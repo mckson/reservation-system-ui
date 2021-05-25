@@ -1,13 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Hotel from '../Models/Hotel';
+import React /* { useState, useEffect } */ from 'react';
+import { useParams } from 'react-router-dom';
+// import Hotel from '../Models/Hotel';
+// import axiosInstance from '../../Common/API';
 
-const HotelFull = ({ hotel }) => {
-  return <div>{hotel.name}</div>;
-};
+const HotelFull = () => {
+  const { id } = useParams();
+  // const [hotel, setHotel] = useState(null);
 
-HotelFull.propTypes = {
-  hotel: PropTypes.instanceOf(Hotel).isRequired,
+  return (
+    <>
+      <p>{id}</p>
+      {/* <div>{hotel != null ? hotel.name : 'Loading'}</div> */}
+    </>
+  );
 };
 
 export default HotelFull;
