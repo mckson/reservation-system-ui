@@ -14,6 +14,7 @@ import AccountSection from '../Models/Components/AccountSection';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 2,
+    margin: theme.spacing(0, 0, 5, 0),
   },
   menuButton: {
     marginRight: theme.spacing(2),

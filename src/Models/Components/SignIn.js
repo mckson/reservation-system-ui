@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { Container, Typography, Grid, Button, Link } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import MyTextField from '../../Common/MyTextField';
 import axiosInstance from '../../Common/API';
 import useStyles from '../../Common/Styles';
@@ -21,6 +22,7 @@ const validationSchema = Yup.object({
 const SignIn = ({ onSignIn }) => {
   const classes = useStyles();
   const [error, setError] = useState('');
+  const history = useHistory();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -47,7 +49,7 @@ const SignIn = ({ onSignIn }) => {
                 .post('/Account/SignIn', request)
                 .then((response) => {
                   onSignIn(response);
-                  console.log(response);
+                  history.push('/Main');
                 })
                 .catch((err) => {
                   if (err.response) {

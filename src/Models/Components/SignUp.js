@@ -13,6 +13,7 @@ import { Alert } from '@material-ui/lab';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import MyTextField from '../../Common/MyTextField';
 import axiosInstance from '../../Common/API';
 import useStyles from '../../Common/Styles';
@@ -54,6 +55,7 @@ const SignUp = ({ onSignUp }) => {
   const url = '/Account/SignUp';
   const classes = useStyles();
   const [error, setError] = useState('');
+  const history = useHistory();
 
   const onSubmit = async (values) => {
     setError('');
@@ -73,6 +75,7 @@ const SignUp = ({ onSignUp }) => {
       .post(url, request)
       .then((response) => {
         onSignUp(response);
+        history.push('/Main');
       })
       .catch((err) => {
         if (err.response) {
