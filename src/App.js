@@ -1,6 +1,11 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 import SignUp from './Models/Components/SignUp';
 import SignIn from './Models/Components/SignIn';
 import Navbar from './Common/Navbar';
@@ -8,6 +13,7 @@ import User from './Models/Models/User';
 import axiosInstance from './Common/API';
 import HotelsPage from './Models/Components/HotelsPage';
 import HotelFull from './Models/Components/HotelFull';
+import Reservation from './Models/Components/Reservation';
 
 function App() {
   const [hotels, setHotels] = useState(null);
@@ -111,17 +117,23 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/Main">
+          <Route exact path="/">
+            <Redirect to="/Hotels" />
+          </Route>
+          <Route path="/Hotels/:id">
+            <HotelFull />
+          </Route>
+          <Route path="/Hotels">
             {hotels ? <HotelsPage hotels={hotels} /> : 'Loading'}
+          </Route>
+          <Route path="/Reservation/:hotelId">
+            <Reservation />
           </Route>
           <Route path="/SignIn">
             <SignIn onSignIn={onSubmit} />
           </Route>
           <Route path="/SignUp">
             <SignUp onSignUp={onSubmit} />
-          </Route>
-          <Route path="/Hotels/:id">
-            <HotelFull />
           </Route>
         </Switch>
       </div>

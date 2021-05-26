@@ -21,6 +21,7 @@ const HotelsPage = ({ hotels }) => {
   const history = useHistory();
 
   const onOpenFullHotel = (hotelToOpen) => {
+    console.log(hotelToOpen);
     history.push(`/Hotels/${hotelToOpen.id}`);
   };
 

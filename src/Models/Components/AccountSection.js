@@ -12,6 +12,7 @@ import {
 import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
 import HistoryIcon from '@material-ui/icons/HistoryOutlined';
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
+import PersonIcon from '@material-ui/icons/PersonOutlined';
 import User from '../Models/User';
 
 const useStyles = makeStyles((theme) => ({
@@ -55,6 +56,7 @@ const AccountSection = ({ loggedUser, onLogoutClick }) => {
             aria-controls="menu-area"
             aria-haspopup="true"
             onClick={handleClick}
+            startIcon={<PersonIcon />}
           >
             {loggedUser.userName}
           </Button>
