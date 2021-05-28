@@ -1,5 +1,5 @@
 import './App.css';
-import { React, useState, useEffect } from 'react';
+import { React, useState, useEffect, useStateWithPromise } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -17,7 +17,19 @@ import Reservation from './Models/Components/Reservation';
 
 function App() {
   const [hotels, setHotels] = useState(null);
-  const [user, setUser] = useState(null);
+  const useUser = (initialUser = null) => {
+    const [user, setUser] = useStateWithPromise(initialUser);
+
+    const reset = () => {
+      return setUser(initialUser);
+    };
+
+    return {
+      user,
+      setUser,
+      reset,
+    };
+  };
   // const [isHotelsLoaded, setIsHotelsLoaded] = useState(false);
 
   useEffect(
@@ -93,10 +105,22 @@ function App() {
     ]
   );
 
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
+      return null;
+    }
+  };
+
   const onSubmit = (response) => {
     console.log('****');
     console.log(response);
-    setUser(new User(response.data.user));
+    const userDecoded = parseJwt(response.data.jwtToken);
+
+    useUser(new User(userDecoded)).then(() => {
+      console.log(user);
+    });
 
     localStorage.setItem('access_token', response.data.jwtToken);
     localStorage.setItem('refresh_token', response.data.refreshToken);

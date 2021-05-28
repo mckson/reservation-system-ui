@@ -1,14 +1,10 @@
 class User {
   constructor(obj) {
     this.id = obj.id;
-    this.firstName = obj.firstName;
-    this.lastName = obj.lastName;
-    this.userName = obj.userName;
+    this.userName = obj.name;
     this.email = obj.email;
-    this.dateOfBirth = obj.dateOfBirth;
-    this.phoneNumber = obj.phoneNumber;
-    this.roles = obj.roles;
-    this.reservations = obj.reservations;
+    this.roles = obj.role;
+    this.hotelId = obj.hotelId;
   }
 }
 
