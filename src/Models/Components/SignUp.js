@@ -75,7 +75,7 @@ const SignUp = ({ onSignUp }) => {
       .post(url, request)
       .then((response) => {
         onSignUp(response);
-        history.push('/Hotels');
+        history.push('/');
       })
       .catch((err) => {
         if (err.response) {

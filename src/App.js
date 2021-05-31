@@ -1,5 +1,5 @@
 import './App.css';
-import { React, useState, useEffect, useStateWithPromise } from 'react';
+import { React, useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -17,93 +17,38 @@ import Reservation from './Models/Components/Reservation';
 
 function App() {
   const [hotels, setHotels] = useState(null);
-  const useUser = (initialUser = null) => {
-    const [user, setUser] = useStateWithPromise(initialUser);
+  const [user, setUser] = useState(null);
 
-    const reset = () => {
-      return setUser(initialUser);
-    };
-
-    return {
-      user,
-      setUser,
-      reset,
-    };
-  };
-  // const [isHotelsLoaded, setIsHotelsLoaded] = useState(false);
-
-  useEffect(
-    () => {
-      axiosInstance
-        .get('/Hotels')
-        .then((response) => {
-          setHotels(response.data);
-          // setIsHotelsLoaded(true);
-          // console.log(hotels);
-        })
-        .catch((err) => {
-          if (err.response) {
-            /*
-             * The request was made and the server responded with a
-             * status code that falls out of the range of 2xx
-             */
-            console.log(err.response.data);
-            console.log(err.response.status);
-            console.log(err.response.headers);
-          } else if (err.request) {
-            /*
-             * The request was made but no response was received, `error.request`
-             * is an instance of XMLHttpRequest in the browser and an instance
-             * of http.ClientRequest in Node.js
-             */
-            console.log(err.request);
-          } else {
-            // Something happened in setting up the request and triggered an Error
-            console.log('Error', err.message);
-          }
-          console.log(err.config);
-        });
-
-      // axiosInstance({
-      //   method: 'post',
-      //   url: 'Account/RefreshToken',
-      //   data: { token: localStorage.getItem('refresh_token')?.toString() },
-      // })
-      //   .then((response) => {
-      //     setUser(new User(response.data.user));
-
-      //     // setIsHotelsLoaded(true);
-      //     // console.log(hotels);
-      //     localStorage.setItem('access_token', response.data.jwtToken);
-      //     localStorage.setItem('refresh_token', response.data.refreshToken);
-      //   })
-      //   .catch((err) => {
-      //     if (err.response) {
-      //       /*
-      //        * The request was made and the server responded with a
-      //        * status code that falls out of the range of 2xx
-      //        */
-      //       console.log(err.response.data);
-      //       console.log(err.response.status);
-      //       console.log(err.response.headers);
-      //     } else if (err.request) {
-      //       /*
-      //        * The request was made but no response was received, `error.request`
-      //        * is an instance of XMLHttpRequest in the browser and an instance
-      //        * of http.ClientRequest in Node.js
-      //        */
-      //       console.log(err.request);
-      //     } else {
-      //       // Something happened in setting up the request and triggered an Error
-      //       console.log('Error', err.message);
-      //     }
-      //     console.log(err.config);
-      //   });
-    },
-    [
-      /* isHotelsLoaded */
-    ]
-  );
+  useEffect(() => {
+    axiosInstance
+      .get('/Hotels?pageNumber=2&PageSize=5')
+      .then((response) => {
+        setHotels(response.data.content);
+        console.log(hotels);
+      })
+      .catch((err) => {
+        if (err.response) {
+          /*
+           * The request was made and the server responded with a
+           * status code that falls out of the range of 2xx
+           */
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else if (err.request) {
+          /*
+           * The request was made but no response was received, `error.request`
+           * is an instance of XMLHttpRequest in the browser and an instance
+           * of http.ClientRequest in Node.js
+           */
+          console.log(err.request);
+        } else {
+          // Something happened in setting up the request and triggered an Error
+          console.log('Error', err.message);
+        }
+        console.log(err.config);
+      });
+  }, []);
 
   const parseJwt = (token) => {
     try {
@@ -118,9 +63,7 @@ function App() {
     console.log(response);
     const userDecoded = parseJwt(response.data.jwtToken);
 
-    useUser(new User(userDecoded)).then(() => {
-      console.log(user);
-    });
+    setUser(new User(userDecoded));
 
     localStorage.setItem('access_token', response.data.jwtToken);
     localStorage.setItem('refresh_token', response.data.refreshToken);
@@ -137,13 +80,7 @@ function App() {
     <Router>
       <div>
         <Navbar loggedUser={user} onLogoutClick={handleLogout} />
-
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
         <Switch>
-          <Route exact path="/">
-            <Redirect to="/Hotels" />
-          </Route>
           <Route path="/Hotels/:id">
             <HotelFull />
           </Route>
@@ -159,6 +96,7 @@ function App() {
           <Route path="/SignUp">
             <SignUp onSignUp={onSubmit} />
           </Route>
+          <Redirect to="/Hotels" />
         </Switch>
       </div>
     </Router>

@@ -49,7 +49,7 @@ const SignIn = ({ onSignIn }) => {
                 .post('/Account/SignIn', request)
                 .then((response) => {
                   onSignIn(response);
-                  history.push('/Hotels');
+                  history.push('/');
                 })
                 .catch((err) => {
                   if (err.response) {
