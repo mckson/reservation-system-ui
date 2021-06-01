@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
   details: {
-    flexGrow: 4,
+    flexGrow: 3,
     width: 'auto',
     display: 'flex',
     flexDirection: 'column',
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
       flexGrow: 1,
       display: 'block',
       height: 'auto',
-      width: 'auto',
+      width: '25%',
     },
   },
   info: {
