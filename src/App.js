@@ -1,19 +1,8 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
-import SignUp from './Models/Components/SignUp';
-import SignIn from './Models/Components/SignIn';
-import Navbar from './Common/Navbar';
-import User from './Models/Models/User';
+import User from './Models/User';
 import axiosInstance from './Common/API';
-import HotelsPage from './Models/Components/HotelsPage';
-import HotelFull from './Models/Components/HotelFull';
-import Reservation from './Models/Components/Reservation';
+import Routes from './Components/RoutesComponent/Routes';
 
 function App() {
   const [hotels, setHotels] = useState(null);
@@ -82,8 +71,6 @@ function App() {
     const city = searchClauses?.length > 1 ? searchClauses[1] : '';
     const services = searchClauses?.length > 2 ? searchClauses.slice(2) : [];
 
-    console.log(services);
-
     axiosInstance
       .get(
         `/Hotels?pageNumber=1&PageSize=2&name=${hotelname}&city=${city}${services
@@ -91,6 +78,7 @@ function App() {
           .join('')}`
       )
       .then((response) => {
+        console.log(response);
         setHotels(response.data.content);
         setTotalResults(response.data.totalResults);
         setTotalPages(response.data.totalPages);
@@ -136,57 +124,34 @@ function App() {
 
     setUser(new User(userDecoded));
 
+    console.log(userDecoded);
+
     localStorage.setItem('access_token', response.data.jwtToken);
     localStorage.setItem('refresh_token', response.data.refreshToken);
   };
 
-  const handleLogout = () => {
+  const onLogout = () => {
     setUser(null);
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     /* revoke token request */
   };
 
-  const pageChanged = (event, value) => {
+  const onPageChanged = (event, value) => {
     onSearchHotels(searchParameters, value);
   };
 
   return (
-    <Router>
-      <div>
-        <Navbar loggedUser={user} onLogoutClick={handleLogout} />
-        <Switch>
-          <Route path="/Hotels/:id">
-            <HotelFull />
-          </Route>
-          <Route path="/Hotels">
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              {hotels ? (
-                <HotelsPage
-                  hotels={hotels}
-                  totalPages={totalPages}
-                  totalResults={totalResults}
-                  onPageChanged={pageChanged}
-                  searchHotels={onSearchHotels}
-                />
-              ) : (
-                'Loading'
-              )}
-            </div>
-          </Route>
-          <Route path="/Reservation/:hotelId">
-            <Reservation />
-          </Route>
-          <Route path="/SignIn">
-            <SignIn onSignIn={onSubmit} />
-          </Route>
-          <Route path="/SignUp">
-            <SignUp onSignUp={onSubmit} />
-          </Route>
-          <Redirect to="/Hotels" />
-        </Switch>
-      </div>
-    </Router>
+    <Routes
+      loggedUser={user}
+      hotels={hotels}
+      totalPages={totalPages}
+      totalResults={totalResults}
+      pageChanged={onPageChanged}
+      loguot={onLogout}
+      submit={onSubmit}
+      searchHotels={onSearchHotels}
+    />
   );
 }
 

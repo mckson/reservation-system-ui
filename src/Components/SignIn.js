@@ -7,9 +7,9 @@ import { Container, Typography, Grid, Button, Link } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import MyTextField from '../../Common/MyTextField';
-import axiosInstance from '../../Common/API';
-import useStyles from '../../Common/Styles';
+import MyTextField from '../Common/MyTextField';
+import axiosInstance from '../Common/API';
+import useStyles from '../Common/Styles';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email adress').required('Required'),

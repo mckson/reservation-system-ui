@@ -2,8 +2,8 @@ import React from 'react';
 import { Link, Toolbar, AppBar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import User from '../Models/Models/User';
-import AccountSection from '../Models/Components/AccountSection';
+import User from '../Models/User';
+import AccountSection from '../Components/AccountSection/AccountSection';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ loggedUser, onLogoutClick }) => {
+const Navbar = ({ loggedUser, onLogoutClick, manageHotels }) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +43,8 @@ const Navbar = ({ loggedUser, onLogoutClick }) => {
           <div className={classes.account}>
             <AccountSection
               loggedUser={loggedUser}
-              onLogoutClick={onLogoutClick}
+              logout={onLogoutClick}
+              manageHotels={manageHotels}
             />
           </div>
         </Toolbar>
@@ -55,6 +56,7 @@ const Navbar = ({ loggedUser, onLogoutClick }) => {
 Navbar.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   onLogoutClick: PropTypes.func.isRequired,
+  manageHotels: PropTypes.func.isRequired,
 };
 
 Navbar.defaultProps = {

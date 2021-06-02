@@ -2,7 +2,7 @@ import { Container, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import axiosInstance from '../../Common/API';
+import axiosInstance from '../Common/API';
 import Hotel from '../Models/Hotel';
 
 const Reservation = () => {

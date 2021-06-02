@@ -13,7 +13,10 @@ import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
 import HistoryIcon from '@material-ui/icons/HistoryOutlined';
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
-import User from '../Models/User';
+import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
+import User from '../../Models/User';
+
+const AdminRole = 'Admin';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountSection = ({ loggedUser, onLogoutClick }) => {
+const AccountSectionComponent = ({ loggedUser, logout, manageHotels }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -72,15 +75,31 @@ const AccountSection = ({ loggedUser, onLogoutClick }) => {
               </ListItemIcon>
               <ListItemText primary="Manage account" />
             </MenuItem>
+
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <HistoryIcon className={classes.icon} />
               </ListItemIcon>
               <ListItemText primary="View orders" />
             </MenuItem>
+
+            {loggedUser.roles.includes(AdminRole) ? (
+              <MenuItem
+                onClick={() => {
+                  manageHotels();
+                  handleClose();
+                }}
+              >
+                <ListItemIcon>
+                  <AdminPanelIcon className={classes.icon} />
+                </ListItemIcon>
+                <ListItemText primary="Manage hotels" />
+              </MenuItem>
+            ) : null}
+
             <MenuItem
               onClick={() => {
-                onLogoutClick();
+                logout();
                 handleClose();
               }}
             >
@@ -100,13 +119,14 @@ const AccountSection = ({ loggedUser, onLogoutClick }) => {
   );
 };
 
-AccountSection.propTypes = {
+AccountSectionComponent.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
-  onLogoutClick: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
+  manageHotels: PropTypes.func.isRequired,
 };
 
-AccountSection.defaultProps = {
+AccountSectionComponent.defaultProps = {
   loggedUser: null,
 };
 
-export default AccountSection;
+export default AccountSectionComponent;

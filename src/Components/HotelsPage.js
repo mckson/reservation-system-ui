@@ -4,7 +4,7 @@ import { Grid, makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import HotelCard from './HotelCard';
 import Hotel from '../Models/Hotel';
-import PaginationBar from '../../Common/PaginationBar';
+import PaginationBar from '../Common/PaginationBar';
 import HotelSearchComponent from './HotelSearchComponent';
 
 const useStyles = makeStyles(() => ({
