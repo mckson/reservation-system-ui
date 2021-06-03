@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import RoutesComponent from './RoutesComponent';
 import User from '../../Models/User';
@@ -14,6 +14,15 @@ const Routes = ({
   submit,
   searchHotels,
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const onOpen = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+
   return (
     <RoutesComponent
       loggedUser={loggedUser}
@@ -24,6 +33,9 @@ const Routes = ({
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
+      isHotelsManagementOpen={open}
+      closeHotelsManagement={onClose}
+      openHotelsManagement={onOpen}
     />
   );
 };

@@ -14,6 +14,7 @@ import HotelFull from '../HotelFull/HotelFull';
 import Reservation from '../Reservation';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
+import HotelsManagement from '../HotelsManagement/HotelsManagement';
 
 const RoutesComponent = ({
   loggedUser,
@@ -24,15 +25,24 @@ const RoutesComponent = ({
   loguot,
   submit,
   searchHotels,
-  manageHotels,
+  isHotelsManagementOpen,
+  closeHotelsManagement,
+  openHotelsManagement,
 }) => {
   return (
     <Router>
       <Navbar
         loggedUser={loggedUser}
         onLogoutClick={loguot}
-        manageHotels={manageHotels}
+        openHotelsManagement={openHotelsManagement}
       />
+
+      <HotelsManagement
+        isOpen={isHotelsManagementOpen}
+        close={closeHotelsManagement}
+        hotels={hotels}
+      />
+
       <Switch>
         <Route path="/Hotels/:id">
           <HotelFull />
@@ -69,14 +79,16 @@ const RoutesComponent = ({
 
 RoutesComponent.propTypes = {
   loggedUser: PropTypes.instanceOf(User).isRequired,
-  hotels: PropTypes.instanceOf(Hotel).isRequired,
+  hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalPages: PropTypes.number.isRequired,
   totalResults: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
-  manageHotels: PropTypes.func.isRequired,
+  isHotelsManagementOpen: PropTypes.bool.isRequired,
+  closeHotelsManagement: PropTypes.func.isRequired,
+  openHotelsManagement: PropTypes.func.isRequired,
 };
 
 export default RoutesComponent;

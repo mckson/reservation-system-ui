@@ -9,11 +9,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     marginLeft: 0,
     width: '100%',
-    flexGrow: 10,
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
   },
 }));
 

@@ -38,7 +38,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountSectionComponent = ({ loggedUser, logout, manageHotels }) => {
+const AccountSectionComponent = ({
+  loggedUser,
+  logout,
+  openHotelsManagement,
+}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -86,7 +90,7 @@ const AccountSectionComponent = ({ loggedUser, logout, manageHotels }) => {
             {loggedUser.roles.includes(AdminRole) ? (
               <MenuItem
                 onClick={() => {
-                  manageHotels();
+                  openHotelsManagement();
                   handleClose();
                 }}
               >
@@ -122,7 +126,7 @@ const AccountSectionComponent = ({ loggedUser, logout, manageHotels }) => {
 AccountSectionComponent.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   logout: PropTypes.func.isRequired,
-  manageHotels: PropTypes.func.isRequired,
+  openHotelsManagement: PropTypes.func.isRequired,
 };
 
 AccountSectionComponent.defaultProps = {
