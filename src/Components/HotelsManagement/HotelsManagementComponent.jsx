@@ -28,7 +28,16 @@ const Transition = forwardRef(function Transistion(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const HotelsManagementComponent = ({ isOpen, close, hotels }) => {
+const HotelsManagementComponent = ({
+  isOpen,
+  close,
+  hotels,
+  totalCount,
+  pageChanged,
+  pageSizeChanged,
+  pageSize,
+  deleteHotel,
+}) => {
   const classes = useStyles();
   return (
     <Dialog
@@ -45,7 +54,14 @@ const HotelsManagementComponent = ({ isOpen, close, hotels }) => {
         </IconButton>
       </Toolbar>
       <div className={classes.content}>
-        <HotelsTable hotels={hotels} />
+        <HotelsTable
+          hotels={hotels}
+          totalCount={totalCount}
+          pageChanged={pageChanged}
+          pageSize={pageSize}
+          pageSizeChanged={pageSizeChanged}
+          deleteHotel={deleteHotel}
+        />
       </div>
     </Dialog>
   );
@@ -55,6 +71,11 @@ HotelsManagementComponent.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
+  totalCount: PropTypes.number.isRequired,
+  pageChanged: PropTypes.func.isRequired,
+  pageSizeChanged: PropTypes.func.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  deleteHotel: PropTypes.func.isRequired,
 };
 
 export default HotelsManagementComponent;

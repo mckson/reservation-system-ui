@@ -13,22 +13,46 @@ import {
   Box,
   Typography,
   makeStyles,
+  TableFooter,
+  TablePagination,
+  Button,
 } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
+import AddIcon from '@material-ui/icons/Add';
 import Hotel from '../../Models/Hotel';
-import Room from '../../Models/Room';
-import Service from '../../Models/Service';
+import RoomsTableComponent from '../RoomsTable/RoomsTableComponent';
+import ServicesTableComponent from '../ServicesTable/ServicesTableComponent';
 
 const useStyles = makeStyles((theme) => ({
+  row: {
+    '&:selected': {
+      background: theme.palette.grey[300],
+    },
+    '& > *': {
+      borderBottom: 'unset',
+    },
+  },
+  smallCell: {
+    flexGrow: 0.1,
+  },
+  cell: {
+    flexGrow: 1,
+  },
   subrow: {
     display: 'flex',
     alignItems: 'center',
     margin: theme.spacing(0, 5),
   },
+  button: {
+    justifySelf: 'center',
+  },
+  footer: {},
 }));
 
 const HotelRowMap = ({ hotel }) => {
+  const classes = useStyles();
   return (
     <>
       <TableCell>{hotel.id}</TableCell>
@@ -36,7 +60,9 @@ const HotelRowMap = ({ hotel }) => {
       <TableCell>{hotel.location.country}</TableCell>
       <TableCell>{hotel.location.region}</TableCell>
       <TableCell>{hotel.location.city}</TableCell>
-      <TableCell>{`${hotel.location.street}, ${hotel.location.buildingNumber}`}</TableCell>
+      <TableCell
+        classname={classes.cell}
+      >{`${hotel.location.street}, ${hotel.location.buildingNumber}`}</TableCell>
     </>
   );
 };
@@ -45,29 +71,52 @@ HotelRowMap.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
 };
 
-const HotelRow = ({ hotel }) => {
+const HotelRow = ({ hotel, deleteHotel }) => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [openRooms, setOpenRooms] = useState(false);
   const [openServices, setOpenServices] = useState(false);
+  const [selected, setSelected] = useState(false);
 
   return (
     <>
-      <TableRow>
+      <TableRow
+        className={classes.row}
+        selected={selected}
+        onClick={() => setSelected(!selected)}
+      >
         <TableCell>
           <IconButton onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         <HotelRowMap hotel={hotel} />
+        <TableCell>
+          <IconButton>
+            <EditOutlined />
+          </IconButton>
+        </TableCell>
+        <TableCell className={classes.smallCell}>
+          <IconButton
+            onClick={() => {
+              deleteHotel(hotel.id);
+            }}
+          >
+            <DeleteOutlined />
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell colSpan={7}>
-          <Collapse in={open}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
               <div className={classes.subrow}>
-                <IconButton onClick={() => setOpenRooms(!openRooms)}>
+                <IconButton
+                  onClick={() => {
+                    setOpenRooms(!openRooms);
+                  }}
+                >
                   {openRooms ? (
                     <KeyboardArrowUpIcon />
                   ) : (
@@ -104,9 +153,35 @@ const HotelRow = ({ hotel }) => {
 
 HotelRow.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  deleteHotel: PropTypes.func.isRequired,
 };
 
-const HotelsTableComponent = ({ hotels }) => {
+const HotelsTableComponent = ({
+  hotels,
+  totalCount,
+  pageChanged,
+  pageSizeChanged,
+  pageSize,
+  deleteHotel,
+}) => {
+  const classes = useStyles();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowPerPage] = useState(pageSize);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    pageChanged(event, newPage + 1);
+  };
+
+  const handleChangePageSize = (event) => {
+    const newSize = parseInt(event.target.value, 10);
+
+    pageSizeChanged(newSize);
+
+    setPage(1);
+    setRowPerPage(newSize);
+  };
+
   return (
     <TableContainer component={Paper} variant="outlined">
       <Table>
@@ -119,15 +194,37 @@ const HotelsTableComponent = ({ hotels }) => {
             <TableCell>Region</TableCell>
             <TableCell>City</TableCell>
             <TableCell>Street</TableCell>
+            <TableCell />
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {hotels != null ? (
-            hotels.map((hotel) => <HotelRow hotel={hotel} key={hotel.id} />)
+            hotels.map((hotel) => (
+              <HotelRow
+                deleteHotel={deleteHotel}
+                hotel={hotel}
+                key={hotel.id}
+              />
+            ))
           ) : (
             <div>Loading</div>
           )}
         </TableBody>
+        <TableFooter className={classes.footer}>
+          <Button color="primary" className={classes.button}>
+            <AddIcon />
+            <Typography>Add new hotel</Typography>
+          </Button>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPage={rowsPerPage}
+            count={totalCount}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangePageSize}
+          />
+        </TableFooter>
       </Table>
     </TableContainer>
   );
@@ -135,114 +232,11 @@ const HotelsTableComponent = ({ hotels }) => {
 
 HotelsTableComponent.propTypes = {
   hotels: PropTypes.arrayOf(Hotel).isRequired,
-};
-
-const RoomsTableComponent = ({ rooms }) => {
-  return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Id</TableCell>
-          <TableCell>Number</TableCell>
-          <TableCell>Floor</TableCell>
-          <TableCell>Capacity</TableCell>
-          <TableCell>Price</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rooms != null ? (
-          rooms.map((room) => <RoomRow room={room} key={room.id} />)
-        ) : (
-          <div>Loading</div>
-        )}
-      </TableBody>
-    </Table>
-  );
-};
-
-RoomsTableComponent.propTypes = {
-  rooms: PropTypes.arrayOf(Room).isRequired,
-};
-
-const RoomRow = ({ room }) => {
-  return (
-    <TableRow>
-      <RoomRowMap room={room} />
-    </TableRow>
-  );
-};
-
-RoomRow.propTypes = {
-  room: PropTypes.instanceOf(Room).isRequired,
-};
-
-const RoomRowMap = ({ room }) => {
-  return (
-    <>
-      <TableCell>{room.id}</TableCell>
-      <TableCell>{room.roomNumber}</TableCell>
-      <TableCell>{room.floorNumber}</TableCell>
-      <TableCell>{room.capacity}</TableCell>
-      <TableCell>{room.price}</TableCell>
-    </>
-  );
-};
-
-RoomRowMap.propTypes = {
-  room: PropTypes.instanceOf(Room).isRequired,
-};
-
-const ServicesTableComponent = ({ services }) => {
-  return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Id</TableCell>
-          <TableCell>Name</TableCell>
-          <TableCell>Price</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {services != null ? (
-          services.map((service) => (
-            <ServiceRow service={service} key={service.id} />
-          ))
-        ) : (
-          <div>Loading</div>
-        )}
-      </TableBody>
-    </Table>
-  );
-};
-
-ServicesTableComponent.propTypes = {
-  services: PropTypes.arrayOf(Service).isRequired,
-};
-
-const ServiceRow = ({ service }) => {
-  return (
-    <TableRow>
-      <ServiceRowMap service={service} />
-    </TableRow>
-  );
-};
-
-ServiceRow.propTypes = {
-  service: PropTypes.instanceOf(Service).isRequired,
-};
-
-const ServiceRowMap = ({ service }) => {
-  return (
-    <>
-      <TableCell>{service.id}</TableCell>
-      <TableCell>{service.name}</TableCell>
-      <TableCell>{service.price}</TableCell>
-    </>
-  );
-};
-
-ServiceRowMap.propTypes = {
-  service: PropTypes.instanceOf(Service).isRequired,
+  totalCount: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  pageChanged: PropTypes.func.isRequired,
+  pageSizeChanged: PropTypes.func.isRequired,
+  deleteHotel: PropTypes.func.isRequired,
 };
 
 export default HotelsTableComponent;

@@ -15,7 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import MyTextField from '../Common/MyTextField';
-import axiosInstance from '../Common/API';
+import API from '../Common/API';
 import useStyles from '../Common/Styles';
 
 const validationSchema = Yup.object({
@@ -71,7 +71,7 @@ const SignUp = ({ onSignUp }) => {
       DateOfBirth: values.dateOfBirth,
     };
 
-    await axiosInstance
+    await API.axiosInstance
       .post(url, request)
       .then((response) => {
         onSignUp(response);

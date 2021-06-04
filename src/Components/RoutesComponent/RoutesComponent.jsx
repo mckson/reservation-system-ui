@@ -15,6 +15,7 @@ import Reservation from '../Reservation';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import HotelsManagement from '../HotelsManagement/HotelsManagement';
+// import HotelsTable from '../HotelsTable/HotelsTable';
 
 const RoutesComponent = ({
   loggedUser,
@@ -22,9 +23,12 @@ const RoutesComponent = ({
   totalPages,
   totalResults,
   pageChanged,
+  pageSizeChanged,
   loguot,
   submit,
+  deleteHotel,
   searchHotels,
+  pageSize,
   isHotelsManagementOpen,
   closeHotelsManagement,
   openHotelsManagement,
@@ -37,10 +41,23 @@ const RoutesComponent = ({
         openHotelsManagement={openHotelsManagement}
       />
 
+      {/* <HotelsTable
+        hotels={hotels}
+        totalCount={totalResults}
+        pageChanged={pageChanged}
+        pageSize={pageSize}
+        pageSizeChanged={pageSizeChanged}
+      /> */}
+
       <HotelsManagement
         isOpen={isHotelsManagementOpen}
         close={closeHotelsManagement}
+        totalCount={totalResults}
         hotels={hotels}
+        pageChanged={pageChanged}
+        pageSize={pageSize}
+        pageSizeChanged={pageSizeChanged}
+        deleteHotel={deleteHotel}
       />
 
       <Switch>
@@ -82,13 +99,16 @@ RoutesComponent.propTypes = {
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalPages: PropTypes.number.isRequired,
   totalResults: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
+  pageSizeChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
   isHotelsManagementOpen: PropTypes.bool.isRequired,
   closeHotelsManagement: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  deleteHotel: PropTypes.func.isRequired,
 };
 
 export default RoutesComponent;

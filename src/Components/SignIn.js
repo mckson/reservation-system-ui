@@ -8,7 +8,7 @@ import { Alert } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import MyTextField from '../Common/MyTextField';
-import axiosInstance from '../Common/API';
+import API from '../Common/API';
 import useStyles from '../Common/Styles';
 
 const validationSchema = Yup.object({
@@ -45,7 +45,7 @@ const SignIn = ({ onSignIn }) => {
                 Password: values.password,
               };
 
-              await axiosInstance
+              await API.axiosInstance
                 .post('/Account/SignIn', request)
                 .then((response) => {
                   onSignIn(response);

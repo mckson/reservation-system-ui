@@ -9,7 +9,10 @@ const Routes = ({
   hotels,
   totalPages,
   totalResults,
+  pageSize,
   pageChanged,
+  pageSizeChanged,
+  deleteHotel,
   loguot,
   submit,
   searchHotels,
@@ -29,7 +32,10 @@ const Routes = ({
       hotels={hotels}
       totalPages={totalPages}
       totalResults={totalResults}
+      pageSize={pageSize}
       pageChanged={pageChanged}
+      pageSizeChanged={pageSizeChanged}
+      deleteHotel={deleteHotel}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -45,10 +51,13 @@ Routes.propTypes = {
   hotels: PropTypes.instanceOf(Hotel).isRequired,
   totalPages: PropTypes.number.isRequired,
   totalResults: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
+  pageSizeChanged: PropTypes.func.isRequired,
+  deleteHotel: PropTypes.func.isRequired,
 };
 
 export default Routes;

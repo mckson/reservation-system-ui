@@ -22,7 +22,7 @@ const HotelSearchComponent = ({ searchHotels }) => {
       onChange={(request) => setSearchRequest(request)}
       onRequestSearch={() => searchHotels(searchRequest)}
       className={classes.search}
-      placeholder="Search... (hotename city services)"
+      placeholder="Search... (name city services)"
     />
   );
 };
