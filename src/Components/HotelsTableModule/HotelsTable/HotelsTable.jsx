@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import HotelsTableComponent from './HotelsTableComponent';
-import Hotel from '../../Models/Hotel';
+import Hotel from '../../../Models/Hotel';
 
 const HotelsTable = ({
   hotels,
@@ -10,6 +10,9 @@ const HotelsTable = ({
   pageSize,
   pageSizeChanged,
   deleteHotel,
+  updateHotel,
+  createHotel,
+  createRoom,
 }) => {
   return (
     <HotelsTableComponent
@@ -19,6 +22,9 @@ const HotelsTable = ({
       pageSize={pageSize}
       pageSizeChanged={pageSizeChanged}
       deleteHotel={deleteHotel}
+      updateHotel={updateHotel}
+      createHotel={createHotel}
+      createRoom={createRoom}
     />
   );
 };
@@ -30,6 +36,9 @@ HotelsTable.propTypes = {
   pageSizeChanged: PropTypes.func.isRequired,
   pageSize: PropTypes.number.isRequired,
   deleteHotel: PropTypes.func.isRequired,
+  updateHotel: PropTypes.func.isRequired,
+  createHotel: PropTypes.func.isRequired,
+  createRoom: PropTypes.func.isRequired,
 };
 
 export default HotelsTable;

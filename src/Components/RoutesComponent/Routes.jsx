@@ -13,6 +13,9 @@ const Routes = ({
   pageChanged,
   pageSizeChanged,
   deleteHotel,
+  updateHotel,
+  createHotel,
+  createRoom,
   loguot,
   submit,
   searchHotels,
@@ -36,6 +39,9 @@ const Routes = ({
       pageChanged={pageChanged}
       pageSizeChanged={pageSizeChanged}
       deleteHotel={deleteHotel}
+      updateHotel={updateHotel}
+      createHotel={createHotel}
+      createRoom={createRoom}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -58,6 +64,9 @@ Routes.propTypes = {
   searchHotels: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
   deleteHotel: PropTypes.func.isRequired,
+  updateHotel: PropTypes.func.isRequired,
+  createHotel: PropTypes.func.isRequired,
+  createRoom: PropTypes.func.isRequired,
 };
 
 export default Routes;

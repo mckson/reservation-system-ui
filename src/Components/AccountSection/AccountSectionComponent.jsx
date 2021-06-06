@@ -88,17 +88,29 @@ const AccountSectionComponent = ({
             </MenuItem>
 
             {loggedUser.roles.includes(AdminRole) ? (
-              <MenuItem
-                onClick={() => {
-                  openHotelsManagement();
-                  handleClose();
-                }}
-              >
-                <ListItemIcon>
-                  <AdminPanelIcon className={classes.icon} />
-                </ListItemIcon>
-                <ListItemText primary="Manage hotels" />
-              </MenuItem>
+              <>
+                <MenuItem
+                  onClick={() => {
+                    openHotelsManagement();
+                    handleClose();
+                  }}
+                >
+                  <ListItemIcon>
+                    <AdminPanelIcon className={classes.icon} />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage hotels" />
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  <ListItemIcon>
+                    <AdminPanelIcon className={classes.icon} />
+                  </ListItemIcon>
+                  <ListItemText primary="Manage users" />
+                </MenuItem>
+              </>
             ) : null}
 
             <MenuItem

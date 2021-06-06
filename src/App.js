@@ -85,7 +85,46 @@ function App() {
 
   const handleDeleteHotel = async (id) => {
     const deletedHotel = await API.deleteHotel(id);
-    console.log(deletedHotel);
+
+    if (deletedHotel != null) {
+      // const updatedHotels = hotels.filter((hotel) => hotel.id !== id);
+      // setHotels(updatedHotels);
+      // console.log(deletedHotel);
+      await requestHotels(searchParameters);
+    }
+  };
+
+  const handleUpdateHotel = async (updatedHotel) => {
+    const returnedHotel = await API.updateHotel(updatedHotel);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (returnedHotel != null) {
+      // const updatedHotels = hotels.filter(
+      //   (hotel) => hotel.id !== updatedHotel.id
+      // );
+      await requestHotels(searchParameters);
+    }
+  };
+
+  const handleCreateHotel = async (createdHotel) => {
+    const returnedHotel = await API.createHotel(createdHotel);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (returnedHotel != null) {
+      await requestHotels(searchParameters);
+    }
+  };
+
+  const handleCreateRoom = async (createdRoom) => {
+    const returnedRoom = await API.createRoom(createdRoom);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (returnedRoom != null) {
+      await requestHotels(searchParameters); // fix to more effficient way
+    }
   };
 
   return (
@@ -96,6 +135,9 @@ function App() {
       totalResults={totalResults}
       pageSize={pageSize}
       deleteHotel={handleDeleteHotel}
+      updateHotel={handleUpdateHotel}
+      createHotel={handleCreateHotel}
+      createRoom={handleCreateRoom}
       pageChanged={onPageChanged}
       pageSizeChanged={handlePageSizeChanged}
       loguot={onLogout}

@@ -11,6 +11,9 @@ const HotelsManagement = ({
   pageChanged,
   pageSizeChanged,
   deleteHotel,
+  updateHotel,
+  createHotel,
+  createRoom,
   pageSize,
 }) => {
   return (
@@ -23,6 +26,9 @@ const HotelsManagement = ({
       pageSizeChanged={pageSizeChanged}
       pageSize={pageSize}
       deleteHotel={deleteHotel}
+      updateHotel={updateHotel}
+      createHotel={createHotel}
+      createRoom={createRoom}
     />
   );
 };
@@ -36,6 +42,9 @@ HotelsManagement.propTypes = {
   pageSizeChanged: PropTypes.func.isRequired,
   pageSize: PropTypes.number.isRequired,
   deleteHotel: PropTypes.func.isRequired,
+  updateHotel: PropTypes.func.isRequired,
+  createHotel: PropTypes.func.isRequired,
+  createRoom: PropTypes.func.isRequired,
 };
 
 export default HotelsManagement;

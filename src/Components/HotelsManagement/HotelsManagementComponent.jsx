@@ -9,7 +9,7 @@ import {
 import React, { forwardRef } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
-import HotelsTable from '../HotelsTable/HotelsTable';
+import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
 import Hotel from '../../Models/Hotel';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +37,9 @@ const HotelsManagementComponent = ({
   pageSizeChanged,
   pageSize,
   deleteHotel,
+  updateHotel,
+  createHotel,
+  createRoom,
 }) => {
   const classes = useStyles();
   return (
@@ -61,6 +64,9 @@ const HotelsManagementComponent = ({
           pageSize={pageSize}
           pageSizeChanged={pageSizeChanged}
           deleteHotel={deleteHotel}
+          updateHotel={updateHotel}
+          createHotel={createHotel}
+          createRoom={createRoom}
         />
       </div>
     </Dialog>
@@ -76,6 +82,9 @@ HotelsManagementComponent.propTypes = {
   pageSizeChanged: PropTypes.func.isRequired,
   pageSize: PropTypes.number.isRequired,
   deleteHotel: PropTypes.func.isRequired,
+  updateHotel: PropTypes.func.isRequired,
+  createHotel: PropTypes.func.isRequired,
+  createRoom: PropTypes.func.isRequired,
 };
 
 export default HotelsManagementComponent;

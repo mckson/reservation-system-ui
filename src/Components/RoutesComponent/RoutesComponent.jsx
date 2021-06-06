@@ -27,6 +27,9 @@ const RoutesComponent = ({
   loguot,
   submit,
   deleteHotel,
+  updateHotel,
+  createHotel,
+  createRoom,
   searchHotels,
   pageSize,
   isHotelsManagementOpen,
@@ -58,6 +61,9 @@ const RoutesComponent = ({
         pageSize={pageSize}
         pageSizeChanged={pageSizeChanged}
         deleteHotel={deleteHotel}
+        updateHotel={updateHotel}
+        createHotel={createHotel}
+        createRoom={createRoom}
       />
 
       <Switch>
@@ -109,6 +115,9 @@ RoutesComponent.propTypes = {
   closeHotelsManagement: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
   deleteHotel: PropTypes.func.isRequired,
+  updateHotel: PropTypes.func.isRequired,
+  createHotel: PropTypes.func.isRequired,
+  createRoom: PropTypes.func.isRequired,
 };
 
 export default RoutesComponent;
