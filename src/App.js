@@ -1,35 +1,149 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import SignUp from './Models/Components/SignUp';
-import SignIn from './Models/Components/SignIn';
+import { React, useState, useEffect } from 'react';
+import User from './Models/User';
+import API from './Common/API';
+import Routes from './Components/RoutesComponent/Routes';
 
 function App() {
-  return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/SignIn">Sign in</Link>
-            </li>
-            <li>
-              <Link to="/SignUp">Sign up</Link>
-            </li>
-          </ul>
-        </nav>
+  const [hotels, setHotels] = useState(null);
+  const [searchParameters, setSearchParameters] = useState(null);
+  const [totalResults, setTotalResults] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(null);
+  const [user, setUser] = useState(null);
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/SignIn">
-            <SignIn />
-          </Route>
-          <Route path="/SignUp">
-            <SignUp />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+  const requestHotels = async (searchRequest) => {
+    console.log(searchRequest);
+    const searchClauses = searchRequest?.split(' ');
+    const hotelname = searchClauses?.length > 0 ? searchClauses[0] : '';
+    const city = searchClauses?.length > 1 ? searchClauses[1] : '';
+    const services = searchClauses?.length > 2 ? searchClauses.slice(2) : [];
+
+    const response = await API.getHotels(
+      pageNumber,
+      pageSize,
+      hotelname,
+      city,
+      services
+    );
+
+    if (response != null) {
+      setHotels(response.content);
+      setTotalResults(response.totalResults);
+      setTotalPages(response.totalPages);
+      setPageNumber(response.pageNumber);
+      setPageSize(response.pageSize);
+    }
+    console.log(response);
+    console.log(pageNumber);
+  };
+
+  const onSearchHotels = (searchRequest) => {
+    setSearchParameters(searchRequest);
+  };
+
+  useEffect(async () => {
+    await requestHotels(searchParameters);
+  }, [pageSize, pageNumber, searchParameters]);
+
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
+      return null;
+    }
+  };
+
+  const onSubmit = (response) => {
+    console.log('****');
+    console.log(response);
+    const userDecoded = parseJwt(response.data.jwtToken);
+
+    setUser(new User(userDecoded));
+
+    console.log(userDecoded);
+
+    localStorage.setItem('access_token', response.data.jwtToken);
+    localStorage.setItem('refresh_token', response.data.refreshToken);
+  };
+
+  const onLogout = () => {
+    setUser(null);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    /* revoke token request */
+  };
+
+  const onPageChanged = (event, value) => {
+    setPageNumber(value);
+  };
+
+  const handlePageSizeChanged = (newSize) => {
+    setPageSize(newSize);
+  };
+
+  const handleDeleteHotel = async (id) => {
+    const deletedHotel = await API.deleteHotel(id);
+
+    if (deletedHotel != null) {
+      // const updatedHotels = hotels.filter((hotel) => hotel.id !== id);
+      // setHotels(updatedHotels);
+      // console.log(deletedHotel);
+      await requestHotels(searchParameters);
+    }
+  };
+
+  const handleUpdateHotel = async (updatedHotel) => {
+    const returnedHotel = await API.updateHotel(updatedHotel);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (returnedHotel != null) {
+      // const updatedHotels = hotels.filter(
+      //   (hotel) => hotel.id !== updatedHotel.id
+      // );
+      await requestHotels(searchParameters);
+    }
+  };
+
+  const handleCreateHotel = async (createdHotel) => {
+    const returnedHotel = await API.createHotel(createdHotel);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (returnedHotel != null) {
+      await requestHotels(searchParameters);
+    }
+  };
+
+  const handleCreateRoom = async (createdRoom) => {
+    const returnedRoom = await API.createRoom(createdRoom);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (returnedRoom != null) {
+      await requestHotels(searchParameters); // fix to more effficient way
+    }
+  };
+
+  return (
+    <Routes
+      loggedUser={user}
+      hotels={hotels}
+      totalPages={totalPages}
+      totalResults={totalResults}
+      pageSize={pageSize}
+      deleteHotel={handleDeleteHotel}
+      updateHotel={handleUpdateHotel}
+      createHotel={handleCreateHotel}
+      createRoom={handleCreateRoom}
+      pageChanged={onPageChanged}
+      pageSizeChanged={handlePageSizeChanged}
+      loguot={onLogout}
+      submit={onSubmit}
+      searchHotels={onSearchHotels}
+    />
   );
 }
 
