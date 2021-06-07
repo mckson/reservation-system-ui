@@ -1,26 +1,80 @@
 import axios from 'axios';
+// import { useHistory } from 'react-router-dom';
+import LocalStorageService from './LocalStorageService';
+
+const localStorageService = LocalStorageService.getService();
+const baseURL = 'https://localhost:5001/api';
+
+const hotelUrl = (id) => `/Hotels/${id}`;
+const roomUrl = (id) => `/Rooms/${id}`;
+const serviceUrl = (id) => `/Services/${id}`;
 
 const hotelsUrl = (pageNumber, pageSize, name, city, services) =>
   `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${name}&city=${city}${services
     .map((service) => `&services=${service}`)
     .join('')}`;
 
-const hotelUrl = (id) => `/Hotels/${id}`;
+axios.defaults.baseURL = baseURL;
 
-const roomUrl = (id) => `/Rooms/${id}`;
+axios.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorageService.getAccessToken();
 
-const serviceUrl = (id) => `/Services/${id}`;
+    if (accessToken) {
+      // eslint-disable-next-line no-param-reassign
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
 
-const axiosInstance = axios.create({
-  baseURL: 'https://localhost:5001/api',
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+    return config;
   },
-});
+  (error) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // const history = useHistory();
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const originalRequest = error.config;
+
+    if (originalRequest.url === '/Account/RefreshToken') {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      localStorageService.clearToken();
+      // return Promise.reject(error);
+    }
+
+    if (error.response.status === 401 && !originalRequest.retry) {
+      originalRequest.retry = true;
+
+      // eslint-disable-next-line no-debugger
+      debugger;
+      return axios
+        .post('/Account/RefreshToken', {
+          token: localStorageService.getRefreshToken(),
+        })
+        .then((response) => {
+          // eslint-disable-next-line no-debugger
+          debugger;
+          localStorageService.setToken(response.data);
+          axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
+          // return axios(originalRequest);
+          return axios(originalRequest);
+        });
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 const getHotels = (pageNumber, pageSize, name, city, services) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .get(hotelsUrl(pageNumber, pageSize, name, city, services))
       .then((response) => {
         resolve(response.data);
@@ -33,7 +87,7 @@ const getHotels = (pageNumber, pageSize, name, city, services) => {
 
 const deleteHotel = (id) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .delete(hotelUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -45,7 +99,7 @@ const deleteHotel = (id) => {
 
 const updateHotel = (hotel) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .put(hotelUrl(hotel.id), hotel)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -57,7 +111,7 @@ const updateHotel = (hotel) => {
 
 const createHotel = (hotel) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .post(hotelUrl(''), hotel)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -69,7 +123,7 @@ const createHotel = (hotel) => {
 
 const getHotel = (id) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .get(hotelUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -81,7 +135,7 @@ const getHotel = (id) => {
 
 const createRoom = (room) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .post(roomUrl(''), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -93,7 +147,7 @@ const createRoom = (room) => {
 
 const updateRoom = (room) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .put(roomUrl(room.id), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -105,7 +159,7 @@ const updateRoom = (room) => {
 
 const deleteRoom = (id) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .delete(roomUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -117,10 +171,12 @@ const deleteRoom = (id) => {
 
 const createService = (service) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .post(serviceUrl(''), service)
       .then((response) => resolve(response.data))
       .catch((error) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         console.log(error.response);
         reject(error);
       });
@@ -129,7 +185,7 @@ const createService = (service) => {
 
 const updateService = (service) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .put(serviceUrl(service.id), service)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -141,7 +197,7 @@ const updateService = (service) => {
 
 const deleteService = (id) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .delete(serviceUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -152,7 +208,7 @@ const deleteService = (id) => {
 };
 
 export default {
-  axiosInstance,
+  axios,
   getHotels,
   deleteHotel,
   updateHotel,

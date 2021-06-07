@@ -43,10 +43,6 @@ function App() {
     setSearchParameters(searchRequest);
   };
 
-  useEffect(async () => {
-    await requestHotels(searchParameters);
-  }, [pageSize, pageNumber, searchParameters]);
-
   const parseJwt = (token) => {
     try {
       return JSON.parse(atob(token.split('.')[1]));
@@ -54,6 +50,15 @@ function App() {
       return null;
     }
   };
+  useEffect(async () => {
+    const jwt = localStorage.getItem('access_token');
+    if (jwt && user == null) {
+      const userDecoded = parseJwt(jwt);
+      setUser(new User(userDecoded));
+    }
+
+    await requestHotels(searchParameters);
+  }, [pageSize, pageNumber, searchParameters]);
 
   const onSubmit = (response) => {
     console.log('****');
@@ -68,11 +73,14 @@ function App() {
     localStorage.setItem('refresh_token', response.data.refreshToken);
   };
 
-  const onLogout = () => {
+  const onLogout = async () => {
     setUser(null);
+    await API.axios.post('/Account/SignOut', {
+      token: localStorage.getItem('refresh_token'),
+    });
+
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    /* revoke token request */
   };
 
   const onPageChanged = (event, value) => {

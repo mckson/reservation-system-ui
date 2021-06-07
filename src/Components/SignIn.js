@@ -45,7 +45,7 @@ const SignIn = ({ onSignIn }) => {
                 Password: values.password,
               };
 
-              await API.axiosInstance
+              await API.axios
                 .post('/Account/SignIn', request)
                 .then((response) => {
                   onSignIn(response);
