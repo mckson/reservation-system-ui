@@ -30,6 +30,11 @@ const RoutesComponent = ({
   updateHotel,
   createHotel,
   createRoom,
+  updateRoom,
+  deleteRoom,
+  createService,
+  updateService,
+  deleteService,
   searchHotels,
   pageSize,
   isHotelsManagementOpen,
@@ -64,6 +69,11 @@ const RoutesComponent = ({
         updateHotel={updateHotel}
         createHotel={createHotel}
         createRoom={createRoom}
+        updateRoom={updateRoom}
+        deleteRoom={deleteRoom}
+        createService={createService}
+        updateService={updateService}
+        deleteService={deleteService}
       />
 
       <Switch>
@@ -118,6 +128,11 @@ RoutesComponent.propTypes = {
   updateHotel: PropTypes.func.isRequired,
   createHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  createService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
 };
 
 export default RoutesComponent;

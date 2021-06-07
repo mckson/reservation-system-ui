@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
-import axiosInstance from '../../Common/API';
+import API from '../../Common/API';
 
 const HotelFull = () => {
   const { id } = useParams();
@@ -24,7 +24,7 @@ const HotelFull = () => {
   const onReserveClick = () => history.push(`/Reservation/${hotel.id}`);
 
   useEffect(() => {
-    axiosInstance
+    API.axiosInstance
       .get(`/Hotels/${id}`)
       .then((response) => {
         setHotel(new Hotel(response.data));

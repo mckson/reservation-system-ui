@@ -127,6 +127,98 @@ function App() {
     }
   };
 
+  const handleUpdateRoom = async (updatedRoom) => {
+    try {
+      const returnedRoom = await API.updateRoom(updatedRoom);
+
+      if (returnedRoom != null) {
+        await requestHotels(searchParameters);
+      }
+
+      return null;
+    } catch (error) {
+      if (error.response.data) {
+        return error.response.data.message;
+      }
+      return error.message;
+    }
+  };
+
+  const handleDeleteRoom = async (id) => {
+    try {
+      const returnedRoom = await API.deleteRoom(id);
+      if (returnedRoom != null) {
+        await requestHotels(searchParameters);
+      }
+
+      return null;
+    } catch (error) {
+      if (error.response.data) {
+        return error.response.data.message;
+      }
+      return error.message;
+    }
+  };
+
+  // returns error message
+  const handleCreateService = async (createdService) => {
+    try {
+      const returnedService = await API.createService(createdService);
+
+      if (returnedService != null) {
+        await requestHotels(searchParameters);
+      }
+
+      return null;
+    } catch (error) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      if (error.response.data) {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        return error.response.data.message;
+      }
+      // eslint-disable-next-line no-debugger
+      debugger;
+      return error.message;
+    }
+  };
+
+  const handleUpdateService = async (updatedService) => {
+    try {
+      const returnedService = await API.updateService(updatedService);
+
+      if (returnedService != null) {
+        await requestHotels(searchParameters);
+      }
+
+      return null;
+    } catch (error) {
+      if (error.response.data) {
+        return error.response.data.message;
+      }
+      return error.message;
+    }
+  };
+
+  const handleDeleteService = async (id) => {
+    try {
+      const returnedService = await API.deleteService(id);
+      if (returnedService != null) {
+        await requestHotels(searchParameters);
+      }
+
+      // eslint-disable-next-line no-debugger
+      debugger;
+      return null;
+    } catch (error) {
+      if (error.response.data) {
+        return error.response.data.message;
+      }
+      return error.message;
+    }
+  };
+
   return (
     <Routes
       loggedUser={user}
@@ -138,6 +230,11 @@ function App() {
       updateHotel={handleUpdateHotel}
       createHotel={handleCreateHotel}
       createRoom={handleCreateRoom}
+      updateRoom={handleUpdateRoom}
+      deleteRoom={handleDeleteRoom}
+      createService={handleCreateService}
+      updateService={handleUpdateService}
+      deleteService={handleDeleteService}
       pageChanged={onPageChanged}
       pageSizeChanged={handlePageSizeChanged}
       loguot={onLogout}

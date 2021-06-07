@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
-
 import {
   IconButton,
   TableRow,
@@ -15,9 +13,10 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import RoomsTableComponent from '../../RoomsTable/RoomsTableComponent';
-import ServicesTableComponent from '../../ServicesTable/ServicesTableComponent';
+import ServicesTableComponent from '../../ServicesTableModule/ServicesTable/ServicesTable';
 import EditHotelComponent from '../Components/EditHotelComponent';
 import Hotel from '../../../Models/Hotel';
+import HotelRowMap from '../HotelRowMap/HotelRowMap';
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -25,18 +24,16 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: 'unset',
     },
     background: theme.palette.background.paper,
-    '&.Mui-selected': { background: theme.palette.grey[400] },
-    '&.Mui-selected:hover': { background: theme.palette.grey[300] },
+    // '&.Mui-selected': { background: theme.palette.grey[400] },
+    // '&.Mui-selected:hover': { background: theme.palette.grey[300] },
   },
-  smallCell: {
-    flexGrow: 0.1,
-  },
-  cell: {
-    flexGrow: 1,
+  subrowTitle: {
+    display: 'flex',
+    alignItems: 'center',
   },
   subrow: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
     margin: theme.spacing(0, 5),
   },
   button: {
@@ -52,36 +49,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const HotelRowMap = ({ hotel }) => {
-  const classes = useStyles();
-
-  return (
-    <>
-      <TableCell>{hotel.id}</TableCell>
-      <TableCell>{hotel.name}</TableCell>
-      <TableCell>{hotel.numberFloors}</TableCell>
-      <TableCell>{hotel.deposit}</TableCell>
-      <TableCell>{hotel.location.country}</TableCell>
-      <TableCell>{hotel.location.region}</TableCell>
-      <TableCell>{hotel.location.city}</TableCell>
-      <TableCell
-        classname={classes.cell}
-      >{`${hotel.location.street}, ${hotel.location.buildingNumber}`}</TableCell>
-    </>
-  );
-};
-
-HotelRowMap.propTypes = {
-  hotel: PropTypes.instanceOf(Hotel).isRequired,
-};
-
-const HotelRowComponent = ({ hotel, deleteHotel, updateHotel, createRoom }) => {
+const HotelRowComponent = ({
+  hotel,
+  deleteHotel,
+  updateHotel,
+  createRoom,
+  updateRoom,
+  deleteRoom,
+  createService,
+  deleteService,
+  updateService,
+}) => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [openRooms, setOpenRooms] = useState(false);
   const [openServices, setOpenServices] = useState(false);
-  const [selected, setSelected] = useState(false);
+  const [openManagers, setOpenManagers] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
   const handleEditClose = () => {
@@ -90,11 +74,7 @@ const HotelRowComponent = ({ hotel, deleteHotel, updateHotel, createRoom }) => {
 
   return (
     <>
-      <TableRow
-        className={classes.row}
-        selected={selected}
-        onClick={() => setSelected(!selected)}
-      >
+      <TableRow className={classes.row}>
         <TableCell>
           <IconButton onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -123,41 +103,79 @@ const HotelRowComponent = ({ hotel, deleteHotel, updateHotel, createRoom }) => {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
               <div className={classes.subrow}>
-                <IconButton
-                  onClick={() => {
-                    setOpenRooms(!openRooms);
-                  }}
-                >
-                  {openRooms ? (
-                    <KeyboardArrowUpIcon />
-                  ) : (
-                    <KeyboardArrowDownIcon />
-                  )}
-                </IconButton>
-                <Typography variant="h6">Rooms</Typography>
+                <div className={classes.subrowTitle}>
+                  <IconButton
+                    onClick={() => {
+                      setOpenRooms(!openRooms);
+                    }}
+                  >
+                    {openRooms ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </IconButton>
+                  <Typography variant="h6">Rooms</Typography>
+                </div>
+                <Collapse in={openRooms}>
+                  <RoomsTableComponent
+                    rooms={hotel.rooms}
+                    createRoom={createRoom}
+                    updateRoom={updateRoom}
+                    deleteRoom={deleteRoom}
+                    hotel={hotel}
+                  />
+                </Collapse>
               </div>
-              <Collapse in={openRooms}>
-                <RoomsTableComponent
-                  rooms={hotel.rooms}
-                  createRoom={createRoom}
-                  hotel={hotel}
-                />
-              </Collapse>
             </Box>
             <Box>
               <div className={classes.subrow}>
-                <IconButton onClick={() => setOpenServices(!openServices)}>
-                  {openServices ? (
-                    <KeyboardArrowUpIcon />
-                  ) : (
-                    <KeyboardArrowDownIcon />
-                  )}
-                </IconButton>
-                <Typography variant="h6">Services</Typography>
+                <div className={classes.subrowTitle}>
+                  <IconButton onClick={() => setOpenServices(!openServices)}>
+                    {openServices ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </IconButton>
+                  <Typography variant="h6">Services</Typography>
+                </div>
+                <Collapse in={openServices}>
+                  <ServicesTableComponent
+                    services={hotel.services}
+                    createService={createService}
+                    updateService={updateService}
+                    deleteService={deleteService}
+                    hotel={hotel}
+                  />
+                </Collapse>
               </div>
-              <Collapse in={openServices}>
-                <ServicesTableComponent services={hotel.services} />
-              </Collapse>
+            </Box>
+            <Box>
+              <div className={classes.subrow}>
+                <div className={classes.subrowTitle}>
+                  <IconButton
+                    onClick={() => {
+                      setOpenManagers(!openManagers);
+                    }}
+                  >
+                    {openManagers ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </IconButton>
+                  <Typography variant="h6">Managers</Typography>
+                </div>
+                <Collapse in={openManagers}>
+                  <RoomsTableComponent
+                    rooms={hotel.rooms}
+                    createRoom={createRoom}
+                    updateRoom={updateRoom}
+                    hotel={hotel}
+                  />
+                </Collapse>
+              </div>
             </Box>
           </Collapse>
         </TableCell>
@@ -177,6 +195,11 @@ HotelRowComponent.propTypes = {
   deleteHotel: PropTypes.func.isRequired,
   updateHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  createService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
 };
 
 export default HotelRowComponent;

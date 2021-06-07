@@ -67,6 +67,18 @@ const createHotel = (hotel) => {
   });
 };
 
+const getHotel = (id) => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .get(hotelUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
 const createRoom = (room) => {
   return new Promise((resolve, reject) => {
     axiosInstance
@@ -74,6 +86,30 @@ const createRoom = (room) => {
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
+const updateRoom = (room) => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .put(roomUrl(room.id), room)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const deleteRoom = (id) => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .delete(roomUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
         reject(error);
       });
   });
@@ -91,12 +127,41 @@ const createService = (service) => {
   });
 };
 
+const updateService = (service) => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .put(serviceUrl(service.id), service)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const deleteService = (id) => {
+  return new Promise((resolve, reject) => {
+    axiosInstance
+      .delete(serviceUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
 export default {
   axiosInstance,
   getHotels,
   deleteHotel,
   updateHotel,
   createHotel,
+  getHotel,
   createRoom,
+  updateRoom,
+  deleteRoom,
   createService,
+  updateService,
+  deleteService,
 };

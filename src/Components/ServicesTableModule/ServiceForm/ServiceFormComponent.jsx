@@ -1,21 +1,20 @@
-import React from 'react';
-import { CloseOutlined } from '@material-ui/icons';
 import {
-  IconButton,
-  Dialog,
-  DialogTitle,
-  Typography,
-  makeStyles,
-  DialogContent,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { CloseOutlined } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import { Alert } from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
-import Room from '../../Models/Hotel';
-import MyTextField from '../../Common/MyTextField';
+import MyTextField from '../../../Common/MyTextField';
+import Service from '../../../Models/Service';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -32,33 +31,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const validationSchema = Yup.object({
-  number: Yup.number()
-    .max(10000, 'Must be 10000 or less')
-    .min(1, 'Must be 1 or more')
-    .required('Required'),
-  floor: Yup.number()
-    .max(500, 'Must be 500 or less')
-    .min(1, 'Must be 1 or more')
-    .required('Required'),
-  price: Yup.number().min(1, 'Must be 1 or more').required('Required'),
-  capacity: Yup.number()
-    .max(50, 'Must be 10 or less')
-    .min(1, 'Must be 1 or more')
-    .required('Required'),
-});
-
-const RoomForm = ({
+const ServiceFormComponent = ({
   open,
-  close,
-  room,
-  submitHandler,
   title,
+  close,
+  service,
+  validationSchema,
+  submitHandler,
   submitText,
   error,
   resetError,
 }) => {
   const classes = useStyles();
+
+  //   const mappedInitialValues = () => {
+  //     const mapped = [];
+  //     // eslint-disable-next-line no-restricted-syntax
+  //     for (const [key] of Object.entries(initialValues)) {
+  //       mapped.push(key);
+  //     }
+  //     return mapped;
+  //   };
 
   return (
     <div>
@@ -76,10 +69,8 @@ const RoomForm = ({
         <DialogContent>
           <Formik
             initialValues={{
-              number: room != null ? room.roomNumber : '',
-              floor: room != null ? room.floorNumber : '',
-              price: room != null ? room.price : '',
-              capacity: room != null ? room.capacity : '',
+              name: service != null ? service.name : '',
+              price: service != null ? service.price : '',
             }}
             validationSchema={validationSchema}
             onSubmit={submitHandler}
@@ -88,34 +79,16 @@ const RoomForm = ({
               <MyTextField
                 required
                 fullWidth
-                label="Number"
-                name="number"
+                label="Name"
+                name="name"
                 type="text"
-                placeholder="4"
               />
               <MyTextField
                 required
                 fullWidth
-                label="Floor number"
-                name="floor"
-                type="text"
-                placeholder="1"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Price per night"
+                label="Price"
                 name="price"
                 type="text"
-                placeholder="100"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Beds"
-                name="capacity"
-                type="text"
-                placeholder="2"
               />
               <Button
                 fullWidth
@@ -155,20 +128,21 @@ const RoomForm = ({
   );
 };
 
-RoomForm.propTypes = {
+ServiceFormComponent.propTypes = {
   open: PropTypes.bool.isRequired,
-  close: PropTypes.func.isRequired,
-  room: PropTypes.instanceOf(Room).isRequired,
-  submitHandler: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  submitText: PropTypes.string,
+  close: PropTypes.func.isRequired,
+  service: PropTypes.instanceOf(Service).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  validationSchema: PropTypes.object.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+  submitText: PropTypes.string.isRequired,
   error: PropTypes.string,
   resetError: PropTypes.func.isRequired,
 };
 
-RoomForm.defaultProps = {
-  submitText: 'Submit',
+ServiceFormComponent.defaultProps = {
   error: null,
 };
 
-export default RoomForm;
+export default ServiceFormComponent;

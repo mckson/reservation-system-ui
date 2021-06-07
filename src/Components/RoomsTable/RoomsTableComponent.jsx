@@ -13,14 +13,22 @@ import {
   Typography,
   Paper,
   IconButton,
+  makeStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
 import Hotel from '../../Models/Hotel';
 import Room from '../../Models/Room';
 import CreateRoomComponent from './CreateRoomComponent';
+import EditRoomComponent from './EditRoomComponent';
 
-const RoomsTableComponent = ({ rooms, createRoom, hotel }) => {
+const RoomsTableComponent = ({
+  rooms,
+  createRoom,
+  updateRoom,
+  deleteRoom,
+  hotel,
+}) => {
   const [isAdd, setIsAdd] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
@@ -57,7 +65,15 @@ const RoomsTableComponent = ({ rooms, createRoom, hotel }) => {
             {rooms != null ? (
               rooms
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((room) => <RoomRow room={room} key={room.id} />)
+                .map((room) => (
+                  <RoomRow
+                    room={room}
+                    key={room.id}
+                    updateRoom={updateRoom}
+                    deleteRoom={deleteRoom}
+                    hotel={hotel}
+                  />
+                ))
             ) : (
               <div>Loading</div>
             )}
@@ -93,29 +109,69 @@ RoomsTableComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   // totalCount: PropTypes.number.isRequired,
   // pageSize: PropTypes.number.isRequired,
-  // deleteRoom: PropTypes.func.isRequired,
-  // updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
 };
 
-const RoomRow = ({ room }) => {
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: 0,
+    color: theme.palette.primary.main,
+  },
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 'auto',
+  },
+}));
+
+const RoomRow = ({ room, hotel, updateRoom, deleteRoom }) => {
+  const classes = useStyles();
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  const handleEditClose = () => {
+    setIsEdit(false);
+  };
+
   return (
-    <TableRow>
-      <RoomRowMap room={room} />
-      <TableCell>
-        <IconButton>
-          <EditOutlined />
-        </IconButton>
-        <IconButton>
-          <DeleteOutlined />
-        </IconButton>
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow>
+        <RoomRowMap room={room} />
+        <TableCell className={classes.actions}>
+          <IconButton
+            className={classes.button}
+            onClick={() => setIsEdit(!isEdit)}
+          >
+            <EditOutlined />
+          </IconButton>
+          <IconButton
+            className={classes.button}
+            onClick={() => deleteRoom(room.id)}
+          >
+            <DeleteOutlined />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      <EditRoomComponent
+        room={room}
+        open={isEdit}
+        close={handleEditClose}
+        hotel={hotel}
+        updateRoom={updateRoom}
+      />
+    </>
   );
 };
 
 RoomRow.propTypes = {
   room: PropTypes.instanceOf(Room).isRequired,
+  hotel: PropTypes.instanceOf(Hotel).isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
 };
 
 const RoomRowMap = ({ room }) => {
