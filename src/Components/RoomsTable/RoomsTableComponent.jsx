@@ -50,7 +50,15 @@ const RoomsTableComponent = ({
   return (
     <>
       <TableContainer component={Paper} variant="outlined">
-        <Table>
+        <Table size="small">
+          <colgroup>
+            <col width="2.5%" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="2.5%" />
+          </colgroup>
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>

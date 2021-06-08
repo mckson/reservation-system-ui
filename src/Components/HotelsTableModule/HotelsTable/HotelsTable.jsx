@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import HotelsTableComponent from './HotelsTableComponent';
 import Hotel from '../../../Models/Hotel';
+import User from '../../../Models/User';
 
 const HotelsTable = ({
+  users,
   hotels,
   totalCount,
   pageChanged,
@@ -18,9 +20,11 @@ const HotelsTable = ({
   createService,
   updateService,
   deleteService,
+  updateUser,
 }) => {
   return (
     <HotelsTableComponent
+      users={users}
       hotels={hotels}
       totalCount={totalCount}
       pageChanged={pageChanged}
@@ -35,11 +39,13 @@ const HotelsTable = ({
       createService={createService}
       updateService={updateService}
       deleteService={deleteService}
+      updateUser={updateUser}
     />
   );
 };
 
 HotelsTable.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
@@ -54,6 +60,7 @@ HotelsTable.propTypes = {
   createService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
 export default HotelsTable;

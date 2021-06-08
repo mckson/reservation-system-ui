@@ -1,31 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Table,
-  TableRow,
-  TableHead,
-  TableBody,
+  Paper,
   TableCell,
   TableContainer,
-  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
   TableFooter,
   Button,
-  Typography,
   TablePagination,
+  Typography,
 } from '@material-ui/core';
 import { AddOutlined } from '@material-ui/icons';
-import Service from '../../../Models/Service';
-import ServiceRow from '../ServiceRow/ServiceRow';
-import CreateServiceComponent from '../CreateServiceComponent';
 import Hotel from '../../../Models/Hotel';
+import ManagerRowComponent from '../ManagerRow/ManagerRowComponent';
+import AddManagerComponent from '../AddManager/AddManagerComponent';
+import User from '../../../Models/User';
 
-const ServicesTableComponent = ({
-  services,
-  createService,
-  hotel,
-  deleteService,
-  updateService,
-}) => {
+const ManagersTableComponent = ({ hotel, users, updateUser }) => {
   const [isCreate, setIsCreate] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
@@ -49,35 +43,34 @@ const ServicesTableComponent = ({
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
-            <col width="2.5%" />
+            <col width="auto" />
+            <col width="auto" />
             <col width="auto" />
             <col width="auto" />
             <col width="2.5%" />
           </colgroup>
-
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
+              <TableCell>Surname</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Price</TableCell>
+              <TableCell>Email</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
-            {services != null ? (
-              services
+            {hotel.managers ? (
+              hotel.managers
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((service) => (
-                  <ServiceRow
-                    service={service}
+                .map((manager) => (
+                  <ManagerRowComponent
+                    manager={manager}
                     hotel={hotel}
-                    key={service.id}
-                    deleteService={deleteService}
-                    updateService={updateService}
+                    updateUser={updateUser}
                   />
                 ))
             ) : (
-              <div>Loading</div>
+              <div>No managers for current hotel</div>
             )}
           </TableBody>
           <TableFooter>
@@ -88,12 +81,12 @@ const ServicesTableComponent = ({
               }}
             >
               <AddOutlined />
-              <Typography>Add new service</Typography>
+              <Typography>Add manager</Typography>
             </Button>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               rowsPerPage={rowsPerPage}
-              count={services.length}
+              count={hotel.managers.length}
               page={page}
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangePageSize}
@@ -101,22 +94,21 @@ const ServicesTableComponent = ({
           </TableFooter>
         </Table>
       </TableContainer>
-      <CreateServiceComponent
+      <AddManagerComponent
         open={isCreate}
         close={handleCreateClose}
-        createService={createService}
+        updateUser={updateUser}
         hotel={hotel}
+        users={users}
       />
     </>
   );
 };
 
-ServicesTableComponent.propTypes = {
-  services: PropTypes.arrayOf(Service).isRequired,
-  createService: PropTypes.func.isRequired,
-  deleteService: PropTypes.func.isRequired,
-  updateService: PropTypes.func.isRequired,
+ManagersTableComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  users: PropTypes.instanceOf(User).isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
-export default ServicesTableComponent;
+export default ManagersTableComponent;

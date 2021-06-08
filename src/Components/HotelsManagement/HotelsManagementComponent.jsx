@@ -11,6 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
 import Hotel from '../../Models/Hotel';
+import User from '../../Models/User';
 
 const useStyles = makeStyles((theme) => ({
   dialogbar: {
@@ -29,6 +30,7 @@ const Transition = forwardRef(function Transistion(props, ref) {
 });
 
 const HotelsManagementComponent = ({
+  users,
   isOpen,
   close,
   hotels,
@@ -45,6 +47,7 @@ const HotelsManagementComponent = ({
   createService,
   updateService,
   deleteService,
+  updateUser,
 }) => {
   const classes = useStyles();
   return (
@@ -63,6 +66,7 @@ const HotelsManagementComponent = ({
       </Toolbar>
       <div className={classes.content}>
         <HotelsTable
+          users={users}
           hotels={hotels}
           totalCount={totalCount}
           pageChanged={pageChanged}
@@ -77,6 +81,7 @@ const HotelsManagementComponent = ({
           createService={createService}
           updateService={updateService}
           deleteService={deleteService}
+          updateUser={updateUser}
         />
       </div>
     </Dialog>
@@ -84,6 +89,7 @@ const HotelsManagementComponent = ({
 };
 
 HotelsManagementComponent.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
@@ -100,6 +106,7 @@ HotelsManagementComponent.propTypes = {
   createService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
 export default HotelsManagementComponent;

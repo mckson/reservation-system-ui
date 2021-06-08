@@ -9,8 +9,8 @@ import {
   makeStyles,
   Link,
 } from '@material-ui/core';
-import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
-import HistoryIcon from '@material-ui/icons/HistoryOutlined';
+// import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
+// import HistoryIcon from '@material-ui/icons/HistoryOutlined';
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
@@ -73,7 +73,7 @@ const AccountSectionComponent = ({
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>
+            {/* <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <AccountIcon className={classes.icon} />
               </ListItemIcon>
@@ -85,7 +85,7 @@ const AccountSectionComponent = ({
                 <HistoryIcon className={classes.icon} />
               </ListItemIcon>
               <ListItemText primary="View orders" />
-            </MenuItem>
+            </MenuItem> */}
 
             {loggedUser.roles.includes(AdminRole) ? (
               <>
@@ -100,7 +100,7 @@ const AccountSectionComponent = ({
                   </ListItemIcon>
                   <ListItemText primary="Manage hotels" />
                 </MenuItem>
-                <MenuItem
+                {/* <MenuItem
                   onClick={() => {
                     handleClose();
                   }}
@@ -109,7 +109,7 @@ const AccountSectionComponent = ({
                     <AdminPanelIcon className={classes.icon} />
                   </ListItemIcon>
                   <ListItemText primary="Manage users" />
-                </MenuItem>
+                </MenuItem> */}
               </>
             ) : null}
 

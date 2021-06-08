@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import HotelsManagementComponent from './HotelsManagementComponent';
 import Hotel from '../../Models/Hotel';
+import User from '../../Models/User';
 
 const HotelsManagement = ({
+  users,
   isOpen,
   close,
   hotels,
@@ -19,10 +21,12 @@ const HotelsManagement = ({
   createService,
   updateService,
   deleteService,
+  updateUser,
   pageSize,
 }) => {
   return (
     <HotelsManagementComponent
+      users={users}
       isOpen={isOpen}
       close={close}
       hotels={hotels}
@@ -39,11 +43,13 @@ const HotelsManagement = ({
       createService={createService}
       updateService={updateService}
       deleteService={deleteService}
+      updateUser={updateUser}
     />
   );
 };
 
 HotelsManagement.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
@@ -60,6 +66,7 @@ HotelsManagement.propTypes = {
   createService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
 export default HotelsManagement;

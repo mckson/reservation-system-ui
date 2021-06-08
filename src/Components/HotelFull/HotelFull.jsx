@@ -24,7 +24,7 @@ const HotelFull = () => {
   const onReserveClick = () => history.push(`/Reservation/${hotel.id}`);
 
   useEffect(() => {
-    API.axiosInstance
+    API.axios
       .get(`/Hotels/${id}`)
       .then((response) => {
         setHotel(new Hotel(response.data));

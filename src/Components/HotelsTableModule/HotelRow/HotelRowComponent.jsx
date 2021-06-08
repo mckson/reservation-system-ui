@@ -13,10 +13,12 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import RoomsTableComponent from '../../RoomsTable/RoomsTableComponent';
-import ServicesTableComponent from '../../ServicesTableModule/ServicesTable/ServicesTable';
+import ServicesTable from '../../ServicesTableModule/ServicesTable/ServicesTable';
+import ManagersTable from '../../ManagersTableModule/ManagersTable/ManagersTable';
 import EditHotelComponent from '../Components/EditHotelComponent';
 import Hotel from '../../../Models/Hotel';
 import HotelRowMap from '../HotelRowMap/HotelRowMap';
+import User from '../../../Models/User';
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HotelRowComponent = ({
+  users,
   hotel,
   deleteHotel,
   updateHotel,
@@ -59,6 +62,7 @@ const HotelRowComponent = ({
   createService,
   deleteService,
   updateService,
+  updateUser,
 }) => {
   const classes = useStyles();
 
@@ -141,7 +145,7 @@ const HotelRowComponent = ({
                   <Typography variant="h6">Services</Typography>
                 </div>
                 <Collapse in={openServices}>
-                  <ServicesTableComponent
+                  <ServicesTable
                     services={hotel.services}
                     createService={createService}
                     updateService={updateService}
@@ -168,11 +172,10 @@ const HotelRowComponent = ({
                   <Typography variant="h6">Managers</Typography>
                 </div>
                 <Collapse in={openManagers}>
-                  <RoomsTableComponent
-                    rooms={hotel.rooms}
-                    createRoom={createRoom}
-                    updateRoom={updateRoom}
+                  <ManagersTable
                     hotel={hotel}
+                    users={users}
+                    updateUser={updateUser}
                   />
                 </Collapse>
               </div>
@@ -191,6 +194,7 @@ const HotelRowComponent = ({
 };
 
 HotelRowComponent.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   deleteHotel: PropTypes.func.isRequired,
   updateHotel: PropTypes.func.isRequired,
@@ -200,6 +204,7 @@ HotelRowComponent.propTypes = {
   createService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
 export default HotelRowComponent;

@@ -8,6 +8,9 @@ const baseURL = 'https://localhost:5001/api';
 const hotelUrl = (id) => `/Hotels/${id}`;
 const roomUrl = (id) => `/Rooms/${id}`;
 const serviceUrl = (id) => `/Services/${id}`;
+const userUrl = (id) => `/Users/${id}`;
+
+const usersUrl = '/Users';
 
 const hotelsUrl = (pageNumber, pageSize, name, city, services) =>
   `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${name}&city=${city}${services
@@ -46,6 +49,7 @@ axios.interceptors.response.use(
       // eslint-disable-next-line no-debugger
       debugger;
       localStorageService.clearToken();
+      window.location.href = '/SignIn';
       // return Promise.reject(error);
     }
 
@@ -71,6 +75,17 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+const getUsers = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(usersUrl)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
 const getHotels = (pageNumber, pageSize, name, city, services) => {
   return new Promise((resolve, reject) => {
@@ -207,8 +222,25 @@ const deleteService = (id) => {
   });
 };
 
+const updateUser = (user) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(userUrl(user.id), user)
+      .then((response) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
 export default {
   axios,
+  getUsers,
   getHotels,
   deleteHotel,
   updateHotel,
@@ -220,4 +252,5 @@ export default {
   createService,
   updateService,
   deleteService,
+  updateUser,
 };

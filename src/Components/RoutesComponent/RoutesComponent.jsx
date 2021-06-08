@@ -5,6 +5,8 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
+// import { Autocomplete } from '@material-ui/lab';
+// import { TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
@@ -18,6 +20,7 @@ import HotelsManagement from '../HotelsManagement/HotelsManagement';
 // import HotelsTable from '../HotelsTable/HotelsTable';
 
 const RoutesComponent = ({
+  users,
   loggedUser,
   hotels,
   totalPages,
@@ -35,6 +38,7 @@ const RoutesComponent = ({
   createService,
   updateService,
   deleteService,
+  updateUser,
   searchHotels,
   pageSize,
   isHotelsManagementOpen,
@@ -58,6 +62,7 @@ const RoutesComponent = ({
       /> */}
 
       <HotelsManagement
+        users={users}
         isOpen={isHotelsManagementOpen}
         close={closeHotelsManagement}
         totalCount={totalResults}
@@ -74,6 +79,7 @@ const RoutesComponent = ({
         createService={createService}
         updateService={updateService}
         deleteService={deleteService}
+        updateUser={updateUser}
       />
 
       <Switch>
@@ -82,6 +88,13 @@ const RoutesComponent = ({
         </Route>
         <Route path="/Hotels">
           <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {/* <Autocomplete
+              options={users}
+              getOptionLabel={(option) => option.firstName}
+              // filterOptions={filterOptions}
+              style={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="User" />}
+            /> */}
             {hotels ? (
               <HotelsPage
                 hotels={hotels}
@@ -111,6 +124,7 @@ const RoutesComponent = ({
 };
 
 RoutesComponent.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   loggedUser: PropTypes.instanceOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalPages: PropTypes.number.isRequired,
@@ -133,6 +147,7 @@ RoutesComponent.propTypes = {
   createService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
 export default RoutesComponent;

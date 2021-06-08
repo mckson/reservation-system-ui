@@ -5,6 +5,7 @@ import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
 
 const Routes = ({
+  users,
   loggedUser,
   hotels,
   totalPages,
@@ -21,6 +22,7 @@ const Routes = ({
   createService,
   updateService,
   deleteService,
+  updateUser,
   loguot,
   submit,
   searchHotels,
@@ -36,6 +38,7 @@ const Routes = ({
 
   return (
     <RoutesComponent
+      users={users}
       loggedUser={loggedUser}
       hotels={hotels}
       totalPages={totalPages}
@@ -52,6 +55,7 @@ const Routes = ({
       createService={createService}
       updateService={updateService}
       deleteService={deleteService}
+      updateUser={updateUser}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -63,6 +67,7 @@ const Routes = ({
 };
 
 Routes.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   loggedUser: PropTypes.instanceOf(User).isRequired,
   hotels: PropTypes.instanceOf(Hotel).isRequired,
   totalPages: PropTypes.number.isRequired,
@@ -82,6 +87,7 @@ Routes.propTypes = {
   createService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
 };
 
 export default Routes;

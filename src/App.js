@@ -5,6 +5,7 @@ import API from './Common/API';
 import Routes from './Components/RoutesComponent/Routes';
 
 function App() {
+  const [users, setUsers] = useState(null);
   const [hotels, setHotels] = useState(null);
   const [searchParameters, setSearchParameters] = useState(null);
   const [totalResults, setTotalResults] = useState(null);
@@ -12,6 +13,15 @@ function App() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(null);
   const [user, setUser] = useState(null);
+
+  const requestUsers = async () => {
+    const response = await API.getUsers();
+    console.log(response);
+
+    if (response) {
+      setUsers(response);
+    }
+  };
 
   const requestHotels = async (searchRequest) => {
     console.log(searchRequest);
@@ -50,6 +60,7 @@ function App() {
       return null;
     }
   };
+
   useEffect(async () => {
     const jwt = localStorage.getItem('access_token');
     if (jwt && user == null) {
@@ -59,6 +70,12 @@ function App() {
 
     await requestHotels(searchParameters);
   }, [pageSize, pageNumber, searchParameters]);
+
+  useEffect(async () => {
+    if (user) {
+      await requestUsers();
+    }
+  }, [user]);
 
   const onSubmit = (response) => {
     console.log('****');
@@ -227,8 +244,33 @@ function App() {
     }
   };
 
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      const returnedUser = await API.updateUser(updatedUser);
+
+      // eslint-disable-next-line no-debugger
+      debugger;
+      if (returnedUser != null) {
+        await requestUsers();
+        await requestHotels();
+      }
+
+      // eslint-disable-next-line no-debugger
+      debugger;
+      return null;
+    } catch (error) {
+      if (error.response.data) {
+        return error.response.data.message;
+      }
+      return error.message;
+    }
+  };
+
   return (
     <Routes
+      users={users}
       loggedUser={user}
       hotels={hotels}
       totalPages={totalPages}
@@ -243,6 +285,7 @@ function App() {
       createService={handleCreateService}
       updateService={handleUpdateService}
       deleteService={handleDeleteService}
+      updateUser={handleUpdateUser}
       pageChanged={onPageChanged}
       pageSizeChanged={handlePageSizeChanged}
       loguot={onLogout}
