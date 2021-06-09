@@ -100,35 +100,7 @@ const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
           </CardMedia>
 
           <div className={classes.desription}>
-            <Typography variant="body2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-              mattis, ante vitae ultrices posuere, justo quam auctor magna, in
-              pulvinar nibh magna ut sapien. Pellentesque vehicula turpis non
-              augue faucibus, vitae dictum diam dignissim. Morbi id laoreet
-              purus, non suscipit tortor. Vivamus lacus nisi, luctus ut dictum
-              sit amet, semper eu risus. Suspendisse eget purus non ex vehicula
-              fringilla. Vivamus id quam vel felis aliquet pharetra non nec
-              nibh. Sed imperdiet odio orci, sit amet semper nibh pellentesque
-              vitae. Aliquam pellentesque ex quis nisl ornare, eu volutpat erat
-              varius.Aliquam lobortis quis enim eu laoreet. Fusce vel massa at
-              lorem gravida tempus quis vitae enim. Suspendisse vehicula, urna
-              egestas interdum consectetur, dui lectus luctus arcu, id finibus
-              ante libero in urna. Nunc auctor mi quis dui placerat dictum.
-              Praesent quis lorem in leo aliquet tempus. Sed dui urna, pulvinar
-              ut turpis ullamcorper, auctor feugiat arcu. Phasellus eu facilisis
-              nisi. Etiam lobortis risus a arcu rhoncus ultricies. Integer
-              laoreet magna sed pulvinar vestibulum. Vestibulum felis nisl,
-              viverra pulvinar diam in, congue cursus leo. Etiam pretium, enim
-              at tristique egestas, lorem nibh tempor odio, ac mollis nunc quam
-              quis erat. Maecenas urna augue, maximus ut tortor vitae, molestie
-              pellentesque quam. Mauris tellus quam, elementum at eros eu,
-              luctus tincidunt mauris. Curabitur condimentum sem sed metus
-              malesuada lobortis. Proin vehicula ut enim id vestibulum. Cras
-              quam purus, congue ac commodo a, facilisis condimentum nunc. Proin
-              lobortis sed nisi ut interdum. Sed purus dolor, aliquet eget nunc
-              in, fringilla vestibulum diam. Proin sed lacinia neque. Nam augue
-              enim, elementum nec congue quis, facilisis ut neque.
-            </Typography>
+            <Typography variant="body2">{hotel.description}</Typography>
           </div>
 
           <div className={classes.labeledInfo}>

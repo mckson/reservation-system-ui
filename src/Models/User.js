@@ -6,7 +6,7 @@ class User {
     this.userName = obj.name;
     this.email = obj.email;
     this.roles = obj.role;
-    this.hotelId = obj.hotelId;
+    this.hotel = obj.hotel;
   }
 }
 

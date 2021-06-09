@@ -31,8 +31,6 @@ axios.interceptors.request.use(
     return config;
   },
   (error) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     Promise.reject(error);
   }
 );
@@ -40,34 +38,23 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    // const history = useHistory();
-    // eslint-disable-next-line no-debugger
-    debugger;
     const originalRequest = error.config;
 
     if (originalRequest.url === '/Account/RefreshToken') {
-      // eslint-disable-next-line no-debugger
-      debugger;
       localStorageService.clearToken();
       window.location.href = '/SignIn';
-      // return Promise.reject(error);
     }
 
     if (error.response.status === 401 && !originalRequest.retry) {
       originalRequest.retry = true;
 
-      // eslint-disable-next-line no-debugger
-      debugger;
       return axios
         .post('/Account/RefreshToken', {
           token: localStorageService.getRefreshToken(),
         })
         .then((response) => {
-          // eslint-disable-next-line no-debugger
-          debugger;
           localStorageService.setToken(response.data);
           axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
-          // return axios(originalRequest);
           return axios(originalRequest);
         });
     }
@@ -125,6 +112,8 @@ const updateHotel = (hotel) => {
 };
 
 const createHotel = (hotel) => {
+  // eslint-disable-next-line no-debugger
+  debugger;
   return new Promise((resolve, reject) => {
     axios
       .post(hotelUrl(''), hotel)

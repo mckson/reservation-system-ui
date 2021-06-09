@@ -8,6 +8,8 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
       name: values.name,
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
+      description: values.description,
+      mainImage: values.mainImage,
       location: {
         country: values.country,
         region: values.region,
@@ -16,6 +18,9 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
         buildingNumber: parseInt(values.buildingNumber, 10),
       },
     };
+
+    // eslint-disable-next-line no-debugger
+    debugger;
     createHotel(createdHotel);
     close();
   };

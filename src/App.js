@@ -65,6 +65,8 @@ function App() {
     const jwt = localStorage.getItem('access_token');
     if (jwt && user == null) {
       const userDecoded = parseJwt(jwt);
+      // eslint-disable-next-line no-debugger
+      debugger;
       setUser(new User(userDecoded));
     }
 

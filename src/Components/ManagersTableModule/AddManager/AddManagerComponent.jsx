@@ -10,20 +10,28 @@ const AddManagerComponent = ({ open, close, hotel, updateUser, users }) => {
   const managerRole = 'manager';
   const formTitle = `Add manager to hotel ${hotel.name}`;
   const formSubmittext = 'Add manager';
-
+  let errorResponse = null;
   const onUpdateUserAsync = async (user) => {
     // eslint-disable-next-line no-debugger
     debugger;
     // eslint-disable-next-line no-param-reassign
-    user.hotelId = hotel.id;
-    user.roles.push(managerRole);
+    if (!user.hotels.includes(hotel.id)) {
+      user.hotels.push(hotel.id);
+      user.roles.push(managerRole);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
+      // eslint-disable-next-line no-debugger
+      debugger;
 
-    const errorResponse = await updateUser(user);
+      errorResponse = await updateUser(user);
+    } else {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      errorResponse = 'User is already manager of current hotel';
+    }
 
     if (errorResponse != null) {
+      // eslint-disable-next-line no-debugger
+      debugger;
       setError(errorResponse);
     } else {
       close();

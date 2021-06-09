@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CloseOutlined } from '@material-ui/icons';
 import {
   IconButton,
@@ -12,6 +12,7 @@ import {
 import PropTypes from 'prop-types';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import FileBase64 from 'react-file-base64';
 import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
 
@@ -60,10 +61,16 @@ const validationSchema = Yup.object({
     .max(500, 'Must be 500 or less')
     .required('Required'),
   deposit: Yup.number().required('Required'),
+  description: Yup.string()
+    .max(1000, 'Must be 1000 characters or less')
+    .min(10, 'Must be 10 characters or more')
+    .required('Required'),
 });
 
 const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
   const classes = useStyles();
+
+  const [mainImage, setMainImage] = useState(null);
 
   return (
     <div>
@@ -84,15 +91,21 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
               name: hotel != null ? hotel.name : '',
               floors: hotel != null ? hotel.numberFloors : '',
               deposit: hotel != null ? hotel.deposit : '',
+              description: hotel != null ? hotel.description : '',
               country: hotel != null ? hotel.location.country : '',
               region: hotel != null ? hotel.location.region : '',
               city: hotel != null ? hotel.location.city : '',
               street: hotel != null ? hotel.location.street : '',
               buildingNumber:
                 hotel != null ? hotel.location.buildingNumber : '',
+              mainImage: hotel != null ? hotel.mainImage : null,
             }}
             validationSchema={validationSchema}
-            onSubmit={submitHandler}
+            onSubmit={(values) => {
+              // eslint-disable-next-line no-param-reassign
+              values.mainImage = mainImage;
+              submitHandler(values);
+            }}
           >
             <Form autoComplete="on">
               <MyTextField
@@ -118,6 +131,16 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
                 name="deposit"
                 type="text"
                 placeholder="100"
+              />
+              <MyTextField
+                required
+                fullWidth
+                multiline
+                rows={3}
+                label="Description"
+                name="description"
+                type="text"
+                placeholder="Some description"
               />
               <MyTextField
                 required
@@ -159,8 +182,20 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
                 type="text"
                 placeholder="14"
               />
+              <FileBase64
+                multiple
+                onDone={(result) => {
+                  // eslint-disable-next-line no-debugger
+                  debugger;
+                  setMainImage(result[0].base64);
+                }}
+              />
+              <Button variant="contained" color="primary" component="span">
+                Upload
+              </Button>
               <Button
                 fullWidth
+                disabled={!mainImage}
                 className={classes.submit}
                 variant="contained"
                 type="submit"
