@@ -17,7 +17,7 @@ import TicketIcon from '@material-ui/icons/ConfirmationNumberOutlined';
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import RoomIcon from '@material-ui/icons/AirlineSeatIndividualSuiteOutlined';
 import PropTypes from 'prop-types';
-import Gallery from '../Gallery';
+// import Gallery from '../Gallery';
 import Hotel from '../../Models/Hotel';
 
 const useStyles = makeStyles((theme) => ({
@@ -96,7 +96,8 @@ const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
         />
         <CardContent className={classes.details}>
           <CardMedia>
-            <Gallery imageUrls={images} />
+            {/* <Gallery imageUrls={images} /> */}
+            <img src={`data:image/jpeg;base64,${images.image}`} alt="hotel" />
           </CardMedia>
 
           <div className={classes.desription}>

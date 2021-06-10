@@ -11,6 +11,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import Hotel from '../Models/Hotel';
+import defaultImage from '../images/default.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,9 +56,12 @@ const HotelCard = ({ hotel, onOpenFullHotel }) => {
     <Card className={classes.root} variant="outlined">
       <CardMedia
         className={classes.media}
-        image="https://source.unsplash.com/random"
+        image={
+          hotel.mainImage
+            ? `data:image/jpeg;base64,${hotel.mainImage.image}`
+            : defaultImage
+        }
       />
-
       <div className={classes.info}>
         <div className={classes.details}>
           <CardHeader title={hotel.name} />

@@ -9,7 +9,9 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
       description: values.description,
-      mainImage: values.mainImage,
+      mainImage: {
+        image: values.mainImage,
+      },
       location: {
         country: values.country,
         region: values.region,

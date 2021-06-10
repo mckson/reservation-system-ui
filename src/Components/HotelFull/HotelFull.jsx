@@ -10,14 +10,7 @@ const HotelFull = () => {
   const [hotel, setHotel] = useState(null);
   const history = useHistory();
 
-  const images = [
-    'https://source.unsplash.com/random',
-    'https://source.unsplash.com/random',
-    'https://source.unsplash.com/random',
-    'https://source.unsplash.com/random',
-    'https://source.unsplash.com/random',
-    'https://source.unsplash.com/random',
-  ];
+  // const image = hotel.mainImage;
 
   const onBackClick = () => history.push('/Hotels');
 
@@ -58,7 +51,7 @@ const HotelFull = () => {
       {hotel != null ? (
         <HotelFullComponent
           hotel={hotel}
-          images={images}
+          images={hotel.mainImage}
           onBackClick={onBackClick}
           onReserveClick={onReserveClick}
         />

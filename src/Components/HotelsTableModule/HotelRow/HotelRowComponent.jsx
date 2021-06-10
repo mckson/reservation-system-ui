@@ -19,6 +19,7 @@ import EditHotelComponent from '../Components/EditHotelComponent';
 import Hotel from '../../../Models/Hotel';
 import HotelRowMap from '../HotelRowMap/HotelRowMap';
 import User from '../../../Models/User';
+import ImagesTable from '../../ImagesTableModule/ImagesTable';
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -63,6 +64,8 @@ const HotelRowComponent = ({
   deleteService,
   updateService,
   updateUser,
+  deleteImage,
+  createImage,
 }) => {
   const classes = useStyles();
 
@@ -70,6 +73,7 @@ const HotelRowComponent = ({
   const [openRooms, setOpenRooms] = useState(false);
   const [openServices, setOpenServices] = useState(false);
   const [openManagers, setOpenManagers] = useState(false);
+  const [openImages, setOpenImages] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
   const handleEditClose = () => {
@@ -103,7 +107,13 @@ const HotelRowComponent = ({
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+        <TableCell
+          style={{
+            paddingBottom: 0,
+            paddingTop: 0,
+          }}
+          colSpan={11}
+        >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
               <div className={classes.subrow}>
@@ -180,6 +190,31 @@ const HotelRowComponent = ({
                 </Collapse>
               </div>
             </Box>
+            <Box>
+              <div className={classes.subrow}>
+                <div className={classes.subrowTitle}>
+                  <IconButton
+                    onClick={() => {
+                      setOpenImages(!openImages);
+                    }}
+                  >
+                    {openImages ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </IconButton>
+                  <Typography variant="h6">Images</Typography>
+                </div>
+                <Collapse in={openImages}>
+                  <ImagesTable
+                    hotel={hotel}
+                    deleteImage={deleteImage}
+                    createImage={createImage}
+                  />
+                </Collapse>
+              </div>
+            </Box>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -205,6 +240,8 @@ HotelRowComponent.propTypes = {
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default HotelRowComponent;

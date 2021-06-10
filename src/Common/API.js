@@ -9,6 +9,7 @@ const hotelUrl = (id) => `/Hotels/${id}`;
 const roomUrl = (id) => `/Rooms/${id}`;
 const serviceUrl = (id) => `/Services/${id}`;
 const userUrl = (id) => `/Users/${id}`;
+const imageUrl = (id) => `/Images/${id}`;
 
 const usersUrl = '/Users';
 
@@ -227,6 +228,32 @@ const updateUser = (user) => {
   });
 };
 
+const createImage = (image) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(imageUrl(''), image)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
+const deleteImage = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(imageUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
 export default {
   axios,
   getUsers,
@@ -242,4 +269,6 @@ export default {
   updateService,
   deleteService,
   updateUser,
+  createImage,
+  deleteImage,
 };

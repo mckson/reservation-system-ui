@@ -23,6 +23,8 @@ const Routes = ({
   updateService,
   deleteService,
   updateUser,
+  createImage,
+  deleteImage,
   loguot,
   submit,
   searchHotels,
@@ -56,6 +58,8 @@ const Routes = ({
       updateService={updateService}
       deleteService={deleteService}
       updateUser={updateUser}
+      createImage={createImage}
+      deleteImage={deleteImage}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -88,6 +92,8 @@ Routes.propTypes = {
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default Routes;

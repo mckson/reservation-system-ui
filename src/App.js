@@ -270,6 +270,52 @@ function App() {
     }
   };
 
+  const handleCreateImage = async (image) => {
+    try {
+      const returnedImage = await API.createImage(image);
+
+      if (returnedImage != null) {
+        await requestHotels(searchParameters);
+      }
+
+      return null;
+    } catch (error) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      if (error.response.data) {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        return error.response.data.message;
+      }
+      // eslint-disable-next-line no-debugger
+      debugger;
+      return error.message;
+    }
+  };
+
+  const handleDeleteImage = async (image) => {
+    try {
+      const returnedImage = await API.deleteImage(image.id);
+
+      if (returnedImage != null) {
+        await requestHotels(searchParameters);
+      }
+
+      return null;
+    } catch (error) {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      if (error.response.data) {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        return error.response.data.message;
+      }
+      // eslint-disable-next-line no-debugger
+      debugger;
+      return error.message;
+    }
+  };
+
   return (
     <Routes
       users={users}
@@ -288,6 +334,8 @@ function App() {
       updateService={handleUpdateService}
       deleteService={handleDeleteService}
       updateUser={handleUpdateUser}
+      createImage={handleCreateImage}
+      deleteImage={handleDeleteImage}
       pageChanged={onPageChanged}
       pageSizeChanged={handlePageSizeChanged}
       loguot={onLogout}

@@ -48,6 +48,8 @@ const HotelsManagementComponent = ({
   updateService,
   deleteService,
   updateUser,
+  createImage,
+  deleteImage,
 }) => {
   const classes = useStyles();
   return (
@@ -82,6 +84,8 @@ const HotelsManagementComponent = ({
           updateService={updateService}
           deleteService={deleteService}
           updateUser={updateUser}
+          createImage={createImage}
+          deleteImage={deleteImage}
         />
       </div>
     </Dialog>
@@ -107,6 +111,8 @@ HotelsManagementComponent.propTypes = {
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default HotelsManagementComponent;

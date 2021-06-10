@@ -21,6 +21,8 @@ const HotelsTable = ({
   updateService,
   deleteService,
   updateUser,
+  createImage,
+  deleteImage,
 }) => {
   return (
     <HotelsTableComponent
@@ -40,6 +42,8 @@ const HotelsTable = ({
       updateService={updateService}
       deleteService={deleteService}
       updateUser={updateUser}
+      createImage={createImage}
+      deleteImage={deleteImage}
     />
   );
 };
@@ -61,6 +65,8 @@ HotelsTable.propTypes = {
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default HotelsTable;

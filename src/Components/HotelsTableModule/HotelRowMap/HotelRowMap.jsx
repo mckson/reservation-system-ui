@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, TableCell } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Hotel from '../../../Models/Hotel';
+import defaultImage from '../../../images/default.png';
 
 const useStyles = makeStyles(() => ({
   smallCell: {
@@ -27,6 +28,17 @@ const HotelRowMap = ({ hotel }) => {
       <TableCell
         className={classes.smallCell}
       >{`${hotel.location.street}, ${hotel.location.buildingNumber}`}</TableCell>
+      <TableCell>
+        <img
+          style={{ width: 100 }}
+          src={
+            hotel.mainImage
+              ? `data:image/jpeg;base64,${hotel.mainImage.image}`
+              : defaultImage
+          }
+          alt="hotel"
+        />
+      </TableCell>
     </>
   );
 };

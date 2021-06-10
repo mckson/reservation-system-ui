@@ -45,6 +45,8 @@ const HotelsTableComponent = ({
   deleteService,
   updateService,
   updateUser,
+  createImage,
+  deleteImage,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -83,6 +85,7 @@ const HotelsTableComponent = ({
             <col width="auto" />
             <col width="auto" />
             <col width="auto" />
+            <col width="auto" />
             <col width="2.5%" />
           </colgroup>
           <TableHead>
@@ -96,6 +99,7 @@ const HotelsTableComponent = ({
               <TableCell>Region</TableCell>
               <TableCell>City</TableCell>
               <TableCell>Street</TableCell>
+              <TableCell>Picture</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -113,6 +117,8 @@ const HotelsTableComponent = ({
                   updateService={updateService}
                   deleteService={deleteService}
                   updateUser={updateUser}
+                  createImage={createImage}
+                  deleteImage={deleteImage}
                   hotel={hotel}
                   key={hotel.id}
                 />
@@ -167,6 +173,8 @@ HotelsTableComponent.propTypes = {
   updateService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default HotelsTableComponent;
