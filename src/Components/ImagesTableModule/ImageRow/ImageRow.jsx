@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, TableRow, TableCell, makeStyles } from '@material-ui/core';
 import { DeleteOutlined } from '@material-ui/icons';
-import Image from '../../../Models/Image';
+import Image from '../../../Models/HotelImage';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -10,10 +10,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
   },
   actions: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  image: {
+    height: 150,
   },
 }));
 
@@ -28,8 +30,12 @@ const ImageRow = ({ image, deleteImage }) => {
     <>
       <TableRow>
         <TableCell>{image.id}</TableCell>
-        <TableCell>
-          <img src={`data:image/jpeg;base64,${image.image}`} alt="Hotel" />
+        <TableCell align="center">
+          <img
+            className={classes.image}
+            src={`data:image/jpeg;base64,${image.image}`}
+            alt="Hotel"
+          />
         </TableCell>
         <TableCell className={classes.actions}>
           <IconButton

@@ -13,13 +13,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HotelSearchComponent = ({ searchHotels }) => {
-  const [searchRequest, setSearchRequest] = useState(null);
+  const [searchRequest, setSearchRequest] = useState('');
   const classes = useStyles();
 
   return (
     <SearchBar
+      variant="outlined"
       value={searchRequest}
       onChange={(request) => setSearchRequest(request)}
+      onCancelSearch={() => searchHotels(null)}
       onRequestSearch={() => searchHotels(searchRequest)}
       className={classes.search}
       placeholder="Search... (name city services)"

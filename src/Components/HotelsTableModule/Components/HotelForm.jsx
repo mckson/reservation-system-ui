@@ -12,7 +12,6 @@ import {
 import PropTypes from 'prop-types';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-// import FileBase64 from 'react-file-base64';
 import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
 

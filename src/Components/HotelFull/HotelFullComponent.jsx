@@ -17,58 +17,73 @@ import TicketIcon from '@material-ui/icons/ConfirmationNumberOutlined';
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import RoomIcon from '@material-ui/icons/AirlineSeatIndividualSuiteOutlined';
 import PropTypes from 'prop-types';
-// import Gallery from '../Gallery';
+import { PhotoCameraOutlined, DescriptionOutlined } from '@material-ui/icons';
+import Gallery from '../Gallery';
 import Hotel from '../../Models/Hotel';
+import Image from '../../Models/HotelImage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1),
+    margin: theme.spacing(0, 5, 3),
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(0, 10, 3),
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: theme.spacing(0, 30, 3),
+    },
+    [theme.breakpoints.up('xl')]: {
+      margin: theme.spacing(0, 60, 3),
+    },
   },
   actionsTop: {
     flexGrow: 1,
-    height: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   details: {
     flexGrow: 10,
     height: 'auto',
   },
+  media: {
+    flexGrow: 3,
+    margin: theme.spacing(0, 0, 5, 0),
+  },
   labeledInfo: {
     display: 'flex',
+    flexDirection: 'column',
     margin: theme.spacing(0, 0, 5, 0),
   },
   label: {
     display: 'flex',
-    alignItems: 'baseline',
+    alignItems: 'center',
   },
   info: {
-    margin: theme.spacing(0, 5),
-  },
-  gallery: {
     margin: theme.spacing(0),
-    backgroundColor: '#d7e4fa',
-    display: 'flex',
-    flexDirection: 'row',
   },
   desription: {
     margin: theme.spacing(5, 0),
-  },
-  image: {
-    flexGrow: 1,
-    display: 'block',
-    height: '300px',
-    width: 'auto',
   },
   room: {
     margin: theme.spacing(0, 0, 3, 0),
     padding: theme.spacing(3),
     borderRadius: theme.spacing(1),
-    border: '1px solid black',
+    border: `1px solid ${theme.palette.grey[300]}`,
+  },
+  gallery: {
+    margin: theme.spacing(2, 0, 2),
   },
 }));
 
-const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
+const HotelFullComponent = ({
+  hotel,
+  onBackClick,
+  onReserveClick,
+  mainImage,
+}) => {
   const classes = useStyles();
 
   return (
@@ -95,13 +110,37 @@ const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
           title={<Typography variant="h4">{hotel.name}</Typography>}
         />
         <CardContent className={classes.details}>
-          <CardMedia>
-            {/* <Gallery imageUrls={images} /> */}
-            <img src={`data:image/jpeg;base64,${images.image}`} alt="hotel" />
+          <CardMedia className={classes.media}>
+            <img
+              style={{ width: '100%' }}
+              src={`data:image/jpeg;base64,${mainImage.image}`}
+              alt="hotel"
+            />
           </CardMedia>
 
-          <div className={classes.desription}>
-            <Typography variant="body2">{hotel.description}</Typography>
+          {hotel?.images ? (
+            <div className={classes.labeledInfo}>
+              <div className={classes.label}>
+                <PhotoCameraOutlined />
+                <Typography variant="h6">Album</Typography>
+              </div>
+
+              <div className={classes.info}>
+                <div className={classes.gallery}>
+                  <Gallery images={hotel.images} />
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <div className={classes.labeledInfo}>
+            <div className={classes.label}>
+              <DescriptionOutlined />
+              <Typography variant="h6">Description</Typography>
+            </div>
+            <div className={classes.info}>
+              <Typography variant="body1">{hotel.description}</Typography>
+            </div>
           </div>
 
           <div className={classes.labeledInfo}>
@@ -111,16 +150,16 @@ const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
             </div>
             <div className={classes.info}>
               <Typography>
-                <b>Country</b> {hotel.location.country}
+                <b>Country:</b> {hotel.location.country}
               </Typography>
               <Typography>
-                <b>Region</b> {hotel.location.region}
+                <b>Region:</b> {hotel.location.region}
               </Typography>
               <Typography>
-                <b>City</b> {hotel.location.city}
+                <b>City:</b> {hotel.location.city}
               </Typography>
               <Typography>
-                <b>Street</b> {hotel.location.street},{' '}
+                <b>Street:</b> {hotel.location.street},{' '}
                 {hotel.location.buildingNumber}
               </Typography>
             </div>
@@ -160,7 +199,7 @@ const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
               </div>
               <div className={classes.info}>
                 {hotel.rooms.map((room) => (
-                  <div className={classes.room}>
+                  <div key={room.id} className={classes.room}>
                     <Typography>
                       <b>Number</b> {room.roomNumber}
                     </Typography>
@@ -186,8 +225,7 @@ const HotelFullComponent = ({ hotel, onBackClick, onReserveClick, images }) => {
 
 HotelFullComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  images: PropTypes.array.isRequired,
+  mainImage: PropTypes.instanceOf(Image).isRequired,
   onBackClick: PropTypes.func.isRequired,
   onReserveClick: PropTypes.func.isRequired,
 };

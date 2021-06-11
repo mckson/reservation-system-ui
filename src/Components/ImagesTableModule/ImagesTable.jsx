@@ -38,10 +38,12 @@ const ImagesTable = ({ hotel, deleteImage, createImage }) => {
   };
 
   return (
-    <>
+    <div>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
+            <col width="2.5%" />
+            <col width="auto" />
             <col width="2.5%" />
           </colgroup>
           <TableHead>
@@ -89,7 +91,7 @@ const ImagesTable = ({ hotel, deleteImage, createImage }) => {
         createImage={createImage}
         hotel={hotel}
       />
-    </>
+    </div>
   );
 };
 

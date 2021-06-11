@@ -88,6 +88,8 @@ const AddImage = ({ open, close, hotel, createImage }) => {
       debugger;
       setError(errorResponse);
     } else {
+      setImage(null);
+      setUploadedFile(null);
       close();
     }
   };
@@ -103,7 +105,14 @@ const AddImage = ({ open, close, hotel, createImage }) => {
             <Typography className={classes.title} variant="h6">
               Add Image
             </Typography>
-            <IconButton className={classes.closeButton} onClick={close}>
+            <IconButton
+              className={classes.closeButton}
+              onClick={() => {
+                setImage(null);
+                setUploadedFile(null);
+                close();
+              }}
+            >
               <CloseOutlined />
             </IconButton>
           </div>
@@ -128,6 +137,7 @@ const AddImage = ({ open, close, hotel, createImage }) => {
                 </Typography>
                 {image ? (
                   <img
+                    height={100}
                     className={classes.image}
                     src={/* `data:image/jpeg;base64, */ `${image}`}
                     alt="Hotel"

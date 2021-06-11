@@ -35,9 +35,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   subrow: {
+    margin: theme.spacing(0, 5),
     display: 'flex',
     flexDirection: 'column',
-    margin: theme.spacing(0, 5),
+    width: 'auto',
+  },
+  table: {
+    margin: theme.spacing(0, 0, 2),
   },
   button: {
     margin: 0,
@@ -206,7 +210,7 @@ const HotelRowComponent = ({
                   </IconButton>
                   <Typography variant="h6">Images</Typography>
                 </div>
-                <Collapse in={openImages}>
+                <Collapse in={openImages} className={classes.table}>
                   <ImagesTable
                     hotel={hotel}
                     deleteImage={deleteImage}

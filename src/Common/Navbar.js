@@ -8,7 +8,7 @@ import AccountSection from '../Components/AccountSection/AccountSection';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 2,
-    margin: theme.spacing(0, 0, 5, 0),
+    margin: theme.spacing(0, 0, 3, 0),
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -34,7 +34,7 @@ const Navbar = ({ loggedUser, onLogoutClick, openHotelsManagement }) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" variant="outlined">
         <Toolbar className={classes.toolbar}>
           <Link href="/Hotels" variant="h6" className={classes.title}>
             Hotel Reservation System

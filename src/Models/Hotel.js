@@ -10,6 +10,7 @@ class Hotel {
     this.managers = obj.managers;
     this.services = obj.services;
     this.mainImage = obj.mainImage;
+    this.images = obj.images;
   }
 }
 

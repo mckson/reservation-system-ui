@@ -1,12 +1,13 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
+import Hotel from './Models/Hotel';
 import User from './Models/User';
 import API from './Common/API';
 import Routes from './Components/RoutesComponent/Routes';
 
 function App() {
-  const [users, setUsers] = useState(null);
-  const [hotels, setHotels] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [hotels, setHotels] = useState([]);
   const [searchParameters, setSearchParameters] = useState(null);
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -19,12 +20,12 @@ function App() {
     console.log(response);
 
     if (response) {
-      setUsers(response);
+      const respondedUsers = response.map((item) => new User(item));
+      setUsers(respondedUsers);
     }
   };
 
   const requestHotels = async (searchRequest) => {
-    console.log(searchRequest);
     const searchClauses = searchRequest?.split(' ');
     const hotelname = searchClauses?.length > 0 ? searchClauses[0] : '';
     const city = searchClauses?.length > 1 ? searchClauses[1] : '';
@@ -39,14 +40,14 @@ function App() {
     );
 
     if (response != null) {
-      setHotels(response.content);
+      const respondedHotels = response.content.map((item) => new Hotel(item));
+
+      setHotels(respondedHotels);
       setTotalResults(response.totalResults);
       setTotalPages(response.totalPages);
       setPageNumber(response.pageNumber);
       setPageSize(response.pageSize);
     }
-    console.log(response);
-    console.log(pageNumber);
   };
 
   const onSearchHotels = (searchRequest) => {
@@ -80,13 +81,8 @@ function App() {
   }, [user]);
 
   const onSubmit = (response) => {
-    console.log('****');
-    console.log(response);
     const userDecoded = parseJwt(response.data.jwtToken);
-
     setUser(new User(userDecoded));
-
-    console.log(userDecoded);
 
     localStorage.setItem('access_token', response.data.jwtToken);
     localStorage.setItem('refresh_token', response.data.refreshToken);
@@ -94,6 +90,7 @@ function App() {
 
   const onLogout = async () => {
     setUser(null);
+
     await API.axios.post('/Account/SignOut', {
       token: localStorage.getItem('refresh_token'),
     });
@@ -114,9 +111,6 @@ function App() {
     const deletedHotel = await API.deleteHotel(id);
 
     if (deletedHotel != null) {
-      // const updatedHotels = hotels.filter((hotel) => hotel.id !== id);
-      // setHotels(updatedHotels);
-      // console.log(deletedHotel);
       await requestHotels(searchParameters);
     }
   };
@@ -124,12 +118,7 @@ function App() {
   const handleUpdateHotel = async (updatedHotel) => {
     const returnedHotel = await API.updateHotel(updatedHotel);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (returnedHotel != null) {
-      // const updatedHotels = hotels.filter(
-      //   (hotel) => hotel.id !== updatedHotel.id
-      // );
       await requestHotels(searchParameters);
     }
   };
@@ -137,8 +126,6 @@ function App() {
   const handleCreateHotel = async (createdHotel) => {
     const returnedHotel = await API.createHotel(createdHotel);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (returnedHotel != null) {
       await requestHotels(searchParameters);
     }
@@ -147,8 +134,6 @@ function App() {
   const handleCreateRoom = async (createdRoom) => {
     const returnedRoom = await API.createRoom(createdRoom);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (returnedRoom != null) {
       await requestHotels(searchParameters); // fix to more effficient way
     }

@@ -71,11 +71,11 @@ const Routes = ({
 };
 
 Routes.propTypes = {
-  users: PropTypes.arrayOf(User).isRequired,
-  loggedUser: PropTypes.instanceOf(User).isRequired,
-  hotels: PropTypes.instanceOf(Hotel).isRequired,
-  totalPages: PropTypes.number.isRequired,
-  totalResults: PropTypes.number.isRequired,
+  users: PropTypes.arrayOf(User),
+  loggedUser: PropTypes.instanceOf(User),
+  hotels: PropTypes.arrayOf(Hotel),
+  totalPages: PropTypes.number,
+  totalResults: PropTypes.number,
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
@@ -94,6 +94,14 @@ Routes.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+};
+
+Routes.defaultProps = {
+  users: null,
+  loggedUser: null,
+  hotels: null,
+  totalPages: 0,
+  totalResults: 0,
 };
 
 export default Routes;
