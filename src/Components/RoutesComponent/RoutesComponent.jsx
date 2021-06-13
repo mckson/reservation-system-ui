@@ -11,7 +11,7 @@ import Hotel from '../../Models/Hotel';
 import Navbar from '../../Common/Navbar';
 import HotelsPage from '../HotelsPage';
 import HotelFull from '../HotelFull/HotelFull';
-import Reservation from '../Reservation';
+// import Reservation from '../Reservation';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import HotelsManagement from '../HotelsManagement/HotelsManagement';
@@ -44,6 +44,11 @@ const RoutesComponent = ({
   isHotelsManagementOpen,
   closeHotelsManagement,
   openHotelsManagement,
+
+  dateIn,
+  dateOut,
+  onDateInChange,
+  onDateOutChange,
 }) => {
   return (
     <Router>
@@ -80,7 +85,11 @@ const RoutesComponent = ({
       ) : null}
       <Switch>
         <Route path="/Hotels/:id">
-          <HotelFull />
+          <HotelFull
+            loggedUser={loggedUser}
+            dateIn={dateIn}
+            dateOut={dateOut}
+          />
         </Route>
         <Route path="/Hotels">
           <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -91,15 +100,19 @@ const RoutesComponent = ({
                 totalResults={totalResults}
                 onPageChanged={pageChanged}
                 searchHotels={searchHotels}
+                dateIn={dateIn}
+                dateOut={dateOut}
+                onDateInChange={onDateInChange}
+                onDateOutChange={onDateOutChange}
               />
             ) : (
               'Loading'
             )}
           </div>
         </Route>
-        <Route path="/Reservation/:hotelId">
+        {/* <Route path="/Reservation/:hotelId">
           <Reservation />
-        </Route>
+        </Route> */}
         <Route path="/SignIn">
           <SignIn onSignIn={submit} />
         </Route>
@@ -139,6 +152,10 @@ RoutesComponent.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+  onDateInChange: PropTypes.func.isRequired,
+  onDateOutChange: PropTypes.func.isRequired,
 };
 
 RoutesComponent.defaultProps = {
@@ -147,6 +164,8 @@ RoutesComponent.defaultProps = {
   hotels: null,
   totalPages: 0,
   totalResults: 0,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default RoutesComponent;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ArrowBackIcon from '@material-ui/icons/ArrowBackOutlined';
 import LocationIcon from '@material-ui/icons/LocationOnOutlined';
 import ServicesIcon from '@material-ui/icons/ShoppingCartOutlined';
@@ -20,7 +20,9 @@ import PropTypes from 'prop-types';
 import { PhotoCameraOutlined, DescriptionOutlined } from '@material-ui/icons';
 import Gallery from '../Gallery';
 import Hotel from '../../Models/Hotel';
-import Image from '../../Models/HotelImage';
+import Default from '../../images/default.png';
+import Reservation from '../Reservation';
+import User from '../../Models/User';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,10 +83,16 @@ const useStyles = makeStyles((theme) => ({
 const HotelFullComponent = ({
   hotel,
   onBackClick,
-  onReserveClick,
-  mainImage,
+  loggedUser,
+  dateIn,
+  dateOut,
 }) => {
   const classes = useStyles();
+  const [isReservation, setIsReservation] = useState(false);
+
+  const handleReservationClose = () => {
+    setIsReservation(false);
+  };
 
   return (
     <>
@@ -98,10 +106,11 @@ const HotelFullComponent = ({
             <ArrowBackIcon />
           </IconButton>
           <Button
-            onClick={onReserveClick}
+            onClick={() => setIsReservation(!isReservation)}
             variant="contained"
             color="primary"
             startIcon={<TicketIcon />}
+            disabled={dateIn == null || dateOut == null}
           >
             Reserve
           </Button>
@@ -113,12 +122,16 @@ const HotelFullComponent = ({
           <CardMedia className={classes.media}>
             <img
               style={{ width: '100%' }}
-              src={`data:image/jpeg;base64,${mainImage.image}`}
+              src={
+                hotel?.mainImage?.image
+                  ? `data:image/jpeg;base64,${hotel.mainImage.image}`
+                  : Default
+              }
               alt="hotel"
             />
           </CardMedia>
 
-          {hotel?.images ? (
+          {hotel?.images && hotel?.images !== [] ? (
             <div className={classes.labeledInfo}>
               <div className={classes.label}>
                 <PhotoCameraOutlined />
@@ -219,15 +232,30 @@ const HotelFullComponent = ({
           ) : null}
         </CardContent>
       </Card>
+      <Reservation
+        open={isReservation}
+        close={handleReservationClose}
+        hotel={hotel}
+        loggedUser={loggedUser}
+        dateIn={dateIn}
+        dateOut={dateOut}
+      />
     </>
   );
 };
 
 HotelFullComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  mainImage: PropTypes.instanceOf(Image).isRequired,
   onBackClick: PropTypes.func.isRequired,
-  onReserveClick: PropTypes.func.isRequired,
+  loggedUser: PropTypes.instanceOf(User),
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+};
+
+HotelFullComponent.defaultProps = {
+  loggedUser: null,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default HotelFullComponent;

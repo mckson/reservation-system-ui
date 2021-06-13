@@ -14,6 +14,8 @@ function App() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(null);
   const [user, setUser] = useState(null);
+  const [dateIn, setDateIn] = useState(null);
+  const [dateOut, setDateOut] = useState(null);
 
   const requestUsers = async () => {
     const response = await API.getUsers();
@@ -101,6 +103,14 @@ function App() {
 
   const onPageChanged = (event, value) => {
     setPageNumber(value);
+  };
+
+  const handleDateInChange = (value) => {
+    setDateIn(value);
+  };
+
+  const handleDateOutChange = (value) => {
+    setDateOut(value);
   };
 
   const handlePageSizeChanged = (newSize) => {
@@ -326,6 +336,10 @@ function App() {
       loguot={onLogout}
       submit={onSubmit}
       searchHotels={onSearchHotels}
+      dateIn={dateIn}
+      dateOut={dateOut}
+      onDateInChange={handleDateInChange}
+      onDateOutChange={handleDateOutChange}
     />
   );
 }
