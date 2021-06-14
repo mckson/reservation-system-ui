@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { CloseOutlined, PhotoCameraOutlined } from '@material-ui/icons';
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  PhotoCameraOutlined,
+} from '@material-ui/icons';
 import {
   IconButton,
   Dialog,
@@ -80,7 +84,11 @@ const HotelForm = ({
   resetError,
 }) => {
   const classes = useStyles();
-  const [mainImage, setMainImage] = useState(null);
+  const [mainImage, setMainImage] = useState(
+    hotel?.mainImage?.image
+      ? `data:image/jpeg;base64,${hotel.mainImage.image}`
+      : null
+  );
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const convertBase64 = (file) => {
@@ -118,7 +126,11 @@ const HotelForm = ({
             <IconButton
               className={classes.closeButton}
               onClick={() => {
-                setMainImage(null);
+                setMainImage(
+                  hotel?.mainImage?.image
+                    ? `data:image/jpeg;base64,${hotel.mainImage.image}`
+                    : null
+                );
                 setUploadedFile(null);
                 close();
               }}
@@ -140,7 +152,7 @@ const HotelForm = ({
               street: hotel != null ? hotel.location.street : '',
               buildingNumber:
                 hotel != null ? hotel.location.buildingNumber : '',
-              mainImage: hotel != null ? hotel.mainImage : null,
+              mainImage: hotel != null ? hotel.mainImage?.image : null,
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
@@ -236,7 +248,9 @@ const HotelForm = ({
                 }}
               >
                 <Typography>
-                  {uploadedFile?.name || 'Upload main picture'}
+                  {mainImage
+                    ? uploadedFile?.name || 'Select new one to change'
+                    : 'Upload main picture'}
                 </Typography>
                 {mainImage ? (
                   <img
@@ -245,13 +259,6 @@ const HotelForm = ({
                     alt="Hotel"
                   />
                 ) : null}
-                {/* {hotel?.mainImage ? (
-                  <img
-                    className={classes.image}
-                    src={`data:image/jpeg;base64,${hotel.mainImage}`}
-                    alt="hotel"
-                  />
-                ) : null} */}
                 <input
                   accept="image/*"
                   style={{ display: 'none' }}
@@ -265,6 +272,13 @@ const HotelForm = ({
                   component="span"
                 >
                   <PhotoCameraOutlined />
+                </IconButton>
+                <IconButton
+                  color="primary"
+                  disabled={!mainImage}
+                  onClick={() => setMainImage(null)}
+                >
+                  <DeleteOutlined />
                 </IconButton>
               </label>
               <Button

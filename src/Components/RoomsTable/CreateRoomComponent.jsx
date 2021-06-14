@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import RoomForm from './RoomForm';
 import Hotel from '../../Models/Hotel';
 
-const CreateRoomComponent = ({ close, open, hotel, createRoom }) => {
-  const onCreateRoom = (values) => {
+const CreateRoomComponent = ({ close, open, hotel, createRoom, onSuccess }) => {
+  const [error, setError] = useState(null);
+
+  const onCreateRoom = async (values) => {
     const createdRoom = {
       hotelId: hotel.id,
       roomNumber: parseInt(values.number, 10),
@@ -12,8 +14,19 @@ const CreateRoomComponent = ({ close, open, hotel, createRoom }) => {
       price: parseFloat(values.price),
       capacity: parseInt(values.capacity, 10),
     };
-    createRoom(createdRoom);
-    close();
+
+    const errorResponse = await createRoom(createdRoom);
+
+    if (errorResponse) {
+      setError(errorResponse);
+    } else {
+      onSuccess('Room sucessfully added');
+      close();
+    }
+  };
+
+  const handleResetError = () => {
+    setError(null);
   };
 
   return (
@@ -24,6 +37,8 @@ const CreateRoomComponent = ({ close, open, hotel, createRoom }) => {
       submitHandler={onCreateRoom}
       title="Room creation"
       submitText="Create room"
+      error={error}
+      resetError={handleResetError}
     />
   );
 };
@@ -33,6 +48,7 @@ CreateRoomComponent.propTypes = {
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   createRoom: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default CreateRoomComponent;

@@ -5,10 +5,12 @@ import {
   Slide,
   Toolbar,
   Typography,
+  Snackbar,
 } from '@material-ui/core';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
+import { Alert } from '@material-ui/lab';
 import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
 import Hotel from '../../Models/Hotel';
 import User from '../../Models/User';
@@ -52,6 +54,33 @@ const HotelsManagementComponent = ({
   deleteImage,
 }) => {
   const classes = useStyles();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleResetError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setError(null);
+  };
+
+  const handleResetSuccess = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSuccess(null);
+  };
+
+  const handleError = (errorMessage) => {
+    setError(errorMessage);
+  };
+
+  const handleSuccess = (successMessage) => {
+    setSuccess(successMessage);
+  };
+
   return (
     <Dialog
       fullScreen
@@ -86,8 +115,28 @@ const HotelsManagementComponent = ({
           updateUser={updateUser}
           createImage={createImage}
           deleteImage={deleteImage}
+          onError={handleError}
+          onSuccess={handleSuccess}
         />
       </div>
+      <Snackbar
+        open={!!error}
+        autoHideDuration={5000}
+        onClose={handleResetError}
+      >
+        <Alert onClose={handleResetError} severity="error" variant="filled">
+          {error}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={!!success}
+        autoHideDuration={5000}
+        onClose={handleResetSuccess}
+      >
+        <Alert onClose={handleResetSuccess} severity="success" variant="filled">
+          {success}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import HotelForm from './HotelForm';
 
-const CreateHotelComponent = ({ open, close, createHotel }) => {
+const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
   const [error, setError] = useState(null);
 
   const onCreateHotel = async (values) => {
@@ -11,9 +11,11 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
       description: values.description,
-      mainImage: {
-        image: values.mainImage,
-      },
+      mainImage: values.mainImage
+        ? {
+            image: values.mainImage,
+          }
+        : null,
       location: {
         country: values.country,
         region: values.region,
@@ -30,6 +32,7 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
     if (errorResponse) {
       setError(errorResponse);
     } else {
+      onSuccess('Hotel added successfully');
       close('Hotel added successfully');
     }
   };
@@ -55,6 +58,7 @@ CreateHotelComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   createHotel: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default CreateHotelComponent;

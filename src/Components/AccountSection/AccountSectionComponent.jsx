@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'uppercase',
     '&:hover': {
       background: 'transparent',
+      textDecoration: 'none',
     },
   },
   icon: {

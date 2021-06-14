@@ -6,17 +6,19 @@ import HotelForm from './HotelForm';
 const EditHotelComponent = ({ open, close, hotel, updateHotel }) => {
   const [error, setError] = useState(null);
 
-  const onUpdateHotel = (values) => {
+  const onUpdateHotel = async (values) => {
     const updatedHotel = {
       id: hotel.id,
       name: values.name,
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
       description: values.description,
-      mainImage: {
-        image: values.mainImage,
-        hotelId: hotel.id,
-      },
+      mainImage: values.mainImage
+        ? {
+            image: values.mainImage,
+            hotelId: hotel.id,
+          }
+        : null,
       location: {
         country: values.country,
         region: values.region,
@@ -25,7 +27,9 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel }) => {
         buildingNumber: parseInt(values.buildingNumber, 10),
       },
     };
-    const errorResponse = updateHotel(updatedHotel);
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const errorResponse = await updateHotel(updatedHotel);
 
     if (errorResponse) {
       setError(errorResponse);

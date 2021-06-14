@@ -59,15 +59,10 @@ const HotelsManagement = ({
   }, [pageSize, pageNumber]);
 
   const handleCreateHotel = async (createdHotel) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const error = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateHotel,
       createdHotel
     );
-
-    // eslint-disable-next-line no-debugger
-    debugger;
 
     if (!error) {
       await requestHotels();
@@ -77,18 +72,118 @@ const HotelsManagement = ({
   };
 
   const handleUpdateHotel = async (updatedHotel) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const error = await ManagementService.baseRequestHandler(
       ManagementService.handleUpdateHotel,
       updatedHotel
     );
 
-    // eslint-disable-next-line no-debugger
-    debugger;
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleDeleteHotel = async (deletedHotelId) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleDeleteHotel,
+      deletedHotelId
+    );
 
     if (!error) {
       await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleCreateRoom = async (createdRoom) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleCreateRoom,
+      createdRoom
+    );
+
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleUpdateRoom = async (updatedRoom) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleUpdateRoom,
+      updatedRoom
+    );
+
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleDeleteRoom = async (deletedRoomId) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleDeleteRoom,
+      deletedRoomId
+    );
+
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleCreateService = async (createdService) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleCreateService,
+      createdService
+    );
+
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleUpdateService = async (updatedService) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleUpdateService,
+      updatedService
+    );
+
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleDeleteService = async (deleteServiceId) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleDeleteService,
+      deleteServiceId
+    );
+
+    if (!error) {
+      await requestHotels();
+    }
+
+    return error;
+  };
+
+  const handleUpdateUser = async (updatedUser) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleUpdateUser,
+      updatedUser
+    );
+
+    if (!error) {
+      await requestHotels();
+      // await refreshUSers()
     }
 
     return error;
@@ -106,14 +201,14 @@ const HotelsManagement = ({
       pageSize={pageSize}
       createHotel={handleCreateHotel}
       updateHotel={handleUpdateHotel}
-      deleteHotel={ManagementService.handleDeleteHotel}
-      createRoom={ManagementService.handleCreateRoom}
-      updateRoom={ManagementService.handleUpdateRoom}
-      deleteRoom={ManagementService.handleDeleteRoom}
-      createService={ManagementService.handleCreateService}
-      updateService={ManagementService.handleUpdateService}
-      deleteService={ManagementService.handleDeleteService}
-      updateUser={ManagementService.handleUpdateUser}
+      deleteHotel={handleDeleteHotel}
+      createRoom={handleCreateRoom}
+      updateRoom={handleUpdateRoom}
+      deleteRoom={handleDeleteRoom}
+      createService={handleCreateService}
+      updateService={handleUpdateService}
+      deleteService={handleDeleteService}
+      updateUser={handleUpdateUser}
       createImage={ManagementService.handleCreateImage}
       deleteImage={ManagementService.handleDeleteImage}
     />

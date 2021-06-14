@@ -70,6 +70,8 @@ const HotelRowComponent = ({
   updateUser,
   deleteImage,
   createImage,
+  onError,
+  onSuccess,
 }) => {
   const classes = useStyles();
 
@@ -103,8 +105,14 @@ const HotelRowComponent = ({
           </IconButton>
           <IconButton
             className={classes.button}
-            onClick={() => {
-              deleteHotel(hotel.id);
+            onClick={async () => {
+              const errorResponse = await deleteHotel(hotel.id);
+
+              if (errorResponse) {
+                onError(errorResponse);
+              } else {
+                onSuccess('Hotel successfully deleted');
+              }
             }}
           >
             <DeleteOutlined />
@@ -143,6 +151,8 @@ const HotelRowComponent = ({
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
                     hotel={hotel}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
@@ -166,6 +176,8 @@ const HotelRowComponent = ({
                     updateService={updateService}
                     deleteService={deleteService}
                     hotel={hotel}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
@@ -191,6 +203,8 @@ const HotelRowComponent = ({
                     hotel={hotel}
                     users={users}
                     updateUser={updateUser}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
@@ -247,6 +261,8 @@ HotelRowComponent.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default HotelRowComponent;

@@ -23,6 +23,8 @@ const HotelsTable = ({
   updateUser,
   createImage,
   deleteImage,
+  onError,
+  onSuccess,
 }) => {
   return (
     <HotelsTableComponent
@@ -44,6 +46,8 @@ const HotelsTable = ({
       updateUser={updateUser}
       createImage={createImage}
       deleteImage={deleteImage}
+      onError={onError}
+      onSuccess={onSuccess}
     />
   );
 };
@@ -67,6 +71,8 @@ HotelsTable.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default HotelsTable;

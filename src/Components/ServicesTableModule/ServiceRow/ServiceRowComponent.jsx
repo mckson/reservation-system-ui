@@ -22,7 +22,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ServiceRow = ({ service, deleteService, hotel, updateService }) => {
+const ServiceRow = ({
+  service,
+  deleteService,
+  hotel,
+  updateService,
+  onError,
+  onSuccess,
+}) => {
   const classes = useStyles();
 
   const [isEdit, setIsEdit] = useState(false);
@@ -44,7 +51,15 @@ const ServiceRow = ({ service, deleteService, hotel, updateService }) => {
           </IconButton>
           <IconButton
             className={classes.button}
-            onClick={() => deleteService(service.id)}
+            onClick={async () => {
+              const errorResponse = await deleteService(service.id);
+
+              if (errorResponse) {
+                onError(errorResponse);
+              } else {
+                onSuccess('Service successfully deleted');
+              }
+            }}
           >
             <DeleteOutlined />
           </IconButton>
@@ -56,6 +71,7 @@ const ServiceRow = ({ service, deleteService, hotel, updateService }) => {
         open={isEdit}
         close={handleEditClose}
         updateService={updateService}
+        onSuccess={onSuccess}
       />
     </>
   );
@@ -66,6 +82,8 @@ ServiceRow.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   deleteService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 export default ServiceRow;

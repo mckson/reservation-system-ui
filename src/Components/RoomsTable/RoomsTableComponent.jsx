@@ -10,7 +10,6 @@ import {
   TablePagination,
   TableContainer,
   Button,
-  Typography,
   Paper,
   IconButton,
   makeStyles,
@@ -22,16 +21,45 @@ import Room from '../../Models/Room';
 import CreateRoomComponent from './CreateRoomComponent';
 import EditRoomComponent from './EditRoomComponent';
 
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: 0,
+    color: theme.palette.primary.main,
+    height: 40,
+  },
+  addButton: {
+    margin: theme.spacing(1),
+    border: 0,
+    borderRadius: '15px',
+    height: 40,
+    width: 150,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 'auto',
+  },
+}));
+
 const RoomsTableComponent = ({
   rooms,
   createRoom,
   updateRoom,
   deleteRoom,
   hotel,
+  onSuccess,
+  onError,
 }) => {
   const [isAdd, setIsAdd] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
+
+  const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -80,6 +108,8 @@ const RoomsTableComponent = ({
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
                     hotel={hotel}
+                    onError={onError}
+                    onSuccess={onSuccess}
                   />
                 ))
             ) : (
@@ -87,9 +117,13 @@ const RoomsTableComponent = ({
             )}
           </TableBody>
           <TableFooter>
-            <Button color="primary" onClick={() => setIsAdd(!isAdd)}>
-              <AddIcon />
-              <Typography>Add new room</Typography>
+            <Button
+              color="primary"
+              className={classes.addButton}
+              onClick={() => setIsAdd(!isAdd)}
+              startIcon={<AddIcon />}
+            >
+              Add new room
             </Button>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
@@ -107,6 +141,7 @@ const RoomsTableComponent = ({
         close={handleAddClose}
         createRoom={createRoom}
         hotel={hotel}
+        onSuccess={onSuccess}
       />
     </>
   );
@@ -120,23 +155,18 @@ RoomsTableComponent.propTypes = {
   deleteRoom: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: 0,
-    color: theme.palette.primary.main,
-  },
-  actions: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 'auto',
-  },
-}));
-
-const RoomRow = ({ room, hotel, updateRoom, deleteRoom }) => {
+const RoomRow = ({
+  room,
+  hotel,
+  updateRoom,
+  deleteRoom,
+  onError,
+  onSuccess,
+}) => {
   const classes = useStyles();
 
   const [isEdit, setIsEdit] = useState(false);
@@ -158,7 +188,15 @@ const RoomRow = ({ room, hotel, updateRoom, deleteRoom }) => {
           </IconButton>
           <IconButton
             className={classes.button}
-            onClick={() => deleteRoom(room.id)}
+            onClick={async () => {
+              const errorResponse = await deleteRoom(room.id);
+
+              if (errorResponse) {
+                onError(errorResponse);
+              } else {
+                onSuccess('Room successfully deleted');
+              }
+            }}
           >
             <DeleteOutlined />
           </IconButton>
@@ -170,6 +208,7 @@ const RoomRow = ({ room, hotel, updateRoom, deleteRoom }) => {
         close={handleEditClose}
         hotel={hotel}
         updateRoom={updateRoom}
+        onSuccess={onSuccess}
       />
     </>
   );
@@ -180,6 +219,8 @@ RoomRow.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   updateRoom: PropTypes.func.isRequired,
   deleteRoom: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 const RoomRowMap = ({ room }) => {

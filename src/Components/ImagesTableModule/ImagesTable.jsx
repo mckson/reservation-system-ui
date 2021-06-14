@@ -11,17 +11,32 @@ import {
   TableFooter,
   Button,
   TablePagination,
-  Typography,
+  makeStyles,
 } from '@material-ui/core';
 import { AddOutlined } from '@material-ui/icons';
 import ImageRow from './ImageRow/ImageRow';
 import AddImage from './ManageImage/AddImage';
 import Hotel from '../../Models/Hotel';
 
+const useStyles = makeStyles((theme) => ({
+  addButton: {
+    margin: theme.spacing(1),
+    border: 0,
+    borderRadius: '15px',
+    height: 40,
+    width: 150,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+}));
+
 const ImagesTable = ({ hotel, deleteImage, createImage }) => {
   const [isCreate, setIsCreate] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
+
+  const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -67,12 +82,13 @@ const ImagesTable = ({ hotel, deleteImage, createImage }) => {
           <TableFooter>
             <Button
               color="primary"
+              className={classes.addButton}
               onClick={() => {
                 setIsCreate(!isCreate);
               }}
+              startIcon={<AddOutlined />}
             >
-              <AddOutlined />
-              <Typography>Add image</Typography>
+              Add image
             </Button>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

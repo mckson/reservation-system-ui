@@ -4,7 +4,14 @@ import Hotel from '../../Models/Hotel';
 import Room from '../../Models/Room';
 import RoomForm from './RoomForm';
 
-const EditRoomComponent = ({ open, close, room, hotel, updateRoom }) => {
+const EditRoomComponent = ({
+  open,
+  close,
+  room,
+  hotel,
+  updateRoom,
+  onSuccess,
+}) => {
   const [error, setError] = useState(null);
 
   const onUpdateRoom = async (values) => {
@@ -21,6 +28,7 @@ const EditRoomComponent = ({ open, close, room, hotel, updateRoom }) => {
     if (errorResponse != null) {
       setError(errorResponse);
     } else {
+      onSuccess('Room sucessfully updated');
       close();
     }
   };
@@ -49,6 +57,7 @@ EditRoomComponent.propTypes = {
   room: PropTypes.instanceOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   updateRoom: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default EditRoomComponent;
