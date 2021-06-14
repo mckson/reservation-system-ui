@@ -113,203 +113,9 @@ function App() {
     setDateOut(value);
   };
 
-  const handlePageSizeChanged = (newSize) => {
-    setPageSize(newSize);
-  };
-
-  const handleDeleteHotel = async (id) => {
-    const deletedHotel = await API.deleteHotel(id);
-
-    if (deletedHotel != null) {
-      await requestHotels(searchParameters);
-    }
-  };
-
-  const handleUpdateHotel = async (updatedHotel) => {
-    const returnedHotel = await API.updateHotel(updatedHotel);
-
-    if (returnedHotel != null) {
-      await requestHotels(searchParameters);
-    }
-  };
-
-  const handleCreateHotel = async (createdHotel) => {
-    const returnedHotel = await API.createHotel(createdHotel);
-
-    if (returnedHotel != null) {
-      await requestHotels(searchParameters);
-    }
-  };
-
-  const handleCreateRoom = async (createdRoom) => {
-    const returnedRoom = await API.createRoom(createdRoom);
-
-    if (returnedRoom != null) {
-      await requestHotels(searchParameters); // fix to more effficient way
-    }
-  };
-
-  const handleUpdateRoom = async (updatedRoom) => {
-    try {
-      const returnedRoom = await API.updateRoom(updatedRoom);
-
-      if (returnedRoom != null) {
-        await requestHotels(searchParameters);
-      }
-
-      return null;
-    } catch (error) {
-      if (error.response.data) {
-        return error.response.data.message;
-      }
-      return error.message;
-    }
-  };
-
-  const handleDeleteRoom = async (id) => {
-    try {
-      const returnedRoom = await API.deleteRoom(id);
-      if (returnedRoom != null) {
-        await requestHotels(searchParameters);
-      }
-
-      return null;
-    } catch (error) {
-      if (error.response.data) {
-        return error.response.data.message;
-      }
-      return error.message;
-    }
-  };
-
-  // returns error message
-  const handleCreateService = async (createdService) => {
-    try {
-      const returnedService = await API.createService(createdService);
-
-      if (returnedService != null) {
-        await requestHotels(searchParameters);
-      }
-
-      return null;
-    } catch (error) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-      if (error.response.data) {
-        // eslint-disable-next-line no-debugger
-        debugger;
-        return error.response.data.message;
-      }
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return error.message;
-    }
-  };
-
-  const handleUpdateService = async (updatedService) => {
-    try {
-      const returnedService = await API.updateService(updatedService);
-
-      if (returnedService != null) {
-        await requestHotels(searchParameters);
-      }
-
-      return null;
-    } catch (error) {
-      if (error.response.data) {
-        return error.response.data.message;
-      }
-      return error.message;
-    }
-  };
-
-  const handleDeleteService = async (id) => {
-    try {
-      const returnedService = await API.deleteService(id);
-      if (returnedService != null) {
-        await requestHotels(searchParameters);
-      }
-
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return null;
-    } catch (error) {
-      if (error.response.data) {
-        return error.response.data.message;
-      }
-      return error.message;
-    }
-  };
-
-  const handleUpdateUser = async (updatedUser) => {
-    try {
-      // eslint-disable-next-line no-debugger
-      debugger;
-      const returnedUser = await API.updateUser(updatedUser);
-
-      // eslint-disable-next-line no-debugger
-      debugger;
-      if (returnedUser != null) {
-        await requestUsers();
-        await requestHotels();
-      }
-
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return null;
-    } catch (error) {
-      if (error.response.data) {
-        return error.response.data.message;
-      }
-      return error.message;
-    }
-  };
-
-  const handleCreateImage = async (image) => {
-    try {
-      const returnedImage = await API.createImage(image);
-
-      if (returnedImage != null) {
-        await requestHotels(searchParameters);
-      }
-
-      return null;
-    } catch (error) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-      if (error.response.data) {
-        // eslint-disable-next-line no-debugger
-        debugger;
-        return error.response.data.message;
-      }
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return error.message;
-    }
-  };
-
-  const handleDeleteImage = async (image) => {
-    try {
-      const returnedImage = await API.deleteImage(image.id);
-
-      if (returnedImage != null) {
-        await requestHotels(searchParameters);
-      }
-
-      return null;
-    } catch (error) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-      if (error.response.data) {
-        // eslint-disable-next-line no-debugger
-        debugger;
-        return error.response.data.message;
-      }
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return error.message;
-    }
-  };
+  // const handlePageSizeChanged = (newSize) => {
+  //   setPageSize(newSize);
+  // };
 
   return (
     <Routes
@@ -318,21 +124,21 @@ function App() {
       hotels={hotels}
       totalPages={totalPages}
       totalResults={totalResults}
-      pageSize={pageSize}
-      deleteHotel={handleDeleteHotel}
-      updateHotel={handleUpdateHotel}
-      createHotel={handleCreateHotel}
-      createRoom={handleCreateRoom}
-      updateRoom={handleUpdateRoom}
-      deleteRoom={handleDeleteRoom}
-      createService={handleCreateService}
-      updateService={handleUpdateService}
-      deleteService={handleDeleteService}
-      updateUser={handleUpdateUser}
-      createImage={handleCreateImage}
-      deleteImage={handleDeleteImage}
+      // pageSize={pageSize}
+      // deleteHotel={handleDeleteHotel}
+      // updateHotel={handleUpdateHotel}
+      // createHotel={handleCreateHotel}
+      // createRoom={handleCreateRoom}
+      // updateRoom={handleUpdateRoom}
+      // deleteRoom={handleDeleteRoom}
+      // createService={handleCreateService}
+      // updateService={handleUpdateService}
+      // deleteService={handleDeleteService}
+      // updateUser={handleUpdateUser}
+      // createImage={handleCreateImage}
+      // deleteImage={handleDeleteImage}
       pageChanged={onPageChanged}
-      pageSizeChanged={handlePageSizeChanged}
+      // pageSizeChanged={handlePageSizeChanged}
       loguot={onLogout}
       submit={onSubmit}
       searchHotels={onSearchHotels}

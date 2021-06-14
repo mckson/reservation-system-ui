@@ -87,7 +87,7 @@ const AccountSectionComponent = ({
               <ListItemText primary="View orders" />
             </MenuItem> */}
 
-            {loggedUser.roles.includes(AdminRole) ? (
+            {loggedUser?.roles.includes(AdminRole) ? (
               <>
                 <MenuItem
                   onClick={() => {

@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Form, Formik } from 'formik';
+import { Alert } from '@material-ui/lab';
 import * as Yup from 'yup';
 import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
@@ -69,7 +70,15 @@ const validationSchema = Yup.object({
     .required('Required'),
 });
 
-const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
+const HotelForm = ({
+  open,
+  close,
+  hotel,
+  submitHandler,
+  title,
+  error,
+  resetError,
+}) => {
   const classes = useStyles();
   const [mainImage, setMainImage] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -85,8 +94,8 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
         resolve(fileReader.result);
       };
 
-      fileReader.onerror = (error) => {
-        reject(error);
+      fileReader.onerror = (err) => {
+        reject(err);
       };
     });
   };
@@ -270,17 +279,44 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
             </Form>
           </Formik>
         </DialogContent>
+        {error != null ? (
+          <Alert
+            fullWidth
+            variant="outlined"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  resetError();
+                }}
+              >
+                <CloseOutlined fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
       </Dialog>
     </div>
   );
 };
 
-EditHotelComponent.propTypes = {
+HotelForm.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   submitHandler: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  resetError: PropTypes.func.isRequired,
 };
 
-export default EditHotelComponent;
+HotelForm.defaultProps = {
+  error: null,
+};
+
+export default HotelForm;

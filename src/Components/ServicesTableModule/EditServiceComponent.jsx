@@ -36,6 +36,7 @@ const EditServiceComponent = ({
   const handleResetError = () => {
     setError(null);
   };
+
   return (
     <ServiceForm
       open={open}

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Hotel from '../../../Models/Hotel';
 import HotelForm from './HotelForm';
 
 const EditHotelComponent = ({ open, close, hotel, updateHotel }) => {
+  const [error, setError] = useState(null);
+
   const onUpdateHotel = (values) => {
     const updatedHotel = {
       id: hotel.id,
@@ -23,8 +25,17 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel }) => {
         buildingNumber: parseInt(values.buildingNumber, 10),
       },
     };
-    updateHotel(updatedHotel);
-    close();
+    const errorResponse = updateHotel(updatedHotel);
+
+    if (errorResponse) {
+      setError(errorResponse);
+    } else {
+      close('Hotel updated successfully');
+    }
+  };
+
+  const handleResetError = () => {
+    setError(null);
   };
 
   return (
@@ -34,6 +45,8 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel }) => {
       hotel={hotel}
       submitHandler={onUpdateHotel}
       title={`Edit hotel with id ${hotel.id}`}
+      error={error}
+      resetError={handleResetError}
     />
   );
 };

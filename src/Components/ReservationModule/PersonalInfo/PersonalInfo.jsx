@@ -1,15 +1,34 @@
-import React from 'react';
+/* eslint-disable no-nested-ternary */
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import PersonalInfoComponent from './PersonalInfoComponent';
 import User from '../../../Models/User';
 
 const PersonalInfo = ({ onSetCustomer, loggedUser }) => {
+  const [customer, setCustomer] = useState(null);
+
   const initialValues = {
-    firstName: loggedUser != null ? loggedUser.firstName : '',
-    lastName: loggedUser != null ? loggedUser.lastName : '',
-    email: loggedUser != null ? loggedUser.email : '',
-    confirmEmail: loggedUser != null ? loggedUser.email : '',
+    firstName: customer
+      ? customer.firstName
+      : loggedUser
+      ? loggedUser.firstName
+      : '',
+    lastName: customer
+      ? customer.lastName
+      : loggedUser != null
+      ? loggedUser.lastName
+      : '',
+    email: customer
+      ? customer.email
+      : loggedUser != null
+      ? loggedUser.email
+      : '',
+    confirmEmail: customer
+      ? customer.email
+      : loggedUser != null
+      ? loggedUser.email
+      : '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -27,12 +46,13 @@ const PersonalInfo = ({ onSetCustomer, loggedUser }) => {
   });
 
   const handleSetCustomer = (values) => {
-    const customer = {
+    const customerToSet = {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
     };
-    onSetCustomer(customer);
+    setCustomer(customerToSet);
+    onSetCustomer(customerToSet);
   };
 
   return (

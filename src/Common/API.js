@@ -15,9 +15,11 @@ const reservationUrl = (id) => `/Reservations/${id}`;
 const usersUrl = '/Users';
 
 const hotelsUrl = (pageNumber, pageSize, name, city, services) =>
-  `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${name}&city=${city}${services
-    .map((service) => `&services=${service}`)
-    .join('')}`;
+  `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${
+    name || ''
+  }&city=${city || ''}${
+    services ? services.map((service) => `&services=${service}`).join('') : ''
+  }`;
 
 axios.defaults.baseURL = baseURL;
 
@@ -103,6 +105,8 @@ const deleteHotel = (id) => {
 
 const updateHotel = (hotel) => {
   return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     axios
       .put(hotelUrl(hotel.id), hotel)
       .then((response) => resolve(response.data))

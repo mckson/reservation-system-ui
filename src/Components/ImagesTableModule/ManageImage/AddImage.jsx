@@ -145,6 +145,7 @@ const AddImage = ({ open, close, hotel, createImage }) => {
                 ) : null}
                 <input
                   accept="image/*"
+                  dra
                   style={{ display: 'none' }}
                   onChange={(e) => uploadImage(e)}
                   id="icon-button-file"

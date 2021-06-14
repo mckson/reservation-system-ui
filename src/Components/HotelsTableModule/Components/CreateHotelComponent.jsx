@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import HotelForm from './HotelForm';
 
 const CreateHotelComponent = ({ open, close, createHotel }) => {
-  const onCreateHotel = (values) => {
+  const [error, setError] = useState(null);
+
+  const onCreateHotel = async (values) => {
     const createdHotel = {
       name: values.name,
       numberFloors: parseInt(values.floors, 10),
@@ -23,8 +25,17 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
 
     // eslint-disable-next-line no-debugger
     debugger;
-    createHotel(createdHotel);
-    close();
+    const errorResponse = await createHotel(createdHotel);
+
+    if (errorResponse) {
+      setError(errorResponse);
+    } else {
+      close('Hotel added successfully');
+    }
+  };
+
+  const handleResetError = () => {
+    setError(null);
   };
 
   return (
@@ -34,6 +45,8 @@ const CreateHotelComponent = ({ open, close, createHotel }) => {
       hotel={null}
       submitHandler={onCreateHotel}
       title="Hotel creation"
+      error={error}
+      resetError={handleResetError}
     />
   );
 };

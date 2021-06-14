@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core';
 import { CloseOutlined } from '@material-ui/icons';
 import React, { useState } from 'react';
-import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
 import Hotel from '../Models/Hotel';
 import RoomSelectionComponent from './ReservationModule/RoomSelection/RoomSelectionComponent';
@@ -24,6 +23,7 @@ import ReservationRequest from '../Models/ReservationRequest';
 import CompleteOrder from './ReservationModule/CompleteOrder/CompleteOrder';
 import API from '../Common/API';
 import SmallHotelCard from './SmallHotelCard';
+import DetailsComponent from './ReservationModule/Details/DetailsComponent';
 
 const getSteps = () => [
   'Select room and services',
@@ -130,7 +130,7 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
   const classes = useStyles();
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-  const [customerInfo, setCustomerInfo] = useState({});
+  const [customerInfo, setCustomerInfo] = useState(null);
 
   const handleReservationComplete = async () => {
     const reservation = new ReservationRequest({
@@ -170,7 +170,7 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => ({
       step: prevActiveStep.step - 1,
-      isNextAvailable: false,
+      isNextAvailable: true,
     }));
   };
 
@@ -178,11 +178,11 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
   //   setActiveStep(0);
   // };
 
-  const handleRoomChange = (room) => {
-    setSelectedRooms(room);
+  const handleRoomsChange = (rooms) => {
+    setSelectedRooms(rooms);
     setActiveStep((previosActiveStep) => ({
       step: previosActiveStep.step,
-      isNextAvailable: !!room, // ? true : false
+      isNextAvailable: rooms && rooms.length !== 0, // ? true : false
     }));
   };
 
@@ -238,23 +238,18 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
                 ))}
               </Stepper>
             </Grid>
-            <Grid container item xs={11} justify="center">
-              <Grid item xs={3}>
-                <Typography variant="h6">Details</Typography>
-                {selectedRooms.map((room) => (
-                  <div key={room.id}>Room {room.roomNumber}</div>
-                ))}
-
-                {selectedServices.map((service) => (
-                  <div key={service.id}>Service {service.name}</div>
-                ))}
-                {customerInfo ? (
-                  <div>
-                    {customerInfo.firstName} {customerInfo.lastName}
-                  </div>
-                ) : null}
+            <Grid container item xs={12} spacing={1} justify="center">
+              <Grid item sm={12} xs={12} md={5}>
+                <DetailsComponent
+                  dateIn={dateIn}
+                  dateOut={dateOut}
+                  selectedRooms={selectedRooms}
+                  selectedServices={selectedServices}
+                  customerInfo={customerInfo}
+                  deposit={hotel.deposit}
+                />
               </Grid>
-              <Grid container item xs={8}>
+              <Grid container item sm={12} md={7}>
                 {activeStep.step === steps.length ? (
                   <Grid item xs={12}>
                     <Typography className={classes.instructions}>
@@ -263,12 +258,12 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
                     <Button>Back</Button>
                   </Grid>
                 ) : (
-                  <Grid container item xs={12} spacing={2}>
+                  <Grid container item xs={12} spacing={1}>
                     {getStepContent(
                       activeStep.step,
                       hotel,
                       loggedUser,
-                      handleRoomChange,
+                      handleRoomsChange,
                       handleServicesChange,
                       handleCustomerChange,
                       handleSubmitOrderChange
@@ -300,11 +295,6 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
                 )}
               </Grid>
             </Grid>
-            <div className="form">
-              <Formik>
-                <Form />
-              </Formik>
-            </div>
           </Grid>
         ) : (
           <CircularProgress />
@@ -315,12 +305,18 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
 };
 
 Reservation.propTypes = {
-  loggedUser: PropTypes.instanceOf(User).isRequired,
+  loggedUser: PropTypes.instanceOf(User),
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  dateIn: PropTypes.string.isRequired,
-  dateOut: PropTypes.string.isRequired,
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+};
+
+Reservation.defaultProps = {
+  loggedUser: null,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default Reservation;

@@ -80,8 +80,9 @@ const HotelRowComponent = ({
   const [openImages, setOpenImages] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const handleEditClose = () => {
+  const handleEditClose = (message) => {
     setIsEdit(!isEdit);
+    console.log(message);
   };
 
   return (

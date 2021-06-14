@@ -13,8 +13,11 @@ import {
   TableFooter,
   TablePagination,
   Button,
+  // Portal,
+  // Snackbar,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+// import MuiAlert from '@material-ui/lab/Alert';
 import Hotel from '../../../Models/Hotel';
 import CreateHotelComponent from '../Components/CreateHotelComponent';
 import HotelRow from '../HotelRow/HotelRow';
@@ -55,20 +58,24 @@ const HotelsTableComponent = ({
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    pageChanged(event, newPage + 1);
+    pageChanged(newPage + 1);
   };
 
   const handleChangePageSize = (event) => {
     const newSize = parseInt(event.target.value, 10);
 
+    // change request parameters
     pageSizeChanged(newSize);
+    pageChanged(1);
 
-    setPage(1);
+    // change table parameters
+    setPage(0);
     setRowPerPage(newSize);
   };
 
-  const handleAddClose = () => {
+  const handleAddClose = (message) => {
     setIsAdd(!isAdd);
+    console.log(message);
   };
 
   return (
@@ -152,6 +159,11 @@ const HotelsTableComponent = ({
         close={handleAddClose}
         createHotel={createHotel}
       />
+      {/* <Portal>
+        <Snackbar open>
+          <MuiAlert elevation={6} variant="filled" severity="success" />;
+        </Snackbar>
+      </Portal> */}
     </>
   );
 };

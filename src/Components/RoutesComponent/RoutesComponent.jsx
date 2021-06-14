@@ -24,23 +24,23 @@ const RoutesComponent = ({
   totalPages,
   totalResults,
   pageChanged,
-  pageSizeChanged,
+  // pageSizeChanged,
   loguot,
   submit,
-  deleteHotel,
-  updateHotel,
-  createHotel,
-  createRoom,
-  updateRoom,
-  deleteRoom,
-  createService,
-  updateService,
-  deleteService,
-  updateUser,
-  createImage,
-  deleteImage,
+  // deleteHotel,
+  // updateHotel,
+  // createHotel,
+  // createRoom,
+  // updateRoom,
+  // deleteRoom,
+  // createService,
+  // updateService,
+  // deleteService,
+  // updateUser,
+  // createImage,
+  // deleteImage,
   searchHotels,
-  pageSize,
+  // pageSize,
   isHotelsManagementOpen,
   closeHotelsManagement,
   openHotelsManagement,
@@ -58,29 +58,29 @@ const RoutesComponent = ({
         openHotelsManagement={openHotelsManagement}
       />
       {loggedUser &&
-      (loggedUser.roles.includes(Constants.adminRole) ||
-        loggedUser.roles.includes(Constants.managerRole)) ? (
+      (loggedUser?.roles.includes(Constants.adminRole) ||
+        loggedUser?.roles.includes(Constants.managerRole)) ? (
         <HotelsManagement
           users={users}
           isOpen={isHotelsManagementOpen}
           close={closeHotelsManagement}
-          totalCount={totalResults}
-          hotels={hotels}
-          pageChanged={pageChanged}
-          pageSize={pageSize}
-          pageSizeChanged={pageSizeChanged}
-          deleteHotel={deleteHotel}
-          updateHotel={updateHotel}
-          createHotel={createHotel}
-          createRoom={createRoom}
-          updateRoom={updateRoom}
-          deleteRoom={deleteRoom}
-          createService={createService}
-          updateService={updateService}
-          deleteService={deleteService}
-          updateUser={updateUser}
-          createImage={createImage}
-          deleteImage={deleteImage}
+          // totalCount={totalResults}
+          // hotels={hotels}
+          // pageChanged={pageChanged}
+          // pageSize={pageSize}
+          // pageSizeChanged={pageSizeChanged}
+          // deleteHotel={deleteHotel}
+          // updateHotel={updateHotel}
+          // createHotel={createHotel}
+          // createRoom={createRoom}
+          // updateRoom={updateRoom}
+          // deleteRoom={deleteRoom}
+          // createService={createService}
+          // updateService={updateService}
+          // deleteService={deleteService}
+          // updateUser={updateUser}
+          // createImage={createImage}
+          // deleteImage={deleteImage}
         />
       ) : null}
       <Switch>
@@ -131,27 +131,27 @@ RoutesComponent.propTypes = {
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
   totalResults: PropTypes.number,
-  pageSize: PropTypes.number.isRequired,
+  // pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
-  pageSizeChanged: PropTypes.func.isRequired,
+  // pageSizeChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
   isHotelsManagementOpen: PropTypes.bool.isRequired,
   closeHotelsManagement: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
-  deleteHotel: PropTypes.func.isRequired,
-  updateHotel: PropTypes.func.isRequired,
-  createHotel: PropTypes.func.isRequired,
-  createRoom: PropTypes.func.isRequired,
-  updateRoom: PropTypes.func.isRequired,
-  deleteRoom: PropTypes.func.isRequired,
-  createService: PropTypes.func.isRequired,
-  updateService: PropTypes.func.isRequired,
-  deleteService: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired,
-  createImage: PropTypes.func.isRequired,
-  deleteImage: PropTypes.func.isRequired,
+  // deleteHotel: PropTypes.func.isRequired,
+  // updateHotel: PropTypes.func.isRequired,
+  // createHotel: PropTypes.func.isRequired,
+  // createRoom: PropTypes.func.isRequired,
+  // updateRoom: PropTypes.func.isRequired,
+  // deleteRoom: PropTypes.func.isRequired,
+  // createService: PropTypes.func.isRequired,
+  // updateService: PropTypes.func.isRequired,
+  // deleteService: PropTypes.func.isRequired,
+  // updateUser: PropTypes.func.isRequired,
+  // createImage: PropTypes.func.isRequired,
+  // deleteImage: PropTypes.func.isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,
@@ -159,7 +159,7 @@ RoutesComponent.propTypes = {
 };
 
 RoutesComponent.defaultProps = {
-  users: null,
+  users: [],
   loggedUser: null,
   hotels: null,
   totalPages: 0,

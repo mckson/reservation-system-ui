@@ -10,21 +10,21 @@ const Routes = ({
   hotels,
   totalPages,
   totalResults,
-  pageSize,
+  // pageSize,
   pageChanged,
-  pageSizeChanged,
-  deleteHotel,
-  updateHotel,
-  createHotel,
-  createRoom,
-  updateRoom,
-  deleteRoom,
-  createService,
-  updateService,
-  deleteService,
-  updateUser,
-  createImage,
-  deleteImage,
+  // pageSizeChanged,
+  // deleteHotel,
+  // updateHotel,
+  // createHotel,
+  // createRoom,
+  // updateRoom,
+  // deleteRoom,
+  // createService,
+  // updateService,
+  // deleteService,
+  // updateUser,
+  // createImage,
+  // deleteImage,
   loguot,
   submit,
   searchHotels,
@@ -49,21 +49,21 @@ const Routes = ({
       hotels={hotels}
       totalPages={totalPages}
       totalResults={totalResults}
-      pageSize={pageSize}
+      // pageSize={pageSize}
       pageChanged={pageChanged}
-      pageSizeChanged={pageSizeChanged}
-      deleteHotel={deleteHotel}
-      updateHotel={updateHotel}
-      createHotel={createHotel}
-      createRoom={createRoom}
-      updateRoom={updateRoom}
-      deleteRoom={deleteRoom}
-      createService={createService}
-      updateService={updateService}
-      deleteService={deleteService}
-      updateUser={updateUser}
-      createImage={createImage}
-      deleteImage={deleteImage}
+      // pageSizeChanged={pageSizeChanged}
+      // deleteHotel={deleteHotel}
+      // updateHotel={updateHotel}
+      // createHotel={createHotel}
+      // createRoom={createRoom}
+      // updateRoom={updateRoom}
+      // deleteRoom={deleteRoom}
+      // createService={createService}
+      // updateService={updateService}
+      // deleteService={deleteService}
+      // updateUser={updateUser}
+      // createImage={createImage}
+      // deleteImage={deleteImage}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -84,24 +84,24 @@ Routes.propTypes = {
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
   totalResults: PropTypes.number,
-  pageSize: PropTypes.number.isRequired,
+  // pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
-  pageSizeChanged: PropTypes.func.isRequired,
-  deleteHotel: PropTypes.func.isRequired,
-  updateHotel: PropTypes.func.isRequired,
-  createHotel: PropTypes.func.isRequired,
-  createRoom: PropTypes.func.isRequired,
-  updateRoom: PropTypes.func.isRequired,
-  deleteRoom: PropTypes.func.isRequired,
-  createService: PropTypes.func.isRequired,
-  updateService: PropTypes.func.isRequired,
-  deleteService: PropTypes.func.isRequired,
-  updateUser: PropTypes.func.isRequired,
-  createImage: PropTypes.func.isRequired,
-  deleteImage: PropTypes.func.isRequired,
+  // pageSizeChanged: PropTypes.func.isRequired,
+  // deleteHotel: PropTypes.func.isRequired,
+  // updateHotel: PropTypes.func.isRequired,
+  // createHotel: PropTypes.func.isRequired,
+  // createRoom: PropTypes.func.isRequired,
+  // updateRoom: PropTypes.func.isRequired,
+  // deleteRoom: PropTypes.func.isRequired,
+  // createService: PropTypes.func.isRequired,
+  // updateService: PropTypes.func.isRequired,
+  // deleteService: PropTypes.func.isRequired,
+  // updateUser: PropTypes.func.isRequired,
+  // createImage: PropTypes.func.isRequired,
+  // deleteImage: PropTypes.func.isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,
