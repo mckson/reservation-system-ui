@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import HotelCard from './HotelCard';
 import Hotel from '../Models/Hotel';
 import PaginationBar from '../Common/PaginationBar';
-import HotelSearchComponent from './HotelSearchComponent';
+// import HotelSearchComponent from './HotelSearchComponent';
 import SearchBarComponent from './SearchBar/SearchBarComponent';
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +40,10 @@ const HotelsPage = ({
   totalResults,
   onPageChanged,
   searchHotels,
+  dateIn,
+  dateOut,
+  onDateInChange,
+  onDateOutChange,
 }) => {
   const classes = useStyles();
   const hotelInstances = hotels.map((hotel) => new Hotel(hotel));
@@ -53,9 +57,14 @@ const HotelsPage = ({
 
   return (
     <Grid container className={classes.root}>
-      <SearchBarComponent />
       <div className={classes.search}>
-        <HotelSearchComponent searchHotels={searchHotels} />
+        <SearchBarComponent
+          searchHotels={searchHotels}
+          dateIn={dateIn}
+          dateOut={dateOut}
+          onDateInChange={onDateInChange}
+          onDateOutChange={onDateOutChange}
+        />
       </div>
       <div>
         {hotelInstances.map((hotel) => (
@@ -81,12 +90,18 @@ HotelsPage.propTypes = {
   totalResults: PropTypes.number,
   onPageChanged: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+  onDateInChange: PropTypes.func.isRequired,
+  onDateOutChange: PropTypes.func.isRequired,
 };
 
 HotelsPage.defaultProps = {
   hotels: [],
   totalPages: 0,
   totalResults: 0,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default HotelsPage;

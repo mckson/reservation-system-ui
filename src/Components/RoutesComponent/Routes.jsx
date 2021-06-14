@@ -28,6 +28,10 @@ const Routes = ({
   loguot,
   submit,
   searchHotels,
+  dateIn,
+  dateOut,
+  onDateInChange,
+  onDateOutChange,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -66,6 +70,10 @@ const Routes = ({
       isHotelsManagementOpen={open}
       closeHotelsManagement={onClose}
       openHotelsManagement={onOpen}
+      dateIn={dateIn}
+      dateOut={dateOut}
+      onDateInChange={onDateInChange}
+      onDateOutChange={onDateOutChange}
     />
   );
 };
@@ -94,6 +102,10 @@ Routes.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+  onDateInChange: PropTypes.func.isRequired,
+  onDateOutChange: PropTypes.func.isRequired,
 };
 
 Routes.defaultProps = {
@@ -102,6 +114,8 @@ Routes.defaultProps = {
   hotels: null,
   totalPages: 0,
   totalResults: 0,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default Routes;

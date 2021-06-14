@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
 import API from '../../Common/API';
-import Image from '../../Models/HotelImage';
+import User from '../../Models/User';
 
-const HotelFull = () => {
+// import Default from '../../images/default.png';
+
+const HotelFull = ({ loggedUser, dateIn, dateOut }) => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
   const history = useHistory();
 
   const onBackClick = () => history.push('/Hotels');
 
-  const onReserveClick = () => history.push(`/Reservation/${hotel.id}`);
-
   useEffect(() => {
     API.axios
       .get(`/Hotels/${id}`)
       .then((response) => {
+        // if (response.data.mainImage == null) {
+        //   response.data.mainImage = { id: 0, image: Default };
+        // }
         setHotel(new Hotel(response.data));
       })
       .catch((err) => {
@@ -37,18 +41,31 @@ const HotelFull = () => {
 
   return (
     <>
-      {hotel ? (
+      {hotel && hotel !== {} ? (
         <HotelFullComponent
           hotel={hotel}
-          mainImage={new Image(hotel.mainImage)}
           onBackClick={onBackClick}
-          onReserveClick={onReserveClick}
+          loggedUser={loggedUser}
+          dateIn={dateIn}
+          dateOut={dateOut}
         />
       ) : (
         <Typography variant="h4">Loading</Typography>
       )}
     </>
   );
+};
+
+HotelFull.propTypes = {
+  loggedUser: PropTypes.instanceOf(User),
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+};
+
+HotelFull.defaultProps = {
+  loggedUser: null,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default HotelFull;

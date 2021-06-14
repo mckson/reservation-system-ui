@@ -10,6 +10,7 @@ const roomUrl = (id) => `/Rooms/${id}`;
 const serviceUrl = (id) => `/Services/${id}`;
 const userUrl = (id) => `/Users/${id}`;
 const imageUrl = (id) => `/Images/${id}`;
+const reservationUrl = (id) => `/Reservations/${id}`;
 
 const usersUrl = '/Users';
 
@@ -254,6 +255,18 @@ const deleteImage = (id) => {
   });
 };
 
+const createReservation = (reservation) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(reservationUrl(''), reservation)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
 export default {
   axios,
   getUsers,
@@ -271,4 +284,5 @@ export default {
   updateUser,
   createImage,
   deleteImage,
+  createReservation,
 };

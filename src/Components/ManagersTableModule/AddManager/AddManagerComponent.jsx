@@ -15,7 +15,15 @@ const AddManagerComponent = ({ open, close, hotel, updateUser, users }) => {
     // eslint-disable-next-line no-debugger
     debugger;
     // eslint-disable-next-line no-param-reassign
-    if (!user.hotels.includes(hotel.id)) {
+    if (
+      user.hotels == null ||
+      user.hotels === [] ||
+      !user.hotels?.includes(hotel.id)
+    ) {
+      if (user.hotels == null) {
+        // eslint-disable-next-line no-param-reassign
+        user.hotels = [];
+      }
       user.hotels.push(hotel.id);
       user.roles.push(managerRole);
 

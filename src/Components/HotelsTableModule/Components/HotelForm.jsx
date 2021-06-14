@@ -64,7 +64,7 @@ const validationSchema = Yup.object({
     .required('Required'),
   deposit: Yup.number().required('Required'),
   description: Yup.string()
-    .max(1000, 'Must be 1000 characters or less')
+    .max(10000, 'Must be 10000 characters or less')
     .min(10, 'Must be 10 characters or more')
     .required('Required'),
 });
