@@ -6,13 +6,24 @@ import HotelCard from './HotelCard';
 import Hotel from '../Models/Hotel';
 import PaginationBar from '../Common/PaginationBar';
 import HotelSearchComponent from './HotelSearchComponent';
+import SearchBarComponent from './SearchBar/SearchBarComponent';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    width: '50%',
+    width: '100%',
     justifySelf: 'center',
+    padding: theme.spacing(0, 5),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(0, 10),
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(0, 30),
+    },
+    [theme.breakpoints.up('xl')]: {
+      padding: theme.spacing(0, 60),
+    },
   },
   item: {
     flexGrow: 1,
@@ -42,15 +53,16 @@ const HotelsPage = ({
 
   return (
     <Grid container className={classes.root}>
+      <SearchBarComponent />
       <div className={classes.search}>
         <HotelSearchComponent searchHotels={searchHotels} />
       </div>
       <div>
         {hotelInstances.map((hotel) => (
-          <Grid item className={classes.item} xs={12}>
+          <Grid key={hotel.id} item className={classes.item} xs={12}>
             <HotelCard
               key={hotel.id}
-              hotel={hotel}
+              hotel={new Hotel(hotel)}
               onOpenFullHotel={onOpenFullHotel}
             />
           </Grid>
@@ -64,11 +76,17 @@ const HotelsPage = ({
 };
 
 HotelsPage.propTypes = {
-  hotels: PropTypes.instanceOf(Array).isRequired,
-  totalPages: PropTypes.string.isRequired,
-  totalResults: PropTypes.string.isRequired,
+  hotels: PropTypes.arrayOf(Hotel),
+  totalPages: PropTypes.number,
+  totalResults: PropTypes.number,
   onPageChanged: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
+};
+
+HotelsPage.defaultProps = {
+  hotels: [],
+  totalPages: 0,
+  totalResults: 0,
 };
 
 export default HotelsPage;

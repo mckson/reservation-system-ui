@@ -1,22 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid } from '@material-ui/core';
+import { GridList, GridListTile, makeStyles } from '@material-ui/core';
+import HotelImage from '../Models/HotelImage';
 
-const Gallery = ({ imageUrls }) => {
+const useStyles = makeStyles((/* theme */) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    overflow: 'hidden',
+  },
+}));
+
+// function getColWidth(index) {
+//   return index % 2 === 0 ? 1 : 2;
+// }
+
+// function getRowHeight(index) {
+//   return index % 5 === 2 ? 2 : 1;
+// }
+
+// function getRandomInt(max) {
+//   return Math.floor(Math.random() * max);
+// }
+
+const Gallery = ({ images }) => {
+  const classes = useStyles();
   return (
-    <Grid container spacing={0}>
-      {imageUrls.map((imageUrl, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <Grid item xs={2} key={`${imageUrl}-${index}`}>
-          <img width="auto" height="300px" src={imageUrl} alt="hotel" />
-        </Grid>
-      ))}
-    </Grid>
+    <div className={classes.root}>
+      <GridList cellHeight={160} cols={4} rows={2}>
+        {images.map((image /* , index */) => (
+          <GridListTile
+            key={image.id}
+            // cols={getColWidth(index)}
+            // rows={getRowHeight(index)}
+          >
+            <img src={`data:image/jpeg;base64,${image.image}`} alt="hotel" />
+          </GridListTile>
+        ))}
+      </GridList>
+    </div>
   );
 };
 
 Gallery.propTypes = {
-  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+  images: PropTypes.arrayOf(HotelImage).isRequired,
 };
 
 export default Gallery;

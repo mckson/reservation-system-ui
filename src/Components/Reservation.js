@@ -2,7 +2,7 @@ import { Container, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import axiosInstance from '../Common/API';
+import API from '../Common/API';
 import Hotel from '../Models/Hotel';
 
 const Reservation = () => {
@@ -10,7 +10,7 @@ const Reservation = () => {
   const { hotelId } = useParams();
 
   useEffect(() => {
-    axiosInstance
+    API.axios
       .get(`/Hotels/${hotelId}`)
       .then((response) => {
         setHotel(new Hotel(response.data));

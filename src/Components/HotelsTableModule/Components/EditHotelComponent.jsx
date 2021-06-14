@@ -10,6 +10,11 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel }) => {
       name: values.name,
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
+      description: values.description,
+      mainImage: {
+        image: values.mainImage,
+        hotelId: hotel.id,
+      },
       location: {
         country: values.country,
         region: values.region,

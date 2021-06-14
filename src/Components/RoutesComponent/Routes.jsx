@@ -5,6 +5,7 @@ import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
 
 const Routes = ({
+  users,
   loggedUser,
   hotels,
   totalPages,
@@ -16,6 +17,14 @@ const Routes = ({
   updateHotel,
   createHotel,
   createRoom,
+  updateRoom,
+  deleteRoom,
+  createService,
+  updateService,
+  deleteService,
+  updateUser,
+  createImage,
+  deleteImage,
   loguot,
   submit,
   searchHotels,
@@ -31,6 +40,7 @@ const Routes = ({
 
   return (
     <RoutesComponent
+      users={users}
       loggedUser={loggedUser}
       hotels={hotels}
       totalPages={totalPages}
@@ -42,6 +52,14 @@ const Routes = ({
       updateHotel={updateHotel}
       createHotel={createHotel}
       createRoom={createRoom}
+      updateRoom={updateRoom}
+      deleteRoom={deleteRoom}
+      createService={createService}
+      updateService={updateService}
+      deleteService={deleteService}
+      updateUser={updateUser}
+      createImage={createImage}
+      deleteImage={deleteImage}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -53,10 +71,11 @@ const Routes = ({
 };
 
 Routes.propTypes = {
-  loggedUser: PropTypes.instanceOf(User).isRequired,
-  hotels: PropTypes.instanceOf(Hotel).isRequired,
-  totalPages: PropTypes.number.isRequired,
-  totalResults: PropTypes.number.isRequired,
+  users: PropTypes.arrayOf(User),
+  loggedUser: PropTypes.instanceOf(User),
+  hotels: PropTypes.arrayOf(Hotel),
+  totalPages: PropTypes.number,
+  totalResults: PropTypes.number,
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
@@ -67,6 +86,22 @@ Routes.propTypes = {
   updateHotel: PropTypes.func.isRequired,
   createHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  createService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
+};
+
+Routes.defaultProps = {
+  users: null,
+  loggedUser: null,
+  hotels: null,
+  totalPages: 0,
+  totalResults: 0,
 };
 
 export default Routes;

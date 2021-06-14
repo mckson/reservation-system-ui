@@ -1,26 +1,83 @@
 import axios from 'axios';
+// import { useHistory } from 'react-router-dom';
+import LocalStorageService from './LocalStorageService';
+
+const localStorageService = LocalStorageService.getService();
+const baseURL = 'https://localhost:5001/api';
+
+const hotelUrl = (id) => `/Hotels/${id}`;
+const roomUrl = (id) => `/Rooms/${id}`;
+const serviceUrl = (id) => `/Services/${id}`;
+const userUrl = (id) => `/Users/${id}`;
+const imageUrl = (id) => `/Images/${id}`;
+
+const usersUrl = '/Users';
 
 const hotelsUrl = (pageNumber, pageSize, name, city, services) =>
   `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${name}&city=${city}${services
     .map((service) => `&services=${service}`)
     .join('')}`;
 
-const hotelUrl = (id) => `/Hotels/${id}`;
+axios.defaults.baseURL = baseURL;
 
-const roomUrl = (id) => `/Rooms/${id}`;
+axios.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorageService.getAccessToken();
 
-const serviceUrl = (id) => `/Services/${id}`;
+    if (accessToken) {
+      // eslint-disable-next-line no-param-reassign
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
 
-const axiosInstance = axios.create({
-  baseURL: 'https://localhost:5001/api',
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+    return config;
   },
-});
+  (error) => {
+    Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const originalRequest = error.config;
+
+    if (originalRequest.url === '/Account/RefreshToken') {
+      localStorageService.clearToken();
+      window.location.href = '/SignIn';
+    }
+
+    if (error.response.status === 401 && !originalRequest.retry) {
+      originalRequest.retry = true;
+
+      return axios
+        .post('/Account/RefreshToken', {
+          token: localStorageService.getRefreshToken(),
+        })
+        .then((response) => {
+          localStorageService.setToken(response.data);
+          axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
+          return axios(originalRequest);
+        });
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+const getUsers = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(usersUrl)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
 const getHotels = (pageNumber, pageSize, name, city, services) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .get(hotelsUrl(pageNumber, pageSize, name, city, services))
       .then((response) => {
         resolve(response.data);
@@ -33,7 +90,7 @@ const getHotels = (pageNumber, pageSize, name, city, services) => {
 
 const deleteHotel = (id) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .delete(hotelUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -45,7 +102,7 @@ const deleteHotel = (id) => {
 
 const updateHotel = (hotel) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .put(hotelUrl(hotel.id), hotel)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -56,9 +113,23 @@ const updateHotel = (hotel) => {
 };
 
 const createHotel = (hotel) => {
+  // eslint-disable-next-line no-debugger
+  debugger;
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .post(hotelUrl(''), hotel)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
+const getHotel = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(hotelUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.log(error.response);
@@ -69,7 +140,7 @@ const createHotel = (hotel) => {
 
 const createRoom = (room) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .post(roomUrl(''), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
@@ -79,24 +150,125 @@ const createRoom = (room) => {
   });
 };
 
+const updateRoom = (room) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(roomUrl(room.id), room)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const deleteRoom = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(roomUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
 const createService = (service) => {
   return new Promise((resolve, reject) => {
-    axiosInstance
+    axios
       .post(serviceUrl(''), service)
       .then((response) => resolve(response.data))
       .catch((error) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         console.log(error.response);
         reject(error);
       });
   });
 };
 
+const updateService = (service) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(serviceUrl(service.id), service)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const deleteService = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(serviceUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const updateUser = (user) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(userUrl(user.id), user)
+      .then((response) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        resolve(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const createImage = (image) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(imageUrl(''), image)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
+        console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
+const deleteImage = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(imageUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
 export default {
-  axiosInstance,
+  axios,
+  getUsers,
   getHotels,
   deleteHotel,
   updateHotel,
   createHotel,
+  getHotel,
   createRoom,
+  updateRoom,
+  deleteRoom,
   createService,
+  updateService,
+  deleteService,
+  updateUser,
+  createImage,
+  deleteImage,
 };

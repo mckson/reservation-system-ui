@@ -1,5 +1,5 @@
-import React from 'react';
-import { CloseOutlined } from '@material-ui/icons';
+import React, { useState } from 'react';
+import { CloseOutlined, PhotoCameraOutlined } from '@material-ui/icons';
 import {
   IconButton,
   Dialog,
@@ -27,6 +27,9 @@ const useStyles = makeStyles(() => ({
   },
   closeButton: {
     width: 'auto',
+  },
+  image: {
+    height: 100,
   },
 }));
 
@@ -60,10 +63,40 @@ const validationSchema = Yup.object({
     .max(500, 'Must be 500 or less')
     .required('Required'),
   deposit: Yup.number().required('Required'),
+  description: Yup.string()
+    .max(1000, 'Must be 1000 characters or less')
+    .min(10, 'Must be 10 characters or more')
+    .required('Required'),
 });
 
 const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
   const classes = useStyles();
+  const [mainImage, setMainImage] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        console.log(file);
+        setUploadedFile(file);
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const uploadImage = async (event) => {
+    const file = event.target.files[0];
+    const base64 = await convertBase64(file);
+    console.log(base64);
+    setMainImage(base64);
+  };
 
   return (
     <div>
@@ -73,7 +106,14 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
             <Typography className={classes.title} variant="h6">
               {title}
             </Typography>
-            <IconButton className={classes.closeButton} onClick={close}>
+            <IconButton
+              className={classes.closeButton}
+              onClick={() => {
+                setMainImage(null);
+                setUploadedFile(null);
+                close();
+              }}
+            >
               <CloseOutlined />
             </IconButton>
           </div>
@@ -84,15 +124,23 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
               name: hotel != null ? hotel.name : '',
               floors: hotel != null ? hotel.numberFloors : '',
               deposit: hotel != null ? hotel.deposit : '',
+              description: hotel != null ? hotel.description : '',
               country: hotel != null ? hotel.location.country : '',
               region: hotel != null ? hotel.location.region : '',
               city: hotel != null ? hotel.location.city : '',
               street: hotel != null ? hotel.location.street : '',
               buildingNumber:
                 hotel != null ? hotel.location.buildingNumber : '',
+              mainImage: hotel != null ? hotel.mainImage : null,
             }}
             validationSchema={validationSchema}
-            onSubmit={submitHandler}
+            onSubmit={(values) => {
+              // eslint-disable-next-line no-param-reassign
+              values.mainImage = mainImage;
+              submitHandler(values);
+              setMainImage(null);
+              setUploadedFile(null);
+            }}
           >
             <Form autoComplete="on">
               <MyTextField
@@ -118,6 +166,16 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
                 name="deposit"
                 type="text"
                 placeholder="100"
+              />
+              <MyTextField
+                required
+                fullWidth
+                multiline
+                rows={3}
+                label="Description"
+                name="description"
+                type="text"
+                placeholder="Some description"
               />
               <MyTextField
                 required
@@ -159,6 +217,47 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
                 type="text"
                 placeholder="14"
               />
+              <label
+                htmlFor="icon-button-file"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography>
+                  {uploadedFile?.name || 'Upload main picture'}
+                </Typography>
+                {mainImage ? (
+                  <img
+                    className={classes.image}
+                    src={/* `data:image/jpeg;base64, */ `${mainImage}`}
+                    alt="Hotel"
+                  />
+                ) : null}
+                {/* {hotel?.mainImage ? (
+                  <img
+                    className={classes.image}
+                    src={`data:image/jpeg;base64,${hotel.mainImage}`}
+                    alt="hotel"
+                  />
+                ) : null} */}
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={(e) => uploadImage(e)}
+                  id="icon-button-file"
+                  type="file"
+                />
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                  <PhotoCameraOutlined />
+                </IconButton>
+              </label>
               <Button
                 fullWidth
                 className={classes.submit}

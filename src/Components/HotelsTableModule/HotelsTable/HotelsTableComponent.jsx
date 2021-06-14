@@ -18,6 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Hotel from '../../../Models/Hotel';
 import CreateHotelComponent from '../Components/CreateHotelComponent';
 import HotelRow from '../HotelRow/HotelRow';
+import User from '../../../Models/User';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HotelsTableComponent = ({
+  users,
   hotels,
   totalCount,
   pageChanged,
@@ -37,6 +39,14 @@ const HotelsTableComponent = ({
   updateHotel,
   createHotel,
   createRoom,
+  deleteRoom,
+  updateRoom,
+  createService,
+  deleteService,
+  updateService,
+  updateUser,
+  createImage,
+  deleteImage,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -64,7 +74,20 @@ const HotelsTableComponent = ({
   return (
     <>
       <TableContainer component={Paper} variant="outlined">
-        <Table>
+        <Table size="small">
+          <colgroup>
+            <col width="2.5%" />
+            <col width="2.5%" />
+            <col width="auto" />
+            <col width="2.5%" />
+            <col width="5%" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="2.5%" />
+          </colgroup>
           <TableHead>
             <TableRow>
               <TableCell />
@@ -76,6 +99,7 @@ const HotelsTableComponent = ({
               <TableCell>Region</TableCell>
               <TableCell>City</TableCell>
               <TableCell>Street</TableCell>
+              <TableCell>Picture</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -83,9 +107,18 @@ const HotelsTableComponent = ({
             {hotels != null ? (
               hotels.map((hotel) => (
                 <HotelRow
+                  users={users}
                   deleteHotel={deleteHotel}
                   updateHotel={updateHotel}
                   createRoom={createRoom}
+                  updateRoom={updateRoom}
+                  deleteRoom={deleteRoom}
+                  createService={createService}
+                  updateService={updateService}
+                  deleteService={deleteService}
+                  updateUser={updateUser}
+                  createImage={createImage}
+                  deleteImage={deleteImage}
                   hotel={hotel}
                   key={hotel.id}
                 />
@@ -124,6 +157,7 @@ const HotelsTableComponent = ({
 };
 
 HotelsTableComponent.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
@@ -133,6 +167,14 @@ HotelsTableComponent.propTypes = {
   updateHotel: PropTypes.func.isRequired,
   createHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  createService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default HotelsTableComponent;

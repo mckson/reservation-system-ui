@@ -11,6 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
 import Hotel from '../../Models/Hotel';
+import User from '../../Models/User';
 
 const useStyles = makeStyles((theme) => ({
   dialogbar: {
@@ -29,6 +30,7 @@ const Transition = forwardRef(function Transistion(props, ref) {
 });
 
 const HotelsManagementComponent = ({
+  users,
   isOpen,
   close,
   hotels,
@@ -40,6 +42,14 @@ const HotelsManagementComponent = ({
   updateHotel,
   createHotel,
   createRoom,
+  updateRoom,
+  deleteRoom,
+  createService,
+  updateService,
+  deleteService,
+  updateUser,
+  createImage,
+  deleteImage,
 }) => {
   const classes = useStyles();
   return (
@@ -58,6 +68,7 @@ const HotelsManagementComponent = ({
       </Toolbar>
       <div className={classes.content}>
         <HotelsTable
+          users={users}
           hotels={hotels}
           totalCount={totalCount}
           pageChanged={pageChanged}
@@ -67,6 +78,14 @@ const HotelsManagementComponent = ({
           updateHotel={updateHotel}
           createHotel={createHotel}
           createRoom={createRoom}
+          updateRoom={updateRoom}
+          deleteRoom={deleteRoom}
+          createService={createService}
+          updateService={updateService}
+          deleteService={deleteService}
+          updateUser={updateUser}
+          createImage={createImage}
+          deleteImage={deleteImage}
         />
       </div>
     </Dialog>
@@ -74,6 +93,7 @@ const HotelsManagementComponent = ({
 };
 
 HotelsManagementComponent.propTypes = {
+  users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
@@ -85,6 +105,14 @@ HotelsManagementComponent.propTypes = {
   updateHotel: PropTypes.func.isRequired,
   createHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  createService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
 };
 
 export default HotelsManagementComponent;

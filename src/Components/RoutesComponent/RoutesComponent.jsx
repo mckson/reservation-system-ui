@@ -15,9 +15,10 @@ import Reservation from '../Reservation';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 import HotelsManagement from '../HotelsManagement/HotelsManagement';
-// import HotelsTable from '../HotelsTable/HotelsTable';
+import Constants from '../../Common/Constants';
 
 const RoutesComponent = ({
+  users,
   loggedUser,
   hotels,
   totalPages,
@@ -30,6 +31,14 @@ const RoutesComponent = ({
   updateHotel,
   createHotel,
   createRoom,
+  updateRoom,
+  deleteRoom,
+  createService,
+  updateService,
+  deleteService,
+  updateUser,
+  createImage,
+  deleteImage,
   searchHotels,
   pageSize,
   isHotelsManagementOpen,
@@ -43,29 +52,32 @@ const RoutesComponent = ({
         onLogoutClick={loguot}
         openHotelsManagement={openHotelsManagement}
       />
-
-      {/* <HotelsTable
-        hotels={hotels}
-        totalCount={totalResults}
-        pageChanged={pageChanged}
-        pageSize={pageSize}
-        pageSizeChanged={pageSizeChanged}
-      /> */}
-
-      <HotelsManagement
-        isOpen={isHotelsManagementOpen}
-        close={closeHotelsManagement}
-        totalCount={totalResults}
-        hotels={hotels}
-        pageChanged={pageChanged}
-        pageSize={pageSize}
-        pageSizeChanged={pageSizeChanged}
-        deleteHotel={deleteHotel}
-        updateHotel={updateHotel}
-        createHotel={createHotel}
-        createRoom={createRoom}
-      />
-
+      {loggedUser &&
+      (loggedUser.roles.includes(Constants.adminRole) ||
+        loggedUser.roles.includes(Constants.managerRole)) ? (
+        <HotelsManagement
+          users={users}
+          isOpen={isHotelsManagementOpen}
+          close={closeHotelsManagement}
+          totalCount={totalResults}
+          hotels={hotels}
+          pageChanged={pageChanged}
+          pageSize={pageSize}
+          pageSizeChanged={pageSizeChanged}
+          deleteHotel={deleteHotel}
+          updateHotel={updateHotel}
+          createHotel={createHotel}
+          createRoom={createRoom}
+          updateRoom={updateRoom}
+          deleteRoom={deleteRoom}
+          createService={createService}
+          updateService={updateService}
+          deleteService={deleteService}
+          updateUser={updateUser}
+          createImage={createImage}
+          deleteImage={deleteImage}
+        />
+      ) : null}
       <Switch>
         <Route path="/Hotels/:id">
           <HotelFull />
@@ -101,10 +113,11 @@ const RoutesComponent = ({
 };
 
 RoutesComponent.propTypes = {
-  loggedUser: PropTypes.instanceOf(User).isRequired,
-  hotels: PropTypes.arrayOf(Hotel).isRequired,
-  totalPages: PropTypes.number.isRequired,
-  totalResults: PropTypes.number.isRequired,
+  users: PropTypes.arrayOf(User),
+  loggedUser: PropTypes.instanceOf(User),
+  hotels: PropTypes.arrayOf(Hotel),
+  totalPages: PropTypes.number,
+  totalResults: PropTypes.number,
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
@@ -118,6 +131,22 @@ RoutesComponent.propTypes = {
   updateHotel: PropTypes.func.isRequired,
   createHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  updateRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  createService: PropTypes.func.isRequired,
+  updateService: PropTypes.func.isRequired,
+  deleteService: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  createImage: PropTypes.func.isRequired,
+  deleteImage: PropTypes.func.isRequired,
+};
+
+RoutesComponent.defaultProps = {
+  users: null,
+  loggedUser: null,
+  hotels: null,
+  totalPages: 0,
+  totalResults: 0,
 };
 
 export default RoutesComponent;

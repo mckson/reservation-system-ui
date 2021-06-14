@@ -12,6 +12,8 @@ import {
 import PropTypes from 'prop-types';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Alert } from '@material-ui/lab';
+import CloseIcon from '@material-ui/icons/Close';
 import Room from '../../Models/Hotel';
 import MyTextField from '../../Common/MyTextField';
 
@@ -46,7 +48,16 @@ const validationSchema = Yup.object({
     .required('Required'),
 });
 
-const RoomForm = ({ open, close, room, submitHandler, title, submitText }) => {
+const RoomForm = ({
+  open,
+  close,
+  room,
+  submitHandler,
+  title,
+  submitText,
+  error,
+  resetError,
+}) => {
   const classes = useStyles();
 
   return (
@@ -118,6 +129,27 @@ const RoomForm = ({ open, close, room, submitHandler, title, submitText }) => {
             </Form>
           </Formik>
         </DialogContent>
+        {error != null ? (
+          <Alert
+            fullWidth
+            variant="outlined"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  resetError();
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
       </Dialog>
     </div>
   );
@@ -130,10 +162,13 @@ RoomForm.propTypes = {
   submitHandler: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   submitText: PropTypes.string,
+  error: PropTypes.string,
+  resetError: PropTypes.func.isRequired,
 };
 
 RoomForm.defaultProps = {
   submitText: 'Submit',
+  error: null,
 };
 
 export default RoomForm;
