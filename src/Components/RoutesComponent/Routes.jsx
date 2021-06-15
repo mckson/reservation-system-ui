@@ -32,6 +32,8 @@ const Routes = ({
   dateOut,
   onDateInChange,
   onDateOutChange,
+  // refreshUsers,
+  // refreshHotels,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -51,6 +53,8 @@ const Routes = ({
       totalResults={totalResults}
       // pageSize={pageSize}
       pageChanged={pageChanged}
+      // refreshHotels={refreshHotels}
+      // refreshUsers={refreshUsers}
       // pageSizeChanged={pageSizeChanged}
       // deleteHotel={deleteHotel}
       // updateHotel={updateHotel}
@@ -106,6 +110,8 @@ Routes.propTypes = {
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
+  // refreshUsers: PropTypes.func.isRequired,
+  // refreshHotels: PropTypes.func.isRequired,
 };
 
 Routes.defaultProps = {

@@ -15,8 +15,7 @@ import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
 import User from '../../Models/User';
-
-const AdminRole = 'Admin';
+import Constants from '../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -71,6 +70,8 @@ const AccountSectionComponent = ({
           <Menu
             id="menu-area"
             anchorEl={anchorEl}
+            keepMounted
+            elevation={1}
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
@@ -88,30 +89,19 @@ const AccountSectionComponent = ({
               <ListItemText primary="View orders" />
             </MenuItem> */}
 
-            {loggedUser?.roles.includes(AdminRole) ? (
-              <>
-                <MenuItem
-                  onClick={() => {
-                    openHotelsManagement();
-                    handleClose();
-                  }}
-                >
-                  <ListItemIcon>
-                    <AdminPanelIcon className={classes.icon} />
-                  </ListItemIcon>
-                  <ListItemText primary="Manage hotels" />
-                </MenuItem>
-                {/* <MenuItem
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  <ListItemIcon>
-                    <AdminPanelIcon className={classes.icon} />
-                  </ListItemIcon>
-                  <ListItemText primary="Manage users" />
-                </MenuItem> */}
-              </>
+            {loggedUser?.roles.includes(Constants.adminRole) ||
+            loggedUser?.roles.includes(Constants.managerRole) ? (
+              <MenuItem
+                onClick={() => {
+                  openHotelsManagement();
+                  handleClose();
+                }}
+              >
+                <ListItemIcon>
+                  <AdminPanelIcon className={classes.icon} />
+                </ListItemIcon>
+                <ListItemText primary="Manage hotels" />
+              </MenuItem>
             ) : null}
 
             <MenuItem

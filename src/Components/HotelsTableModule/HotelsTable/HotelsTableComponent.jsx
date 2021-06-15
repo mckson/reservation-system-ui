@@ -18,6 +18,7 @@ import Hotel from '../../../Models/Hotel';
 import CreateHotelComponent from '../Components/CreateHotelComponent';
 import HotelRow from '../HotelRow/HotelRow';
 import User from '../../../Models/User';
+import Constants from '../../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HotelsTableComponent = ({
+  role,
   users,
   hotels,
   totalCount,
@@ -122,6 +124,7 @@ const HotelsTableComponent = ({
             {hotels != null ? (
               hotels.map((hotel) => (
                 <HotelRow
+                  role={role}
                   users={users}
                   deleteHotel={deleteHotel}
                   updateHotel={updateHotel}
@@ -145,14 +148,16 @@ const HotelsTableComponent = ({
             )}
           </TableBody>
           <TableFooter className={classes.footer}>
-            <Button
-              color="primary"
-              className={classes.addButton}
-              startIcon={<AddIcon />}
-              onClick={() => setIsAdd(!isAdd)}
-            >
-              Add new hotel
-            </Button>
+            {role === Constants.adminRole ? (
+              <Button
+                color="primary"
+                className={classes.addButton}
+                startIcon={<AddIcon />}
+                onClick={() => setIsAdd(!isAdd)}
+              >
+                Add new hotel
+              </Button>
+            ) : null}
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               rowsPerPage={rowsPerPage}
@@ -175,6 +180,7 @@ const HotelsTableComponent = ({
 };
 
 HotelsTableComponent.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,

@@ -19,12 +19,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImageRow = ({ image, deleteImage }) => {
+const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
   const classes = useStyles();
 
   const onDeleteImage = async () => {
     const errorResponse = await deleteImage(image);
-    console.log(errorResponse);
+
+    if (errorResponse) {
+      onError(errorResponse);
+    } else {
+      onSuccess('Image successfully deleted');
+    }
   };
   return (
     <>
@@ -38,10 +43,7 @@ const ImageRow = ({ image, deleteImage }) => {
           />
         </TableCell>
         <TableCell className={classes.actions}>
-          <IconButton
-            className={classes.button}
-            onClick={async () => onDeleteImage()}
-          >
+          <IconButton className={classes.button} onClick={onDeleteImage}>
             <DeleteOutlined />
           </IconButton>
         </TableCell>
@@ -53,6 +55,8 @@ const ImageRow = ({ image, deleteImage }) => {
 ImageRow.propTypes = {
   image: PropTypes.instanceOf(Image).isRequired,
   deleteImage: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 export default ImageRow;

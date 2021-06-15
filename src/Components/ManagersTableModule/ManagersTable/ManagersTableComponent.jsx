@@ -85,6 +85,7 @@ const ManagersTableComponent = ({
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((manager) => (
                   <ManagerRowComponent
+                    key={manager.id}
                     manager={manager}
                     hotel={hotel}
                     updateUser={updateUser}

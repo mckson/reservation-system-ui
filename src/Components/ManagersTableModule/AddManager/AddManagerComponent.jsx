@@ -18,19 +18,25 @@ const AddManagerComponent = ({
   const formTitle = `Add manager to hotel ${hotel.name}`;
   const formSubmittext = 'Add manager';
   let errorResponse = null;
+
   const onUpdateUserAsync = async (user) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     // eslint-disable-next-line no-param-reassign
     if (
       user.hotels == null ||
-      user.hotels === [] ||
+      user.hotels.length === 0 ||
       !user.hotels?.includes(hotel.id)
     ) {
       if (user.hotels == null) {
         // eslint-disable-next-line no-param-reassign
         user.hotels = [];
+        user.roles.push(managerRole);
+      } else if (user.hotels.length === 0) {
+        user.roles.push(managerRole);
       }
+
       user.hotels.push(hotel.id);
-      user.roles.push(managerRole);
 
       errorResponse = await updateUser(user);
     } else {

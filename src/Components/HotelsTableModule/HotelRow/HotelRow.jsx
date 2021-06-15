@@ -5,6 +5,7 @@ import HotelRowComponent from './HotelRowComponent';
 import User from '../../../Models/User';
 
 const HotelRow = ({
+  role,
   users,
   hotel,
   deleteHotel,
@@ -23,6 +24,7 @@ const HotelRow = ({
 }) => {
   return (
     <HotelRowComponent
+      role={role}
       users={users}
       hotel={hotel}
       deleteHotel={deleteHotel}
@@ -43,6 +45,7 @@ const HotelRow = ({
 };
 
 HotelRow.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   deleteHotel: PropTypes.func.isRequired,

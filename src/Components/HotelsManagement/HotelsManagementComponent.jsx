@@ -35,6 +35,7 @@ const HotelsManagementComponent = ({
   users,
   isOpen,
   close,
+  role,
   hotels,
   totalCount,
   pageChanged,
@@ -97,6 +98,7 @@ const HotelsManagementComponent = ({
       </Toolbar>
       <div className={classes.content}>
         <HotelsTable
+          role={role}
           users={users}
           hotels={hotels}
           totalCount={totalCount}
@@ -144,6 +146,7 @@ const HotelsManagementComponent = ({
 HotelsManagementComponent.propTypes = {
   users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
+  role: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,

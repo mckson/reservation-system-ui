@@ -31,7 +31,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImagesTable = ({ hotel, deleteImage, createImage }) => {
+const ImagesTable = ({
+  hotel,
+  deleteImage,
+  createImage,
+  onSuccess,
+  onError,
+}) => {
   const [isCreate, setIsCreate] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
@@ -73,7 +79,12 @@ const ImagesTable = ({ hotel, deleteImage, createImage }) => {
               hotel.images
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((image) => (
-                  <ImageRow image={image} deleteImage={deleteImage} />
+                  <ImageRow
+                    image={image}
+                    deleteImage={deleteImage}
+                    onError={onError}
+                    onSuccess={onSuccess}
+                  />
                 ))
             ) : (
               <div>No images for current hotel</div>
@@ -106,6 +117,7 @@ const ImagesTable = ({ hotel, deleteImage, createImage }) => {
         close={handleCreateClose}
         createImage={createImage}
         hotel={hotel}
+        onSuccess={onSuccess}
       />
     </div>
   );
@@ -115,6 +127,8 @@ ImagesTable.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   deleteImage: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 export default ImagesTable;

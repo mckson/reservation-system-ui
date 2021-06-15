@@ -20,6 +20,7 @@ import Hotel from '../../../Models/Hotel';
 import HotelRowMap from '../HotelRowMap/HotelRowMap';
 import User from '../../../Models/User';
 import ImagesTable from '../../ImagesTableModule/ImagesTable';
+import Constants from '../../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
   row: {
@@ -57,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HotelRowComponent = ({
+  role,
   users,
   hotel,
   deleteHotel,
@@ -97,26 +99,30 @@ const HotelRowComponent = ({
         </TableCell>
         <HotelRowMap hotel={hotel} isEdit={isEdit} />
         <TableCell className={classes.actions}>
-          <IconButton
-            className={classes.button}
-            onClick={() => setIsEdit(!isEdit)}
-          >
-            <EditOutlined />
-          </IconButton>
-          <IconButton
-            className={classes.button}
-            onClick={async () => {
-              const errorResponse = await deleteHotel(hotel.id);
+          {role === Constants.adminRole ? (
+            <>
+              <IconButton
+                className={classes.button}
+                onClick={() => setIsEdit(!isEdit)}
+              >
+                <EditOutlined />
+              </IconButton>
+              <IconButton
+                className={classes.button}
+                onClick={async () => {
+                  const errorResponse = await deleteHotel(hotel.id);
 
-              if (errorResponse) {
-                onError(errorResponse);
-              } else {
-                onSuccess('Hotel successfully deleted');
-              }
-            }}
-          >
-            <DeleteOutlined />
-          </IconButton>
+                  if (errorResponse) {
+                    onError(errorResponse);
+                  } else {
+                    onSuccess('Hotel successfully deleted');
+                  }
+                }}
+              >
+                <DeleteOutlined />
+              </IconButton>
+            </>
+          ) : null}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -182,33 +188,35 @@ const HotelRowComponent = ({
                 </Collapse>
               </div>
             </Box>
-            <Box>
-              <div className={classes.subrow}>
-                <div className={classes.subrowTitle}>
-                  <IconButton
-                    onClick={() => {
-                      setOpenManagers(!openManagers);
-                    }}
-                  >
-                    {openManagers ? (
-                      <KeyboardArrowUpIcon />
-                    ) : (
-                      <KeyboardArrowDownIcon />
-                    )}
-                  </IconButton>
-                  <Typography variant="h6">Managers</Typography>
+            {role === Constants.adminRole ? (
+              <Box>
+                <div className={classes.subrow}>
+                  <div className={classes.subrowTitle}>
+                    <IconButton
+                      onClick={() => {
+                        setOpenManagers(!openManagers);
+                      }}
+                    >
+                      {openManagers ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                    </IconButton>
+                    <Typography variant="h6">Managers</Typography>
+                  </div>
+                  <Collapse in={openManagers}>
+                    <ManagersTable
+                      hotel={hotel}
+                      users={users}
+                      updateUser={updateUser}
+                      onSuccess={onSuccess}
+                      onError={onError}
+                    />
+                  </Collapse>
                 </div>
-                <Collapse in={openManagers}>
-                  <ManagersTable
-                    hotel={hotel}
-                    users={users}
-                    updateUser={updateUser}
-                    onSuccess={onSuccess}
-                    onError={onError}
-                  />
-                </Collapse>
-              </div>
-            </Box>
+              </Box>
+            ) : null}
             <Box>
               <div className={classes.subrow}>
                 <div className={classes.subrowTitle}>
@@ -230,6 +238,8 @@ const HotelRowComponent = ({
                     hotel={hotel}
                     deleteImage={deleteImage}
                     createImage={createImage}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
@@ -242,12 +252,14 @@ const HotelRowComponent = ({
         open={isEdit}
         close={handleEditClose}
         updateHotel={updateHotel}
+        onSuccess={onSuccess}
       />
     </>
   );
 };
 
 HotelRowComponent.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   deleteHotel: PropTypes.func.isRequired,

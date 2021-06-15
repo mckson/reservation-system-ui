@@ -14,8 +14,19 @@ const reservationUrl = (id) => `/Reservations/${id}`;
 
 const usersUrl = '/Users';
 
-const hotelsUrl = (pageNumber, pageSize, name, city, services) =>
-  `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${
+const hotelsUrl = (
+  pageNumber,
+  pageSize,
+  dateIn,
+  dateOut,
+  manager,
+  name,
+  city,
+  services
+) =>
+  `/Hotels?pageNumber=${pageNumber}&pageSize=${pageSize}&dateIn=${
+    dateIn || ''
+  }&dateOut=${dateOut || ''}&managerId=${manager || ''}&name=${
     name || ''
   }&city=${city || ''}${
     services ? services.map((service) => `&services=${service}`).join('') : ''
@@ -78,11 +89,35 @@ const getUsers = () => {
   });
 };
 
-const getHotels = (pageNumber, pageSize, name, city, services) => {
+const getHotels = (
+  pageNumber,
+  pageSize,
+  dateIn,
+  dateOut,
+  manager,
+  name,
+  city,
+  services
+) => {
+  // eslint-disable-next-line no-debugger
+  debugger;
   return new Promise((resolve, reject) => {
     axios
-      .get(hotelsUrl(pageNumber, pageSize, name, city, services))
+      .get(
+        hotelsUrl(
+          pageNumber,
+          pageSize,
+          dateIn,
+          dateOut,
+          manager,
+          name,
+          city,
+          services
+        )
+      )
       .then((response) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         resolve(response.data);
       })
       .catch((error) => {

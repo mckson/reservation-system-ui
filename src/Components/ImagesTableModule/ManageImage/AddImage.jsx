@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddImage = ({ open, close, hotel, createImage }) => {
+const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
   const classes = useStyles();
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
@@ -90,6 +90,7 @@ const AddImage = ({ open, close, hotel, createImage }) => {
     } else {
       setImage(null);
       setUploadedFile(null);
+      onSuccess('Image successfully added');
       close();
     }
   };
@@ -203,6 +204,7 @@ AddImage.propTypes = {
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   createImage: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default AddImage;

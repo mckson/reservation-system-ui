@@ -14,6 +14,7 @@ import HotelFull from '../HotelFull/HotelFull';
 // import Reservation from '../Reservation';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
+// eslint-disable-next-line import/no-named-as-default
 import HotelsManagement from '../HotelsManagement/HotelsManagement';
 import Constants from '../../Common/Constants';
 
@@ -24,27 +25,15 @@ const RoutesComponent = ({
   totalPages,
   totalResults,
   pageChanged,
-  // pageSizeChanged,
   loguot,
   submit,
-  // deleteHotel,
-  // updateHotel,
-  // createHotel,
-  // createRoom,
-  // updateRoom,
-  // deleteRoom,
-  // createService,
-  // updateService,
-  // deleteService,
-  // updateUser,
-  // createImage,
-  // deleteImage,
   searchHotels,
   // pageSize,
   isHotelsManagementOpen,
   closeHotelsManagement,
   openHotelsManagement,
-
+  // refreshUsers,
+  // refreshHotels,
   dateIn,
   dateOut,
   onDateInChange,
@@ -64,23 +53,7 @@ const RoutesComponent = ({
           users={users}
           isOpen={isHotelsManagementOpen}
           close={closeHotelsManagement}
-          // totalCount={totalResults}
-          // hotels={hotels}
-          // pageChanged={pageChanged}
-          // pageSize={pageSize}
-          // pageSizeChanged={pageSizeChanged}
-          // deleteHotel={deleteHotel}
-          // updateHotel={updateHotel}
-          // createHotel={createHotel}
-          // createRoom={createRoom}
-          // updateRoom={updateRoom}
-          // deleteRoom={deleteRoom}
-          // createService={createService}
-          // updateService={updateService}
-          // deleteService={deleteService}
-          // updateUser={updateUser}
-          // createImage={createImage}
-          // deleteImage={deleteImage}
+          loggedUser={loggedUser}
         />
       ) : null}
       <Switch>
@@ -156,6 +129,8 @@ RoutesComponent.propTypes = {
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
+  //   refreshUsers: PropTypes.func.isRequired,
+  //   refreshHotels: PropTypes.func.isRequired,
 };
 
 RoutesComponent.defaultProps = {

@@ -5,6 +5,7 @@ import Hotel from '../../../Models/Hotel';
 import User from '../../../Models/User';
 
 const HotelsTable = ({
+  role,
   users,
   hotels,
   totalCount,
@@ -28,6 +29,7 @@ const HotelsTable = ({
 }) => {
   return (
     <HotelsTableComponent
+      role={role}
       users={users}
       hotels={hotels}
       totalCount={totalCount}
@@ -53,6 +55,7 @@ const HotelsTable = ({
 };
 
 HotelsTable.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,

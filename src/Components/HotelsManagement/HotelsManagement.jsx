@@ -5,36 +5,20 @@ import Hotel from '../../Models/Hotel';
 import User from '../../Models/User';
 import API from '../../Common/API';
 import ManagementService from '../../Common/ManagementService';
+import Constants from '../../Common/Constants';
 
-const HotelsManagement = ({
-  users,
-  isOpen,
-  close,
-  // hotels,
-  // totalCount,
-  // pageChanged,
-  // pageSizeChanged,
-  // deleteHotel,
-  // updateHotel,
-  // createHotel,
-  // createRoom,
-  // updateRoom,
-  // deleteRoom,
-  // createService,
-  // updateService,
-  // deleteService,
-  // updateUser,
-  // createImage,
-  // deleteImage,
-  // pageSize,
-}) => {
+const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
   const [hotels, setHotels] = useState([]);
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
   const requestHotels = async () => {
-    const response = await API.getHotels(pageNumber, pageSize);
+    const response = await API.getHotels(
+      pageNumber,
+      pageSize,
+      loggedUser.roles.includes(Constants.adminRole) ? '' : loggedUser.id
+    );
 
     if (response != null) {
       const respondedHotels = response.content.map((item) => new Hotel(item));
@@ -44,6 +28,18 @@ const HotelsManagement = ({
       setPageNumber(response.pageNumber);
       setPageSize(response.pageSize);
     }
+  };
+
+  const getRole = (user) => {
+    if (user.roles.includes(Constants.adminRole)) {
+      return Constants.adminRole;
+    }
+
+    if (user.roles.includes(Constants.managerRole)) {
+      return Constants.managerRole;
+    }
+
+    return Constants.userRole;
   };
 
   const handlePageChanged = (value) => {
@@ -66,6 +62,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -79,6 +76,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -92,6 +90,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -105,6 +104,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -118,6 +118,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -131,6 +132,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -144,6 +146,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -157,6 +160,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -170,6 +174,7 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
+      // await refreshHotels();
     }
 
     return error;
@@ -183,7 +188,38 @@ const HotelsManagement = ({
 
     if (!error) {
       await requestHotels();
-      // await refreshUSers()
+      // await refreshHotels();
+      // await refreshUsers();
+    }
+
+    return error;
+  };
+
+  const handleCreateImage = async (createdImage) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleCreateImage,
+      createdImage
+    );
+
+    if (!error) {
+      await requestHotels();
+      // await refreshHotels();
+      // await refreshUsers();
+    }
+
+    return error;
+  };
+
+  const handleDeleteImage = async (deletedImageId) => {
+    const error = await ManagementService.baseRequestHandler(
+      ManagementService.handleDeleteImage,
+      deletedImageId
+    );
+
+    if (!error) {
+      await requestHotels();
+      // await refreshHotels();
+      // await refreshUsers();
     }
 
     return error;
@@ -191,6 +227,7 @@ const HotelsManagement = ({
 
   return (
     <HotelsManagementComponent
+      role={getRole(loggedUser)}
       users={users}
       isOpen={isOpen}
       close={close}
@@ -209,8 +246,8 @@ const HotelsManagement = ({
       updateService={handleUpdateService}
       deleteService={handleDeleteService}
       updateUser={handleUpdateUser}
-      createImage={ManagementService.handleCreateImage}
-      deleteImage={ManagementService.handleDeleteImage}
+      createImage={handleCreateImage}
+      deleteImage={handleDeleteImage}
     />
   );
 };
@@ -219,23 +256,7 @@ HotelsManagement.propTypes = {
   users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  // hotels: PropTypes.arrayOf(Hotel).isRequired,
-  // totalCount: PropTypes.number.isRequired,
-  // pageChanged: PropTypes.func.isRequired,
-  // pageSizeChanged: PropTypes.func.isRequired,
-  // pageSize: PropTypes.number.isRequired,
-  // deleteHotel: PropTypes.func.isRequired,
-  // updateHotel: PropTypes.func.isRequired,
-  // createHotel: PropTypes.func.isRequired,
-  // createRoom: PropTypes.func.isRequired,
-  // updateRoom: PropTypes.func.isRequired,
-  // deleteRoom: PropTypes.func.isRequired,
-  // createService: PropTypes.func.isRequired,
-  // updateService: PropTypes.func.isRequired,
-  // deleteService: PropTypes.func.isRequired,
-  // updateUser: PropTypes.func.isRequired,
-  // createImage: PropTypes.func.isRequired,
-  // deleteImage: PropTypes.func.isRequired,
+  loggedUser: PropTypes.instanceOf(User).isRequired,
 };
 
 export default HotelsManagement;

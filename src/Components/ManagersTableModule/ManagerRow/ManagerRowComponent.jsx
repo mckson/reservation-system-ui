@@ -6,6 +6,8 @@ import User from '../../../Models/User';
 import ManagerRowMap from '../ManagerRowMap/ManagerRowMap';
 import Hotel from '../../../Models/Hotel';
 
+const managerRole = 'Manager';
+
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: 0,
@@ -33,7 +35,7 @@ const ManagerRowComponent = ({
     debugger;
     // eslint-disable-next-line no-param-reassign
     if (manager.hotels.length > 1) {
-      const index = manager.hotels.findIndex(hotel.id);
+      const index = manager.hotels.findIndex((item) => hotel.id === item);
 
       if (index === -1) {
         return 'Current hotel does not contain that manager';
@@ -44,6 +46,12 @@ const ManagerRowComponent = ({
       if (manager.hotels[0] !== hotel.id) {
         return 'Current hotel does not contain that manager';
       }
+
+      const managerRoleIndex = manager.roles.findIndex(
+        (role) => role === managerRole
+      );
+
+      manager.roles.splice(managerRoleIndex, 1);
 
       // eslint-disable-next-line no-param-reassign
       manager.hotels = [];

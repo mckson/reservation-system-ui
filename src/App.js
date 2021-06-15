@@ -36,19 +36,31 @@ function App() {
     const response = await API.getHotels(
       pageNumber,
       pageSize,
+      dateIn,
+      dateOut,
+      '',
       hotelname,
       city,
       services
     );
 
+    console.log('***');
+
     if (response != null) {
       const respondedHotels = response.content.map((item) => new Hotel(item));
+
+      // eslint-disable-next-line no-debugger
+      debugger;
 
       setHotels(respondedHotels);
       setTotalResults(response.totalResults);
       setTotalPages(response.totalPages);
-      setPageNumber(response.pageNumber);
-      setPageSize(response.pageSize);
+      if (response.pageNumber !== pageNumber) {
+        setPageNumber(response.pageNumber);
+      }
+      if (response.pageSize !== pageSize) {
+        setPageSize(response.pageSize);
+      }
     }
   };
 
@@ -74,7 +86,7 @@ function App() {
     }
 
     await requestHotels(searchParameters);
-  }, [pageSize, pageNumber, searchParameters]);
+  }, [pageSize, pageNumber, searchParameters, dateIn, dateOut]);
 
   useEffect(async () => {
     if (user) {
@@ -124,21 +136,7 @@ function App() {
       hotels={hotels}
       totalPages={totalPages}
       totalResults={totalResults}
-      // pageSize={pageSize}
-      // deleteHotel={handleDeleteHotel}
-      // updateHotel={handleUpdateHotel}
-      // createHotel={handleCreateHotel}
-      // createRoom={handleCreateRoom}
-      // updateRoom={handleUpdateRoom}
-      // deleteRoom={handleDeleteRoom}
-      // createService={handleCreateService}
-      // updateService={handleUpdateService}
-      // deleteService={handleDeleteService}
-      // updateUser={handleUpdateUser}
-      // createImage={handleCreateImage}
-      // deleteImage={handleDeleteImage}
       pageChanged={onPageChanged}
-      // pageSizeChanged={handlePageSizeChanged}
       loguot={onLogout}
       submit={onSubmit}
       searchHotels={onSearchHotels}
@@ -146,6 +144,8 @@ function App() {
       dateOut={dateOut}
       onDateInChange={handleDateInChange}
       onDateOutChange={handleDateOutChange}
+      // refreshHotels={requestHotels(searchParameters)}
+      refreshUsers={requestUsers}
     />
   );
 }
