@@ -24,6 +24,7 @@ import CompleteOrder from './ReservationModule/CompleteOrder/CompleteOrder';
 import API from '../Common/API';
 import SmallHotelCard from './SmallHotelCard';
 import DetailsComponent from './ReservationModule/Details/DetailsComponent';
+import Room from '../Models/Room';
 
 const getSteps = () => [
   'Select room and services',
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 const getStepContent = (
   stepIndex,
   hotel,
+  rooms,
   loggedUser,
   onRoomChange,
   onServicesChange,
@@ -74,13 +76,14 @@ const getStepContent = (
         <>
           <Grid item xs={12}>
             <Typography variant="h6">
-              Select rooms annd services you want to reserve
+              Select rooms and services you want to reserve
             </Typography>
             <SmallHotelCard hotel={hotel} />
           </Grid>
           <Grid item xs={12}>
             <RoomSelectionComponent
               hotel={hotel}
+              rooms={rooms}
               onRoomChange={onRoomChange}
               onServicesChange={onServicesChange}
             />
@@ -121,7 +124,15 @@ const getStepContent = (
   }
 };
 
-const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
+const Reservation = ({
+  loggedUser,
+  rooms,
+  open,
+  close,
+  hotel,
+  dateIn,
+  dateOut,
+}) => {
   const [activeStep, setActiveStep] = useState({
     step: 0,
     isNextAvailable: false,
@@ -131,6 +142,19 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [customerInfo, setCustomerInfo] = useState(null);
+  // const [rooms, setRooms] = useState([]);
+
+  // const requestAllRooms = async () => {
+  //   // eslint-disable-next-line no-debugger
+  //   debugger;
+  //   const response = await API.getRooms(1, null, hotel.Id, dateIn, dateOut);
+
+  //   if (response) {
+  //     const respondedRooms = response.content.map((item) => new Room(item));
+
+  //     setRooms(respondedRooms);
+  //   }
+  // };
 
   const handleReservationComplete = async () => {
     const reservation = new ReservationRequest({
@@ -178,8 +202,8 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
   //   setActiveStep(0);
   // };
 
-  const handleRoomsChange = (rooms) => {
-    setSelectedRooms(rooms);
+  const handleRoomsChange = (changedRooms) => {
+    setSelectedRooms(changedRooms);
     setActiveStep((previosActiveStep) => ({
       step: previosActiveStep.step,
       isNextAvailable: rooms && rooms.length !== 0, // ? true : false
@@ -204,6 +228,10 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
       isNextAvailable: agree,
     }));
   };
+
+  // useEffect(async () => {
+  //   await requestAllRooms();
+  // }, []);
 
   return (
     <Dialog open={open} fullWidth maxWidth="md">
@@ -262,6 +290,7 @@ const Reservation = ({ loggedUser, open, close, hotel, dateIn, dateOut }) => {
                     {getStepContent(
                       activeStep.step,
                       hotel,
+                      rooms,
                       loggedUser,
                       handleRoomsChange,
                       handleServicesChange,
@@ -309,6 +338,7 @@ Reservation.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  rooms: PropTypes.arrayOf(Room).isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
 };

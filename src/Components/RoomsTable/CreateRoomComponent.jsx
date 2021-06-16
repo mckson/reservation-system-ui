@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import RoomForm from './RoomForm';
 import Hotel from '../../Models/Hotel';
 
-const CreateRoomComponent = ({ close, open, hotel, createRoom, onSuccess }) => {
+const CreateRoomComponent = ({
+  close,
+  open,
+  hotel,
+  createRoom,
+  onSuccess,
+  onRefresh,
+}) => {
   const [error, setError] = useState(null);
 
   const onCreateRoom = async (values) => {
@@ -22,6 +29,7 @@ const CreateRoomComponent = ({ close, open, hotel, createRoom, onSuccess }) => {
     } else {
       onSuccess('Room sucessfully added');
       close();
+      onRefresh();
     }
   };
 
@@ -49,6 +57,7 @@ CreateRoomComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   createRoom: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
 
 export default CreateRoomComponent;

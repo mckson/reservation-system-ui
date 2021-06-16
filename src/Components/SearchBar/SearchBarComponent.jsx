@@ -97,7 +97,6 @@ const SearchBarComponent = ({
                       style: {
                         padding: 5,
                         height: 30,
-                        width: 140,
                       },
                     }}
                     variant="outlined"
@@ -122,7 +121,6 @@ const SearchBarComponent = ({
                       style: {
                         padding: 5,
                         height: 30,
-                        width: 140,
                       },
                     }}
                     variant="outlined"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -20,6 +20,8 @@ import Hotel from '../../Models/Hotel';
 import Room from '../../Models/Room';
 import CreateRoomComponent from './CreateRoomComponent';
 import EditRoomComponent from './EditRoomComponent';
+
+import API from '../../Common/API';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -47,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RoomsTableComponent = ({
-  rooms,
   createRoom,
   updateRoom,
   deleteRoom,
@@ -56,13 +57,16 @@ const RoomsTableComponent = ({
   onError,
 }) => {
   const [isAdd, setIsAdd] = useState(false);
-  const [page, setPage] = useState(0);
+  const [rooms, setRooms] = useState([]);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowPerPage] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
+  const [refresh, setRefresh] = useState(false);
 
   const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    setPage(newPage + 1);
   };
 
   const handleChangePageSize = (event) => {
@@ -74,6 +78,21 @@ const RoomsTableComponent = ({
   const handleAddClose = () => {
     setIsAdd(!isAdd);
   };
+
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+  };
+
+  useEffect(async () => {
+    const response = await API.getRooms(page, rowsPerPage, hotel.id, '', '');
+
+    if (response) {
+      const respondedRooms = response.content.map((item) => new Room(item));
+
+      setRooms(respondedRooms);
+      setTotalCount(response.totalResults);
+    }
+  }, [page, rowsPerPage, refresh]);
 
   return (
     <>
@@ -100,10 +119,11 @@ const RoomsTableComponent = ({
           <TableBody>
             {rooms != null ? (
               rooms
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((room) => (
                   <RoomRow
                     room={room}
+                    onRefresh={handleRefresh}
                     key={room.id}
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
@@ -128,8 +148,8 @@ const RoomsTableComponent = ({
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               rowsPerPage={rowsPerPage}
-              count={rooms.length}
-              page={page}
+              count={totalCount}
+              page={page - 1}
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangePageSize}
             />
@@ -139,6 +159,7 @@ const RoomsTableComponent = ({
       <CreateRoomComponent
         open={isAdd}
         close={handleAddClose}
+        onRefresh={handleRefresh}
         createRoom={createRoom}
         hotel={hotel}
         onSuccess={onSuccess}
@@ -148,7 +169,7 @@ const RoomsTableComponent = ({
 };
 
 RoomsTableComponent.propTypes = {
-  rooms: PropTypes.arrayOf(Room).isRequired,
+  // rooms: PropTypes.arrayOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   // totalCount: PropTypes.number.isRequired,
   // pageSize: PropTypes.number.isRequired,
@@ -162,6 +183,7 @@ RoomsTableComponent.propTypes = {
 const RoomRow = ({
   room,
   hotel,
+  onRefresh,
   updateRoom,
   deleteRoom,
   onError,
@@ -195,6 +217,7 @@ const RoomRow = ({
                 onError(errorResponse);
               } else {
                 onSuccess('Room successfully deleted');
+                onRefresh();
               }
             }}
           >
@@ -205,6 +228,7 @@ const RoomRow = ({
       <EditRoomComponent
         room={room}
         open={isEdit}
+        onRefresh={onRefresh}
         close={handleEditClose}
         hotel={hotel}
         updateRoom={updateRoom}
@@ -217,6 +241,7 @@ const RoomRow = ({
 RoomRow.propTypes = {
   room: PropTypes.instanceOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  onRefresh: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,
   deleteRoom: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,

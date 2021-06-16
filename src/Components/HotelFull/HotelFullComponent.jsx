@@ -26,15 +26,29 @@ import Reservation from '../Reservation';
 import User from '../../Models/User';
 import SearchBar from '../SearchBar/SearchBar';
 import LabeledInfo from './LabeledInfo';
+import Room from '../../Models/Room';
+import ServiceItem from './ServiceItem';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(1, 5, 1),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(1, 10, 1),
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(1, 30, 1),
+    },
+    [theme.breakpoints.up('xl')]: {
+      padding: theme.spacing(1, 40, 1),
+    },
   },
+  grid: {},
   rootCard: {
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: theme.palette.grey[100],
+    borderColor: theme.palette.grey[100],
     padding: theme.spacing(0),
     margin: theme.spacing(0),
     width: 'auto',
@@ -77,10 +91,18 @@ const useStyles = makeStyles((theme) => ({
   gallery: {
     // margin: theme.spacing(2, 0, 2),
   },
+  serviceContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
 }));
 
 const HotelFullComponent = ({
   hotel,
+  rooms,
   onBackClick,
   loggedUser,
   dateIn,
@@ -98,7 +120,7 @@ const HotelFullComponent = ({
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className={classes.grid}>
         <Grid item sm={12} md={3}>
           <SearchBar
             side
@@ -211,17 +233,21 @@ const HotelFullComponent = ({
                   labelComponent={
                     <Typography variant="h6">Services</Typography>
                   }
-                  infoComponent={hotel.services.map((service) => (
-                    <Typography key={service.id}>{service.name}</Typography>
-                  ))}
+                  infoComponent={
+                    <div className={classes.serviceContainer}>
+                      {hotel.services.map((service) => (
+                        <ServiceItem key={service.id} service={service} />
+                      ))}
+                    </div>
+                  }
                 />
               ) : null}
 
-              {hotel.rooms.lenght !== 0 ? (
+              {rooms && rooms.lenght !== 0 ? (
                 <LabeledInfo
                   icon={<RoomIcon />}
                   labelComponent={<Typography variant="h6">Rooms</Typography>}
-                  infoComponent={hotel.rooms.map((room) => (
+                  infoComponent={rooms.map((room) => (
                     <div key={room.id} className={classes.room}>
                       <Typography>
                         <b>Number</b> {room.roomNumber}
@@ -246,6 +272,7 @@ const HotelFullComponent = ({
           open={isReservation}
           close={handleReservationClose}
           hotel={hotel}
+          rooms={rooms}
           loggedUser={loggedUser}
           dateIn={dateIn}
           dateOut={dateOut}
@@ -264,9 +291,11 @@ HotelFullComponent.propTypes = {
   searchHotels: PropTypes.func.isRequired,
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
+  rooms: PropTypes.arrayOf(Room),
 };
 
 HotelFullComponent.defaultProps = {
+  rooms: [],
   loggedUser: null,
   dateIn: null,
   dateOut: null,

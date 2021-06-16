@@ -7,6 +7,7 @@ import RoomForm from './RoomForm';
 const EditRoomComponent = ({
   open,
   close,
+  onRefresh,
   room,
   hotel,
   updateRoom,
@@ -29,6 +30,7 @@ const EditRoomComponent = ({
       setError(errorResponse);
     } else {
       onSuccess('Room sucessfully updated');
+      onRefresh();
       close();
     }
   };
@@ -54,6 +56,7 @@ const EditRoomComponent = ({
 EditRoomComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
   room: PropTypes.instanceOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   updateRoom: PropTypes.func.isRequired,

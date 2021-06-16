@@ -6,6 +6,7 @@ import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
 import API from '../../Common/API';
 import User from '../../Models/User';
+import Room from '../../Models/Room';
 
 // import Default from '../../images/default.png';
 
@@ -19,18 +20,54 @@ const HotelFull = ({
 }) => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [roomsTotalResults, setRoomsTotalResults] = useState(null);
+  const [roomsPageNumber, setRoomsPageNumber] = useState(1);
+  const [roomsPageSize, setRoomsPageSize] = useState(null);
+  const [roomsTotalPages, setRoomsTotalPages] = useState(null);
+
   const history = useHistory();
 
   const onBackClick = () => history.push('/Hotels');
 
-  useEffect(() => {
-    API.axios
+  const requestRooms = async (hotelId) => {
+    const response = await API.getRooms(
+      roomsPageNumber,
+      roomsPageSize,
+      hotelId,
+      dateIn,
+      dateOut
+    );
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (response) {
+      const respondedRooms = response.content.map((item) => new Room(item));
+
+      setRooms(respondedRooms);
+      setRoomsTotalResults(response.totalResults);
+      setRoomsTotalPages(response.totalPages);
+      if (response.pageNumber !== roomsPageNumber) {
+        setRoomsPageNumber(response.pageNumber);
+      }
+      if (response.pageSize !== roomsPageSize) {
+        setRoomsPageSize(response.pageSize);
+      }
+    }
+  };
+
+  useEffect(async () => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    await API.axios
       .get(`/Hotels/${id}`)
-      .then((response) => {
+      .then(async (response) => {
         // if (response.data.mainImage == null) {
         //   response.data.mainImage = { id: 0, image: Default };
         // }
         setHotel(new Hotel(response.data));
+
+        await requestRooms(response.data.id);
       })
       .catch((err) => {
         if (err.response) {
@@ -46,11 +83,21 @@ const HotelFull = ({
       });
   }, []);
 
+  // useEffect(async () => {
+  //   // eslint-disable-next-line no-debugger
+  //   debugger;
+  //   if (hotel) {
+  //   }
+  // }, [hotel /* , roomsPageSize, roomsPageNumber, dateIn, dateOut */]);
+
   return (
     <>
       {hotel && hotel !== {} ? (
         <HotelFullComponent
           hotel={hotel}
+          rooms={rooms}
+          roomsTotalResults={roomsTotalResults}
+          roomsTotalPages={roomsTotalPages}
           onBackClick={onBackClick}
           loggedUser={loggedUser}
           dateIn={dateIn}

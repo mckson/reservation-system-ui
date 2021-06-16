@@ -152,7 +152,6 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openRooms}>
                   <RoomsTableComponent
-                    rooms={hotel.rooms}
                     createRoom={createRoom}
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}

@@ -5,10 +5,16 @@ import { Autocomplete } from '@material-ui/lab';
 import { Grid, TextField, Typography } from '@material-ui/core';
 
 import Hotel from '../../../Models/Hotel';
+import Room from '../../../Models/Room';
 // import MyTextField from '../../../Common/MyTextField';
 // import SmallHotelCard from '../../SmallHotelCard';
 
-const RoomSelectionComponent = ({ hotel, onRoomChange, onServicesChange }) => {
+const RoomSelectionComponent = ({
+  hotel,
+  rooms,
+  onRoomChange,
+  onServicesChange,
+}) => {
   // const [selectedRoom, setSelectedRoom] = useState({});
   // const [selectedServices, setSelectedServices] = useState([]);
 
@@ -27,7 +33,7 @@ const RoomSelectionComponent = ({ hotel, onRoomChange, onServicesChange }) => {
         <Autocomplete
           size="small"
           multiple
-          options={hotel.rooms}
+          options={rooms}
           getOptionLabel={(room) =>
             `Room #${room.roomNumber}, ${room.capacity} beds ($${room.price})`
           }
@@ -55,6 +61,7 @@ const RoomSelectionComponent = ({ hotel, onRoomChange, onServicesChange }) => {
 
 RoomSelectionComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  rooms: PropTypes.arrayOf(Room).isRequired,
   onRoomChange: PropTypes.func.isRequired,
   onServicesChange: PropTypes.func.isRequired,
 };

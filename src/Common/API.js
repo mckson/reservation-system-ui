@@ -32,6 +32,11 @@ const hotelsUrl = (
     services ? services.map((service) => `&services=${service}`).join('') : ''
   }`;
 
+const roomsUrl = (pageNumber, pageSize, hotelId, dateIn, dateOut) =>
+  `/Rooms?pageNumber=${pageNumber}&pageSize=${
+    pageSize || ''
+  }&hotelId=${hotelId}&dateIn=${dateIn || ''}&dateOut=${dateOut || ''}`;
+
 axios.defaults.baseURL = baseURL;
 
 axios.interceptors.request.use(
@@ -123,6 +128,17 @@ const getHotels = (
       .catch((error) => {
         reject(error);
       });
+  });
+};
+
+const getRooms = (pageNumber, pageSize, hotelId, dateIn, dateOut) => {
+  // eslint-disable-next-line no-debugger
+  debugger;
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomsUrl(pageNumber, pageSize, hotelId, dateIn, dateOut))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -310,6 +326,7 @@ export default {
   axios,
   getUsers,
   getHotels,
+  getRooms,
   deleteHotel,
   updateHotel,
   createHotel,
