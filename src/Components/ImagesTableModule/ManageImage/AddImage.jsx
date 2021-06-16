@@ -8,6 +8,7 @@ import {
   IconButton,
   DialogContent,
   Button,
+  CircularProgress,
   // TextField,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -35,6 +36,7 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
   const classes = useStyles();
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
+  const [processing, setProcessing] = useState(false);
 
   const [uploadedFile, setUploadedFile] = useState(null);
 
@@ -66,7 +68,6 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
     }
   };
 
-  let errorResponse = null;
   const onCreateImageAsync = async (imageData) => {
     // eslint-disable-next-line no-debugger
     debugger;
@@ -79,7 +80,9 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
     // eslint-disable-next-line no-debugger
     debugger;
 
-    errorResponse = await createImage(createdImage);
+    setProcessing(true);
+    const errorResponse = await createImage(createdImage);
+    setProcessing(false);
 
     // eslint-disable-next-line no-debugger
     debugger;
@@ -119,59 +122,63 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
           </div>
         </DialogTitle>
         <DialogContent>
-          <Formik
-            initialValues={{ image: '' }}
-            onSubmit={() => onCreateImageAsync(image)}
-          >
-            <Form>
-              <label
-                htmlFor="icon-button-file"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Typography>
-                  {uploadedFile?.name || 'Upload main picture'}
-                </Typography>
-                {image ? (
-                  <img
-                    height={100}
-                    className={classes.image}
-                    src={/* `data:image/jpeg;base64, */ `${image}`}
-                    alt="Hotel"
-                  />
-                ) : null}
-                <input
-                  accept="image/*"
-                  dra
-                  style={{ display: 'none' }}
-                  onChange={(e) => uploadImage(e)}
-                  id="icon-button-file"
-                  type="file"
-                />
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
-                  component="span"
+          {processing ? (
+            <CircularProgress />
+          ) : (
+            <Formik
+              initialValues={{ image: '' }}
+              onSubmit={() => onCreateImageAsync(image)}
+            >
+              <Form>
+                <label
+                  htmlFor="icon-button-file"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
                 >
-                  <PhotoCameraOutlined />
-                </IconButton>
-              </label>
-              <Button
-                fullWidth
-                disabled={!image}
-                className={classes.submit}
-                variant="contained"
-                type="submit"
-                color="primary"
-              >
-                Add Image
-              </Button>
-            </Form>
-          </Formik>
+                  <Typography>
+                    {uploadedFile?.name || 'Upload main picture'}
+                  </Typography>
+                  {image ? (
+                    <img
+                      height={100}
+                      className={classes.image}
+                      src={/* `data:image/jpeg;base64, */ `${image}`}
+                      alt="Hotel"
+                    />
+                  ) : null}
+                  <input
+                    accept="image/*"
+                    dra
+                    style={{ display: 'none' }}
+                    onChange={(e) => uploadImage(e)}
+                    id="icon-button-file"
+                    type="file"
+                  />
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="span"
+                  >
+                    <PhotoCameraOutlined />
+                  </IconButton>
+                </label>
+                <Button
+                  fullWidth
+                  disabled={!image}
+                  className={classes.submit}
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                >
+                  Add Image
+                </Button>
+              </Form>
+            </Formik>
+          )}
         </DialogContent>
         {error != null ? (
           <Alert

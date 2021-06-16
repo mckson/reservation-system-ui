@@ -6,6 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { CircularProgress } from '@material-ui/core';
 import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
 import Navbar from '../../Common/Navbar';
@@ -62,6 +63,9 @@ const RoutesComponent = ({
             loggedUser={loggedUser}
             dateIn={dateIn}
             dateOut={dateOut}
+            searchHotels={searchHotels}
+            onDateInChange={onDateInChange}
+            onDateOutChange={onDateOutChange}
           />
         </Route>
         <Route path="/Hotels">
@@ -79,13 +83,10 @@ const RoutesComponent = ({
                 onDateOutChange={onDateOutChange}
               />
             ) : (
-              'Loading'
+              <CircularProgress />
             )}
           </div>
         </Route>
-        {/* <Route path="/Reservation/:hotelId">
-          <Reservation />
-        </Route> */}
         <Route path="/SignIn">
           <SignIn onSignIn={submit} />
         </Route>
@@ -104,27 +105,13 @@ RoutesComponent.propTypes = {
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
   totalResults: PropTypes.number,
-  // pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
-  // pageSizeChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
   isHotelsManagementOpen: PropTypes.bool.isRequired,
   closeHotelsManagement: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
-  // deleteHotel: PropTypes.func.isRequired,
-  // updateHotel: PropTypes.func.isRequired,
-  // createHotel: PropTypes.func.isRequired,
-  // createRoom: PropTypes.func.isRequired,
-  // updateRoom: PropTypes.func.isRequired,
-  // deleteRoom: PropTypes.func.isRequired,
-  // createService: PropTypes.func.isRequired,
-  // updateService: PropTypes.func.isRequired,
-  // deleteService: PropTypes.func.isRequired,
-  // updateUser: PropTypes.func.isRequired,
-  // createImage: PropTypes.func.isRequired,
-  // deleteImage: PropTypes.func.isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,

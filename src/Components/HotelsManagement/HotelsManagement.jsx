@@ -17,6 +17,8 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
     const response = await API.getHotels(
       pageNumber,
       pageSize,
+      '',
+      '',
       loggedUser.roles.includes(Constants.adminRole) ? '' : loggedUser.id
     );
 

@@ -6,7 +6,7 @@ import HotelCard from './HotelCard';
 import Hotel from '../Models/Hotel';
 import PaginationBar from '../Common/PaginationBar';
 // import HotelSearchComponent from './HotelSearchComponent';
-import SearchBarComponent from './SearchBar/SearchBarComponent';
+import SearchBar from './SearchBar/SearchBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +58,7 @@ const HotelsPage = ({
   return (
     <Grid container className={classes.root}>
       <div className={classes.search}>
-        <SearchBarComponent
+        <SearchBar
           searchHotels={searchHotels}
           dateIn={dateIn}
           dateOut={dateOut}

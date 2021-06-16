@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
@@ -9,7 +9,14 @@ import User from '../../Models/User';
 
 // import Default from '../../images/default.png';
 
-const HotelFull = ({ loggedUser, dateIn, dateOut }) => {
+const HotelFull = ({
+  loggedUser,
+  dateIn,
+  dateOut,
+  searchHotels,
+  onDateInChange,
+  onDateOutChange,
+}) => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
   const history = useHistory();
@@ -48,9 +55,21 @@ const HotelFull = ({ loggedUser, dateIn, dateOut }) => {
           loggedUser={loggedUser}
           dateIn={dateIn}
           dateOut={dateOut}
+          searchHotels={searchHotels}
+          onDateInChange={onDateInChange}
+          onDateOutChange={onDateOutChange}
         />
       ) : (
-        <Typography variant="h4">Loading</Typography>
+        <div
+          style={{
+            flexGrow: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <CircularProgress />
+        </div>
       )}
     </>
   );
@@ -60,6 +79,9 @@ HotelFull.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
+  searchHotels: PropTypes.func.isRequired,
+  onDateInChange: PropTypes.func.isRequired,
+  onDateOutChange: PropTypes.func.isRequired,
 };
 
 HotelFull.defaultProps = {
