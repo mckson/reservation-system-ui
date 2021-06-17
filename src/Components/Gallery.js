@@ -67,7 +67,7 @@ const Gallery = ({ images }) => {
             // cols={getColWidth(index)}
             // rows={getRowHeight(index)}
           >
-            <img src={`data:image/jpeg;base64,${image.image}`} alt="hotel" />
+            <img src={image} alt={image} />
           </GridListTile>
         ))}
         {images.length > 7 ? (
@@ -99,10 +99,7 @@ const Gallery = ({ images }) => {
           <GridList cellHeight={160} cols={cols} rows={rows}>
             {images.map((image /* , index */) => (
               <GridListTile key={image.id} onClick={() => setViewImage(image)}>
-                <img
-                  src={`data:image/jpeg;base64,${image.image}`}
-                  alt="hotel"
-                />
+                <img src={image} alt={image.name} />
               </GridListTile>
             ))}
           </GridList>
@@ -123,7 +120,7 @@ const Gallery = ({ images }) => {
           </div>
         </DialogTitle>
         <DialogContent>
-          <img src={`data:image/jpeg;base64,${viewImage?.image}`} alt="hotel" />
+          <img src={`${viewImage?.image}`} alt={viewImage?.name} />
         </DialogContent>
       </Dialog>
     </div>

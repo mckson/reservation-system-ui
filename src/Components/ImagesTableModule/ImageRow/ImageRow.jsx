@@ -36,11 +36,7 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
       <TableRow>
         <TableCell>{image.id}</TableCell>
         <TableCell align="center">
-          <img
-            className={classes.image}
-            src={`data:image/jpeg;base64,${image.image}`}
-            alt="Hotel"
-          />
+          <img className={classes.image} src={`${image.image}`} alt="Hotel" />
         </TableCell>
         <TableCell className={classes.actions}>
           <IconButton className={classes.button} onClick={onDeleteImage}>

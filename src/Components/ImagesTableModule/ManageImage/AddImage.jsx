@@ -16,6 +16,7 @@ import { Alert } from '@material-ui/lab';
 import { CloseOutlined, PhotoCameraOutlined } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
 import Hotel from '../../../Models/Hotel';
+import ImageModelConverter from '../../../Common/ImageModelConverter';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -38,61 +39,40 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
   const [image, setImage] = useState(null);
   const [processing, setProcessing] = useState(false);
 
-  const [uploadedFile, setUploadedFile] = useState(null);
+  // const outputImage = (fileImage) => {
+  //   const reader = new FileReader();
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        console.log(file);
-        setUploadedFile(file);
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (err) => {
-        reject(err);
-      };
-    });
-  };
+  //   return reader.readAsDataURL(fileImage);
+  // };
 
   const uploadImage = async (event) => {
-    const file = event.target.files[0];
     try {
-      const base64 = await convertBase64(file);
-      console.log(base64);
-      setImage(base64);
+      const file = event.target.files[0];
+
+      const imageModel = await ImageModelConverter.fileToImageModelAsync(file);
+
+      setImage(imageModel);
     } catch (err) {
       setError(err);
     }
   };
 
   const onCreateImageAsync = async (imageData) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
-
     const createdImage = {
-      image: imageData,
+      image: imageData.image,
+      name: imageData.name,
+      type: imageData.type,
       hotelId: hotel.id,
     };
-
-    // eslint-disable-next-line no-debugger
-    debugger;
 
     setProcessing(true);
     const errorResponse = await createImage(createdImage);
     setProcessing(false);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (errorResponse != null) {
-      // eslint-disable-next-line no-debugger
-      debugger;
       setError(errorResponse);
     } else {
       setImage(null);
-      setUploadedFile(null);
       onSuccess('Image successfully added');
       close();
     }
@@ -113,7 +93,6 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
               className={classes.closeButton}
               onClick={() => {
                 setImage(null);
-                setUploadedFile(null);
                 close();
               }}
             >
@@ -140,13 +119,13 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
                   }}
                 >
                   <Typography>
-                    {uploadedFile?.name || 'Upload main picture'}
+                    {image?.name || 'Upload main picture'}
                   </Typography>
                   {image ? (
                     <img
                       height={100}
                       className={classes.image}
-                      src={/* `data:image/jpeg;base64, */ `${image}`}
+                      src={image.image}
                       alt="Hotel"
                     />
                   ) : null}

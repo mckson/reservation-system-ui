@@ -13,7 +13,9 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
       description: values.description,
       mainImage: values.mainImage
         ? {
-            image: values.mainImage,
+            image: values.mainImage.image,
+            name: values.mainImage.name,
+            type: values.mainImage.type,
           }
         : null,
       location: {
@@ -25,8 +27,6 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
       },
     };
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     const errorResponse = await createHotel(createdHotel);
 
     if (errorResponse) {

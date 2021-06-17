@@ -16,20 +16,14 @@ const ManagementService = (function Management() {
 
   const baseRequestHandler = async (requestFunction, parameter) => {
     try {
-      // eslint-disable-next-line no-debugger
-      debugger;
       const returnedValue = await requestFunction(parameter);
 
-      // eslint-disable-next-line no-debugger
-      debugger;
       if (!returnedValue) {
         throw new ManagementServiceException('Unable to execute operation');
       }
 
       return null;
     } catch (error) {
-      // eslint-disable-next-line no-debugger
-      debugger;
       if (error.response.data.message) {
         return error.response.data.message;
       }
@@ -46,8 +40,6 @@ const ManagementService = (function Management() {
   };
 
   const handleUpdateHotel = async (updatedHotel) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const returnedHotel = await API.updateHotel(updatedHotel);
     return returnedHotel;
   };

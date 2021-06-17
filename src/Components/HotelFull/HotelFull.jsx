@@ -39,8 +39,6 @@ const HotelFull = ({
       dateOut
     );
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
 
@@ -57,8 +55,6 @@ const HotelFull = ({
   };
 
   useEffect(async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     await API.axios
       .get(`/Hotels/${id}`)
       .then(async (response) => {
@@ -84,8 +80,6 @@ const HotelFull = ({
   }, []);
 
   // useEffect(async () => {
-  //   // eslint-disable-next-line no-debugger
-  //   debugger;
   //   if (hotel) {
   //   }
   // }, [hotel /* , roomsPageSize, roomsPageNumber, dateIn, dateOut */]);

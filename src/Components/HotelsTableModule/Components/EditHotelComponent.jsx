@@ -15,7 +15,9 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
       description: values.description,
       mainImage: values.mainImage
         ? {
-            image: values.mainImage,
+            image: values.mainImage.image,
+            name: values.mainImage.name,
+            type: values.mainImage.type,
             hotelId: hotel.id,
           }
         : null,
@@ -27,8 +29,6 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
         buildingNumber: parseInt(values.buildingNumber, 10),
       },
     };
-    // eslint-disable-next-line no-debugger
-    debugger;
     const errorResponse = await updateHotel(updatedHotel);
 
     if (errorResponse) {

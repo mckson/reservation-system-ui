@@ -83,9 +83,8 @@ const HotelsTableComponent = ({
     setRowPerPage(newSize);
   };
 
-  const handleAddClose = (message) => {
+  const handleAddClose = () => {
     setIsAdd(!isAdd);
-    console.log(message);
   };
 
   return (

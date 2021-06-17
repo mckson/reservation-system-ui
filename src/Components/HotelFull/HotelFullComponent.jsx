@@ -163,11 +163,7 @@ const HotelFullComponent = ({
               <CardMedia className={classes.media}>
                 <img
                   style={{ width: '50%' }}
-                  src={
-                    hotel?.mainImage?.image
-                      ? `data:image/jpeg;base64,${hotel.mainImage.image}`
-                      : Default
-                  }
+                  src={hotel?.mainImage ? hotel.mainImage : Default}
                   alt="hotel"
                 />
               </CardMedia>

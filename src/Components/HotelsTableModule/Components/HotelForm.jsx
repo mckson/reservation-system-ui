@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CloseOutlined,
   DeleteOutlined,
@@ -19,6 +19,9 @@ import { Alert } from '@material-ui/lab';
 import * as Yup from 'yup';
 import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
+import ImageModelConverter from '../../../Common/ImageModelConverter';
+
+import API from '../../../Common/API';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -85,34 +88,29 @@ const HotelForm = ({
 }) => {
   const classes = useStyles();
   const [mainImage, setMainImage] = useState(
-    hotel?.mainImage?.image
-      ? `data:image/jpeg;base64,${hotel.mainImage.image}`
-      : null
+    hotel?.mainImage ? hotel?.mainImage : null
   );
-  const [uploadedFile, setUploadedFile] = useState(null);
+  // const [mainImagePreview, setMainImagePreview] = useState(
+  //   hotel?.mainImage ? hotel?.mainImage : null
+  // );
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        console.log(file);
-        setUploadedFile(file);
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (err) => {
-        reject(err);
-      };
-    });
-  };
+  useEffect(async () => {
+    if (hotel?.mainImage) {
+      await API.axios.get(hotel.mainImage).then(async (response) => {
+        const imageModel = await ImageModelConverter.bytesToImageModelAsync(
+          response
+        );
+        console.log(imageModel);
+      });
+    }
+  });
 
   const uploadImage = async (event) => {
     const file = event.target.files[0];
-    const base64 = await convertBase64(file);
-    console.log(base64);
-    setMainImage(base64);
+
+    const imageModel = await ImageModelConverter.fileToImageModelAsync(file);
+
+    setMainImage(imageModel);
   };
 
   return (
@@ -127,11 +125,14 @@ const HotelForm = ({
               className={classes.closeButton}
               onClick={() => {
                 setMainImage(
-                  hotel?.mainImage?.image
-                    ? `data:image/jpeg;base64,${hotel.mainImage.image}`
+                  hotel?.mainImage
+                    ? {
+                        image: hotel.mainImage?.image,
+                        name: hotel.mainImage?.name,
+                        type: hotel.mainImage?.type,
+                      }
                     : null
                 );
-                setUploadedFile(null);
                 close();
               }}
             >
@@ -152,15 +153,23 @@ const HotelForm = ({
               street: hotel != null ? hotel.location.street : '',
               buildingNumber:
                 hotel != null ? hotel.location.buildingNumber : '',
-              mainImage: hotel != null ? hotel.mainImage?.image : null,
+              mainImage:
+                hotel?.mainImage != null
+                  ? {
+                      image: hotel.mainImage.image,
+                      name: hotel.mainImage.name,
+                      type: hotel.mainImage.type,
+                    }
+                  : null,
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
+              // eslint-disable-next-line no-debugger
+              debugger;
               // eslint-disable-next-line no-param-reassign
               values.mainImage = mainImage;
               submitHandler(values);
               setMainImage(null);
-              setUploadedFile(null);
             }}
           >
             <Form autoComplete="on">
@@ -249,15 +258,11 @@ const HotelForm = ({
               >
                 <Typography>
                   {mainImage
-                    ? uploadedFile?.name || 'Select new one to change'
+                    ? 'Select new one to change'
                     : 'Upload main picture'}
                 </Typography>
                 {mainImage ? (
-                  <img
-                    className={classes.image}
-                    src={/* `data:image/jpeg;base64, */ `${mainImage}`}
-                    alt="Hotel"
-                  />
+                  <img className={classes.image} src={mainImage} alt="Hotel" />
                 ) : null}
                 <input
                   accept="image/*"

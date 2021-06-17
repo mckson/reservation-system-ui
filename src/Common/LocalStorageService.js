@@ -12,8 +12,6 @@ const LocalStorageService = (function StorageService() {
   }
 
   function setToken(token) {
-    // eslint-disable-next-line no-debugger
-    debugger;
     localStorage.setItem(accessToken, token.jwtToken);
     localStorage.setItem(refreshToken, token.refreshToken);
   }

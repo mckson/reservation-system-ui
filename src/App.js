@@ -49,9 +49,6 @@ function App() {
     if (response != null) {
       const respondedHotels = response.content.map((item) => new Hotel(item));
 
-      // eslint-disable-next-line no-debugger
-      debugger;
-
       setHotels(respondedHotels);
       setTotalResults(response.totalResults);
       setTotalPages(response.totalPages);
@@ -80,8 +77,7 @@ function App() {
     const jwt = localStorage.getItem('access_token');
     if (jwt && user == null) {
       const userDecoded = parseJwt(jwt);
-      // eslint-disable-next-line no-debugger
-      debugger;
+
       setUser(new User(userDecoded));
     }
 

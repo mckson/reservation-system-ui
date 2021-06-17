@@ -65,18 +65,22 @@ axios.interceptors.response.use(
       window.location.href = '/SignIn';
     }
 
-    if (error.response.status === 401 && !originalRequest.retry) {
-      originalRequest.retry = true;
+    if (error.response) {
+      if (error.response.status === 401 && !originalRequest.retry) {
+        originalRequest.retry = true;
 
-      return axios
-        .post('/Account/RefreshToken', {
-          token: localStorageService.getRefreshToken(),
-        })
-        .then((response) => {
-          localStorageService.setToken(response.data);
-          axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
-          return axios(originalRequest);
-        });
+        return axios
+          .post('/Account/RefreshToken', {
+            token: localStorageService.getRefreshToken(),
+          })
+          .then((response) => {
+            localStorageService.setToken(response.data);
+            axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
+            return axios(originalRequest);
+          });
+      }
+    } else {
+      // handle server down
     }
 
     return Promise.reject(error);
@@ -104,8 +108,6 @@ const getHotels = (
   city,
   services
 ) => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   return new Promise((resolve, reject) => {
     axios
       .get(
@@ -121,8 +123,6 @@ const getHotels = (
         )
       )
       .then((response) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         resolve(response.data);
       })
       .catch((error) => {
@@ -132,8 +132,6 @@ const getHotels = (
 };
 
 const getRooms = (pageNumber, pageSize, hotelId, dateIn, dateOut) => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   return new Promise((resolve, reject) => {
     axios
       .get(roomsUrl(pageNumber, pageSize, hotelId, dateIn, dateOut))
@@ -156,8 +154,6 @@ const deleteHotel = (id) => {
 
 const updateHotel = (hotel) => {
   return new Promise((resolve, reject) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     axios
       .put(hotelUrl(hotel.id), hotel)
       .then((response) => resolve(response.data))
@@ -169,8 +165,6 @@ const updateHotel = (hotel) => {
 };
 
 const createHotel = (hotel) => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   return new Promise((resolve, reject) => {
     axios
       .post(hotelUrl(''), hotel)
@@ -236,8 +230,6 @@ const createService = (service) => {
       .post(serviceUrl(''), service)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         console.log(error.response);
         reject(error);
       });
@@ -273,8 +265,6 @@ const updateUser = (user) => {
     axios
       .put(userUrl(user.id), user)
       .then((response) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         resolve(response.data);
       })
       .catch((error) => {
@@ -290,8 +280,6 @@ const createImage = (image) => {
       .post(imageUrl(''), image)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         console.log(error.response);
         reject(error);
       });

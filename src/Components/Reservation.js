@@ -68,8 +68,6 @@ const getStepContent = (
   onCustomerChange,
   onSubmitOrder
 ) => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   switch (stepIndex) {
     case 0:
       return (
@@ -145,8 +143,6 @@ const Reservation = ({
   // const [rooms, setRooms] = useState([]);
 
   // const requestAllRooms = async () => {
-  //   // eslint-disable-next-line no-debugger
-  //   debugger;
   //   const response = await API.getRooms(1, null, hotel.Id, dateIn, dateOut);
 
   //   if (response) {
@@ -187,8 +183,6 @@ const Reservation = ({
       step: prevActiveStep.step + 1,
       isNextAvailable: false,
     }));
-    // eslint-disable-next-line no-debugger
-    debugger;
   };
 
   const handleBack = () => {

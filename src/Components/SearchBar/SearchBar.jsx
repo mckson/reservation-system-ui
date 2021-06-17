@@ -40,8 +40,6 @@ const SearchBar = ({
   };
 
   const handleSubmit = (values) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     searchHotels(values.search);
     onDateInChange(values.dateIn);
     onDateOutChange(values.dateOut);

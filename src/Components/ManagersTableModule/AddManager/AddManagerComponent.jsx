@@ -20,8 +20,6 @@ const AddManagerComponent = ({
   let errorResponse = null;
 
   const onUpdateUserAsync = async (user) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     // eslint-disable-next-line no-param-reassign
     if (
       user.hotels == null ||

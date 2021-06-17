@@ -31,8 +31,6 @@ const ManagerRowComponent = ({
   const classes = useStyles();
 
   const onDeleteManager = async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     // eslint-disable-next-line no-param-reassign
     if (manager.hotels.length > 1) {
       const index = manager.hotels.findIndex((item) => hotel.id === item);
