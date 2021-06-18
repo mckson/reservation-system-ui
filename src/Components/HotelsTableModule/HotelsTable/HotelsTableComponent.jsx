@@ -67,6 +67,8 @@ const HotelsTableComponent = ({
   const [isAdd, setIsAdd] = useState(false);
 
   const handleChangePage = (event, newPage) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     setPage(newPage);
     pageChanged(newPage + 1);
   };

@@ -7,11 +7,21 @@ import API from '../../Common/API';
 import ManagementService from '../../Common/ManagementService';
 import Constants from '../../Common/Constants';
 
-const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
+const HotelsManagement = ({ isOpen, close, loggedUser }) => {
+  const [users, setUsers] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [totalResults, setTotalResults] = useState(null);
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
+  const requestUsers = async () => {
+    const response = await API.getUsers();
+
+    if (response) {
+      const respondedUsers = response.map((item) => new User(item));
+      setUsers(respondedUsers);
+    }
+  };
 
   const requestHotels = async () => {
     const response = await API.getHotels(
@@ -27,8 +37,12 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
 
       setHotels(respondedHotels);
       setTotalResults(response.totalResults);
-      setPageNumber(response.pageNumber);
-      setPageSize(response.pageSize);
+      if (pageNumber !== response.pageNumber) {
+        setPageNumber(response.pageNumber);
+      }
+      if (pageSize !== response.pageSize) {
+        setPageSize(response.pageSize);
+      }
     }
   };
 
@@ -69,6 +83,14 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
 
     return [response, error];
   };
+
+  useEffect(async () => {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (getRole(loggedUser) === Constants.adminRole) {
+      await requestUsers();
+    }
+  }, []);
 
   const handleUpdateHotel = async (updatedHotel) => {
     const [response, error] = await ManagementService.baseRequestHandler(
@@ -255,7 +277,7 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
 };
 
 HotelsManagement.propTypes = {
-  users: PropTypes.arrayOf(User).isRequired,
+  // users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   loggedUser: PropTypes.instanceOf(User).isRequired,

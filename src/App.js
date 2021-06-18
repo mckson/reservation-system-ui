@@ -6,7 +6,6 @@ import API from './Common/API';
 import Routes from './Components/RoutesComponent/Routes';
 
 function App() {
-  const [users, setUsers] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [searchParameters, setSearchParameters] = useState(null);
   const [totalResults, setTotalResults] = useState(null);
@@ -16,16 +15,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [dateIn, setDateIn] = useState(null);
   const [dateOut, setDateOut] = useState(null);
-
-  const requestUsers = async () => {
-    const response = await API.getUsers();
-    console.log(response);
-
-    if (response) {
-      const respondedUsers = response.map((item) => new User(item));
-      setUsers(respondedUsers);
-    }
-  };
 
   const requestHotels = async (searchRequest) => {
     const searchClauses = searchRequest?.split(' ');
@@ -74,6 +63,8 @@ function App() {
   };
 
   useEffect(async () => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     const jwt = localStorage.getItem('access_token');
     if (jwt && user == null) {
       const userDecoded = parseJwt(jwt);
@@ -83,12 +74,6 @@ function App() {
 
     await requestHotels(searchParameters);
   }, [pageSize, pageNumber, searchParameters, dateIn, dateOut]);
-
-  useEffect(async () => {
-    if (user) {
-      await requestUsers();
-    }
-  }, [user]);
 
   const onSubmit = (response) => {
     const userDecoded = parseJwt(response.data.jwtToken);
@@ -121,13 +106,9 @@ function App() {
     setDateOut(value);
   };
 
-  // const handlePageSizeChanged = (newSize) => {
-  //   setPageSize(newSize);
-  // };
-
   return (
     <Routes
-      users={users}
+      // users={users}
       loggedUser={user}
       hotels={hotels}
       totalPages={totalPages}
@@ -141,7 +122,7 @@ function App() {
       onDateInChange={handleDateInChange}
       onDateOutChange={handleDateOutChange}
       // refreshHotels={requestHotels(searchParameters)}
-      refreshUsers={requestUsers}
+      // refreshUsers={requestUsers}
     />
   );
 }

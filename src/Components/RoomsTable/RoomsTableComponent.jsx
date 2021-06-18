@@ -58,7 +58,7 @@ const RoomsTableComponent = ({
 }) => {
   const [isAdd, setIsAdd] = useState(false);
   const [rooms, setRooms] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [refresh, setRefresh] = useState(false);
@@ -66,7 +66,7 @@ const RoomsTableComponent = ({
   const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1);
+    setPage(newPage);
   };
 
   const handleChangePageSize = (event) => {
@@ -84,7 +84,13 @@ const RoomsTableComponent = ({
   };
 
   useEffect(async () => {
-    const response = await API.getRooms(page, rowsPerPage, hotel.id, '', '');
+    const response = await API.getRooms(
+      page + 1,
+      rowsPerPage,
+      hotel.id,
+      '',
+      ''
+    );
 
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
@@ -149,7 +155,7 @@ const RoomsTableComponent = ({
               rowsPerPageOptions={[5, 10, 25]}
               rowsPerPage={rowsPerPage}
               count={totalCount}
-              page={page - 1}
+              page={page}
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangePageSize}
             />
