@@ -66,7 +66,8 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
     };
 
     setProcessing(true);
-    const errorResponse = await createImage(createdImage);
+    // eslint-disable-next-line no-unused-vars
+    const [imageResponse, errorResponse] = await createImage(createdImage);
     setProcessing(false);
 
     if (errorResponse != null) {

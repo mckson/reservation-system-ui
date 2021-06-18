@@ -57,7 +57,7 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
   }, [pageSize, pageNumber]);
 
   const handleCreateHotel = async (createdHotel) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateHotel,
       createdHotel
     );
@@ -67,11 +67,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleUpdateHotel = async (updatedHotel) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleUpdateHotel,
       updatedHotel
     );
@@ -81,11 +81,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleDeleteHotel = async (deletedHotelId) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleDeleteHotel,
       deletedHotelId
     );
@@ -95,11 +95,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleCreateRoom = async (createdRoom) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateRoom,
       createdRoom
     );
@@ -109,11 +109,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleUpdateRoom = async (updatedRoom) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleUpdateRoom,
       updatedRoom
     );
@@ -123,11 +123,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleDeleteRoom = async (deletedRoomId) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleDeleteRoom,
       deletedRoomId
     );
@@ -137,11 +137,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleCreateService = async (createdService) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateService,
       createdService
     );
@@ -151,11 +151,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleUpdateService = async (updatedService) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleUpdateService,
       updatedService
     );
@@ -165,11 +165,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleDeleteService = async (deleteServiceId) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleDeleteService,
       deleteServiceId
     );
@@ -179,11 +179,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshHotels();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleUpdateUser = async (updatedUser) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleUpdateUser,
       updatedUser
     );
@@ -194,11 +194,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshUsers();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleCreateImage = async (createdImage) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateImage,
       createdImage
     );
@@ -209,11 +209,11 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshUsers();
     }
 
-    return error;
+    return [response, error];
   };
 
   const handleDeleteImage = async (deletedImageId) => {
-    const error = await ManagementService.baseRequestHandler(
+    const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleDeleteImage,
       deletedImageId
     );
@@ -224,7 +224,7 @@ const HotelsManagement = ({ users, isOpen, close, loggedUser }) => {
       // await refreshUsers();
     }
 
-    return error;
+    return [response, error];
   };
 
   return (

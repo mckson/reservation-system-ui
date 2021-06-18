@@ -1,8 +1,8 @@
 import API from './API';
 
-const ManagementServiceException = (message) => ({
-  message,
-});
+// const ManagementServiceException = (message) => ({
+//   message,
+// });
 
 const ManagementService = (function Management() {
   let service;
@@ -17,20 +17,19 @@ const ManagementService = (function Management() {
   const baseRequestHandler = async (requestFunction, parameter) => {
     try {
       const returnedValue = await requestFunction(parameter);
+      // if (!returnedValue) {
+      //   throw new ManagementServiceException('Unable to execute operation');
+      // }
 
-      if (!returnedValue) {
-        throw new ManagementServiceException('Unable to execute operation');
-      }
-
-      return null;
+      return [returnedValue, null];
     } catch (error) {
       if (error.response.data.message) {
-        return error.response.data.message;
+        return [null, error.response.data.message];
       }
       if (error.response.data.title) {
-        return error.response.data.title;
+        return [null, error.response.data.title];
       }
-      return error.message;
+      return [null, error.message];
     }
   };
 
@@ -99,8 +98,10 @@ const ManagementService = (function Management() {
     // }
   };
 
-  const handleDeleteImage = async (image) => {
-    const returnedImage = await API.deleteImage(image.id);
+  const handleDeleteImage = async (imageId) => {
+    const returnedImage = await API.deleteImage(imageId);
+    // eslint-disable-next-line no-debugger
+    debugger;
     return returnedImage;
   };
 

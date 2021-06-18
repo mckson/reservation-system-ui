@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState /* , useEffect */ } from 'react';
 import {
   CloseOutlined,
   DeleteOutlined,
@@ -21,7 +21,7 @@ import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
 import ImageModelConverter from '../../../Common/ImageModelConverter';
 
-import API from '../../../Common/API';
+// import API from '../../../Common/API';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -87,30 +87,21 @@ const HotelForm = ({
   resetError,
 }) => {
   const classes = useStyles();
-  const [mainImage, setMainImage] = useState(
-    hotel?.mainImage ? hotel?.mainImage : null
-  );
-  // const [mainImagePreview, setMainImagePreview] = useState(
-  //   hotel?.mainImage ? hotel?.mainImage : null
-  // );
+  const [newMainImage, setNewMainImage] = useState(null);
+  const [isDeleteMainImage, setIsDeleteMainImage] = useState(false);
 
-  useEffect(async () => {
-    if (hotel?.mainImage) {
-      await API.axios.get(hotel.mainImage).then(async (response) => {
-        const imageModel = await ImageModelConverter.bytesToImageModelAsync(
-          response
-        );
-        console.log(imageModel);
-      });
-    }
-  });
+  const [mainImagePreview, setMainImagePreview] = useState(
+    hotel?.mainImage ? hotel.mainImage : null
+  );
 
   const uploadImage = async (event) => {
     const file = event.target.files[0];
 
     const imageModel = await ImageModelConverter.fileToImageModelAsync(file);
 
-    setMainImage(imageModel);
+    setNewMainImage(imageModel);
+    setMainImagePreview(imageModel.image);
+    setIsDeleteMainImage(false);
   };
 
   return (
@@ -124,15 +115,8 @@ const HotelForm = ({
             <IconButton
               className={classes.closeButton}
               onClick={() => {
-                setMainImage(
-                  hotel?.mainImage
-                    ? {
-                        image: hotel.mainImage?.image,
-                        name: hotel.mainImage?.name,
-                        type: hotel.mainImage?.type,
-                      }
-                    : null
-                );
+                setIsDeleteMainImage(false);
+                setNewMainImage(null);
                 close();
               }}
             >
@@ -153,23 +137,20 @@ const HotelForm = ({
               street: hotel != null ? hotel.location.street : '',
               buildingNumber:
                 hotel != null ? hotel.location.buildingNumber : '',
-              mainImage:
-                hotel?.mainImage != null
-                  ? {
-                      image: hotel.mainImage.image,
-                      name: hotel.mainImage.name,
-                      type: hotel.mainImage.type,
-                    }
-                  : null,
+              newMainImage: null,
+              isDeleteMainImage: false,
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
               // eslint-disable-next-line no-debugger
               debugger;
               // eslint-disable-next-line no-param-reassign
-              values.mainImage = mainImage;
+              values.newMainImage = newMainImage;
+              // eslint-disable-next-line no-param-reassign
+              values.isDeleteMainImage = isDeleteMainImage;
               submitHandler(values);
-              setMainImage(null);
+              setNewMainImage(null);
+              setMainImagePreview(null);
             }}
           >
             <Form autoComplete="on">
@@ -257,12 +238,16 @@ const HotelForm = ({
                 }}
               >
                 <Typography>
-                  {mainImage
+                  {mainImagePreview
                     ? 'Select new one to change'
                     : 'Upload main picture'}
                 </Typography>
-                {mainImage ? (
-                  <img className={classes.image} src={mainImage} alt="Hotel" />
+                {mainImagePreview ? (
+                  <img
+                    className={classes.image}
+                    src={mainImagePreview}
+                    alt="Hotel"
+                  />
                 ) : null}
                 <input
                   accept="image/*"
@@ -280,8 +265,12 @@ const HotelForm = ({
                 </IconButton>
                 <IconButton
                   color="primary"
-                  disabled={!mainImage}
-                  onClick={() => setMainImage(null)}
+                  disabled={!mainImagePreview}
+                  onClick={() => {
+                    setNewMainImage(null);
+                    setMainImagePreview(null);
+                    setIsDeleteMainImage(true);
+                  }}
                 >
                   <DeleteOutlined />
                 </IconButton>

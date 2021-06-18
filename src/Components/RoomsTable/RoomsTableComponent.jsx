@@ -211,12 +211,14 @@ const RoomRow = ({
           <IconButton
             className={classes.button}
             onClick={async () => {
-              const errorResponse = await deleteRoom(room.id);
+              const [roomResponse, errorResponse] = await deleteRoom(room.id);
 
               if (errorResponse) {
                 onError(errorResponse);
               } else {
-                onSuccess('Room successfully deleted');
+                onSuccess(
+                  `Room ${roomResponse.roomNumber} successfully deleted`
+                );
                 onRefresh();
               }
             }}

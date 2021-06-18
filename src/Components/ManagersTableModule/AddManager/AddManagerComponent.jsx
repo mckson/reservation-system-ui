@@ -17,7 +17,7 @@ const AddManagerComponent = ({
   const managerRole = 'manager';
   const formTitle = `Add manager to hotel ${hotel.name}`;
   const formSubmittext = 'Add manager';
-  let errorResponse = null;
+  let [managerResponse, errorResponse] = [null, null];
 
   const onUpdateUserAsync = async (user) => {
     // eslint-disable-next-line no-param-reassign
@@ -36,7 +36,7 @@ const AddManagerComponent = ({
 
       user.hotels.push(hotel.id);
 
-      errorResponse = await updateUser(user);
+      [managerResponse, errorResponse] = await updateUser(user);
     } else {
       errorResponse = 'User is already manager of current hotel';
     }
@@ -44,7 +44,9 @@ const AddManagerComponent = ({
     if (errorResponse != null) {
       setError(errorResponse);
     } else {
-      onSuccess('Manager successfully added');
+      onSuccess(
+        `Manager ${managerResponse.firstName} ${managerResponse.lastName} successfully added`
+      );
       close();
     }
   };

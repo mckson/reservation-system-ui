@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Hotel from '../../../Models/Hotel';
 import HotelForm from './HotelForm';
+import API from '../../../Common/API';
 
 const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
   const [error, setError] = useState(null);
@@ -13,14 +14,6 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
       description: values.description,
-      mainImage: values.mainImage
-        ? {
-            image: values.mainImage.image,
-            name: values.mainImage.name,
-            type: values.mainImage.type,
-            hotelId: hotel.id,
-          }
-        : null,
       location: {
         country: values.country,
         region: values.region,
@@ -29,12 +22,32 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
         buildingNumber: parseInt(values.buildingNumber, 10),
       },
     };
-    const errorResponse = await updateHotel(updatedHotel);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (values.newMainImage) {
+      const image = {
+        image: values.newMainImage.image,
+        name: values.newMainImage.name,
+        type: values.newMainImage.type,
+        hotelId: hotel.id,
+        isMain: true,
+      };
+
+      await API.axios.post('/Images', image);
+    } else if (values.isDeleteMainImage && hotel?.mainImage) {
+      const splited = hotel.mainImage.split('/');
+      const imageId = splited[splited.length - 1];
+
+      await API.axios.delete(`/Images/${parseInt(imageId, 10)}`);
+    }
+
+    const [hotelResponse, errorResponse] = await updateHotel(updatedHotel);
 
     if (errorResponse) {
       setError(errorResponse);
     } else {
-      onSuccess('Hotel updated successfully');
+      onSuccess(`Hotel ${hotelResponse.name} updated successfully`);
       close('Hotel updated successfully');
     }
   };

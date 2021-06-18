@@ -55,10 +55,10 @@ const ManagerRowComponent = ({
       manager.hotels = [];
     }
 
-    const errorResponse = await updateUser(manager);
+    const [managerResponse, errorResponse] = await updateUser(manager);
     console.log(errorResponse);
 
-    return errorResponse;
+    return [managerResponse, errorResponse];
   };
   return (
     <>
@@ -68,12 +68,14 @@ const ManagerRowComponent = ({
           <IconButton
             className={classes.button}
             onClick={async () => {
-              const errorResponse = await onDeleteManager();
+              const [managerResponse, errorResponse] = await onDeleteManager();
 
               if (errorResponse) {
                 onError(errorResponse);
               } else {
-                onSuccess('Manager successfully removed from hotel');
+                onSuccess(
+                  `Manager ${managerResponse.firstName} ${managerResponse.lastName} successfully removed from hotel`
+                );
               }
             }}
           >

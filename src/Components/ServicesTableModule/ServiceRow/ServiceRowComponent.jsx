@@ -52,12 +52,16 @@ const ServiceRow = ({
           <IconButton
             className={classes.button}
             onClick={async () => {
-              const errorResponse = await deleteService(service.id);
+              const [serviceResponse, errorResponse] = await deleteService(
+                service.id
+              );
 
               if (errorResponse) {
                 onError(errorResponse);
               } else {
-                onSuccess('Service successfully deleted');
+                onSuccess(
+                  `Service ${serviceResponse.name} successfully deleted`
+                );
               }
             }}
           >

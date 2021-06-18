@@ -25,12 +25,14 @@ const EditServiceComponent = ({
       price: parseFloat(values.price),
     };
 
-    const errorResponse = await updateService(updatedService);
+    const [serviceResponse, errorResponse] = await updateService(
+      updatedService
+    );
 
     if (errorResponse) {
       setError(errorResponse);
     } else {
-      onSuccess('Service successfully updated');
+      onSuccess(`Service ${serviceResponse.name} successfully updated`);
       close();
     }
   };

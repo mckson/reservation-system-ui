@@ -24,12 +24,12 @@ const EditRoomComponent = ({
       price: parseFloat(values.price),
       capacity: parseInt(values.capacity, 10),
     };
-    const errorResponse = await updateRoom(updatedRoom);
+    const [roomResponse, errorResponse] = await updateRoom(updatedRoom);
 
     if (errorResponse != null) {
       setError(errorResponse);
     } else {
-      onSuccess('Room sucessfully updated');
+      onSuccess(`Room ${roomResponse.roomNumber} sucessfully updated`);
       onRefresh();
       close();
     }

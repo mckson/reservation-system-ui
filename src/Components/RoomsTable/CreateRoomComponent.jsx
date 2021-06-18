@@ -22,12 +22,12 @@ const CreateRoomComponent = ({
       capacity: parseInt(values.capacity, 10),
     };
 
-    const errorResponse = await createRoom(createdRoom);
+    const [roomResponse, errorResponse] = await createRoom(createdRoom);
 
     if (errorResponse) {
       setError(errorResponse);
     } else {
-      onSuccess('Room sucessfully added');
+      onSuccess(`Room ${roomResponse.roomNumber} sucessfully added`);
       close();
       onRefresh();
     }

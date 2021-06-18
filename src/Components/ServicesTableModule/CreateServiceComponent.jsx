@@ -21,12 +21,14 @@ const CreateServiceComponent = ({
       price: parseFloat(values.price),
     };
 
-    const errorResponse = await createService(createdService);
+    const [serviceResponse, errorResponse] = await createService(
+      createdService
+    );
 
     if (errorResponse != null) {
       setError(errorResponse);
     } else {
-      onSuccess('Service sucessfully added');
+      onSuccess(`Service ${serviceResponse.name} sucessfully added`);
       close();
     }
   };

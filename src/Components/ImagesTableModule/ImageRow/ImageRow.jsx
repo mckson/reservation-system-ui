@@ -23,7 +23,15 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
   const classes = useStyles();
 
   const onDeleteImage = async () => {
-    const errorResponse = await deleteImage(image);
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const splited = image.split('/');
+    const imageId = splited[splited.length - 1];
+
+    // eslint-disable-next-line no-unused-vars
+    const [imageResponse, errorResponse] = await deleteImage(
+      parseInt(imageId, 10)
+    );
 
     if (errorResponse) {
       onError(errorResponse);
@@ -34,9 +42,9 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
   return (
     <>
       <TableRow>
-        <TableCell>{image.id}</TableCell>
+        {/* <TableCell>{image.id}</TableCell> */}
         <TableCell align="center">
-          <img className={classes.image} src={`${image.image}`} alt="Hotel" />
+          <img className={classes.image} src={image} alt="Hotel" />
         </TableCell>
         <TableCell className={classes.actions}>
           <IconButton className={classes.button} onClick={onDeleteImage}>

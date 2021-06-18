@@ -63,13 +63,13 @@ const ImagesTable = ({
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
-            <col width="2.5%" />
+            {/* <col width="2.5%" /> */}
             <col width="auto" />
             <col width="2.5%" />
           </colgroup>
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
+              {/* <TableCell>Id</TableCell> */}
               <TableCell>Image</TableCell>
               <TableCell />
             </TableRow>
