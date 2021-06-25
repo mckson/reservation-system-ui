@@ -120,7 +120,7 @@ const Gallery = ({ images }) => {
           </div>
         </DialogTitle>
         <DialogContent>
-          <img src={`${viewImage?.image}`} alt={viewImage?.name} />
+          <img src={viewImage} alt={viewImage?.name} />
         </DialogContent>
       </Dialog>
     </div>
