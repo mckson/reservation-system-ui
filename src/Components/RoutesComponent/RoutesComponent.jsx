@@ -17,6 +17,7 @@ import SignIn from '../SignIn';
 import SignUp from '../SignUp';
 // eslint-disable-next-line import/no-named-as-default
 import HotelsManagement from '../HotelsManagement/HotelsManagement';
+import OrdersSection from '../OrdersSection/OrdersSection';
 import Constants from '../../Common/Constants';
 
 const RoutesComponent = ({
@@ -39,6 +40,9 @@ const RoutesComponent = ({
   dateOut,
   onDateInChange,
   onDateOutChange,
+  isReservationsOpen,
+  openReservations,
+  closeReservations,
 }) => {
   return (
     <Router>
@@ -46,6 +50,7 @@ const RoutesComponent = ({
         loggedUser={loggedUser}
         onLogoutClick={loguot}
         openHotelsManagement={openHotelsManagement}
+        openReservations={openReservations}
       />
       {loggedUser &&
       (loggedUser?.roles.includes(Constants.adminRole) ||
@@ -55,6 +60,13 @@ const RoutesComponent = ({
           isOpen={isHotelsManagementOpen}
           close={closeHotelsManagement}
           loggedUser={loggedUser}
+        />
+      ) : null}
+      {loggedUser ? (
+        <OrdersSection
+          isOpen={isReservationsOpen}
+          close={closeReservations}
+          user={loggedUser}
         />
       ) : null}
       <Switch>
@@ -118,6 +130,9 @@ RoutesComponent.propTypes = {
   onDateOutChange: PropTypes.func.isRequired,
   //   refreshUsers: PropTypes.func.isRequired,
   //   refreshHotels: PropTypes.func.isRequired,
+  isReservationsOpen: PropTypes.bool.isRequired,
+  openReservations: PropTypes.func.isRequired,
+  closeReservations: PropTypes.func.isRequired,
 };
 
 RoutesComponent.defaultProps = {

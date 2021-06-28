@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 const HotelsPage = ({
   hotels,
   totalPages,
-  totalResults,
   onPageChanged,
   searchHotels,
   dateIn,
@@ -50,8 +49,6 @@ const HotelsPage = ({
   const history = useHistory();
 
   const onOpenFullHotel = (hotelToOpen) => {
-    console.log(hotelToOpen);
-    console.log(totalResults);
     history.push(`/Hotels/${hotelToOpen.id}`);
   };
 
@@ -87,7 +84,6 @@ const HotelsPage = ({
 HotelsPage.propTypes = {
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
-  totalResults: PropTypes.number,
   onPageChanged: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
   dateIn: PropTypes.string,
@@ -99,7 +95,6 @@ HotelsPage.propTypes = {
 HotelsPage.defaultProps = {
   hotels: [],
   totalPages: 0,
-  totalResults: 0,
   dateIn: null,
   dateOut: null,
 };

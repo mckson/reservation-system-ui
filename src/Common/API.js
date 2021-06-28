@@ -36,6 +36,11 @@ const roomsUrl = (pageNumber, pageSize, hotelId, dateIn, dateOut) =>
     pageSize || ''
   }&hotelId=${hotelId}&dateIn=${dateIn || ''}&dateOut=${dateOut || ''}`;
 
+const reservationsUrl = (pageNumber, pageSize, email) =>
+  `/Reservations?pageNumber=${pageNumber}&pageSize=${
+    pageSize || ''
+  }&email=${email}`;
+
 axios.defaults.baseURL = baseURL;
 
 axios.interceptors.request.use(
@@ -136,6 +141,19 @@ const getRooms = (pageNumber, pageSize, hotelId, dateIn, dateOut) => {
       .get(roomsUrl(pageNumber, pageSize, hotelId, dateIn, dateOut))
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
+  });
+};
+
+const getReservations = (pageNumber, pageSize, email) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(reservationsUrl(pageNumber, pageSize, email))
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
 };
 
@@ -303,9 +321,17 @@ const createReservation = (reservation) => {
       .post(reservationUrl(''), reservation)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        console.log(error);
         reject(error);
       });
+  });
+};
+
+const getReservation = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(reservationUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -328,4 +354,6 @@ export default {
   createImage,
   deleteImage,
   createReservation,
+  getReservations,
+  getReservation,
 };

@@ -35,13 +35,22 @@ const Routes = ({
   // refreshUsers,
   // refreshHotels,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [openHotelsManagement, setOpenHotelsManagement] = useState(false);
+  const [openReservations, setOpenReservations] = useState(false);
 
-  const onOpen = () => {
-    setOpen(true);
+  const handleOpenHotelsManagement = () => {
+    setOpenHotelsManagement(true);
   };
-  const onClose = () => {
-    setOpen(false);
+  const handleCloseHotelsManagement = () => {
+    setOpenHotelsManagement(false);
+  };
+
+  const handleOpenReservations = () => {
+    setOpenReservations(true);
+  };
+
+  const handleCloseReservations = () => {
+    setOpenReservations(false);
   };
 
   return (
@@ -71,9 +80,12 @@ const Routes = ({
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
-      isHotelsManagementOpen={open}
-      closeHotelsManagement={onClose}
-      openHotelsManagement={onOpen}
+      isHotelsManagementOpen={openHotelsManagement}
+      closeHotelsManagement={handleCloseHotelsManagement}
+      openHotelsManagement={handleOpenHotelsManagement}
+      isReservationsOpen={openReservations}
+      closeReservations={handleCloseReservations}
+      openReservations={handleOpenReservations}
       dateIn={dateIn}
       dateOut={dateOut}
       onDateInChange={onDateInChange}

@@ -1,35 +1,17 @@
-import {
-  Dialog,
-  IconButton,
-  makeStyles,
-  Slide,
-  Toolbar,
-  Typography,
-  Snackbar,
-} from '@material-ui/core';
-import React, { forwardRef, useState } from 'react';
-import CloseIcon from '@material-ui/icons/Close';
+import { makeStyles, Snackbar } from '@material-ui/core';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Alert } from '@material-ui/lab';
 import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
 import Hotel from '../../Models/Hotel';
 import User from '../../Models/User';
+import FullScreenDialog from '../../Common/FullScreenDialog';
 
 const useStyles = makeStyles((theme) => ({
-  dialogbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    background: theme.palette.primary.main,
-    color: theme.palette.background.paper,
-  },
   content: {
     margin: theme.spacing(3, 7),
   },
 }));
-
-const Transition = forwardRef(function Transistion(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const HotelsManagementComponent = ({
   users,
@@ -83,63 +65,62 @@ const HotelsManagementComponent = ({
   };
 
   return (
-    <Dialog
-      fullScreen
-      fullWidth
-      open={isOpen}
-      onClose={close}
-      TransitionComponent={Transition}
-    >
-      <Toolbar className={classes.dialogbar}>
-        <Typography variant="h6">Hotels management</Typography>
-        <IconButton edge="end" color="inherit" onClick={close}>
-          <CloseIcon />
-        </IconButton>
-      </Toolbar>
-      <div className={classes.content}>
-        <HotelsTable
-          role={role}
-          users={users}
-          hotels={hotels}
-          totalCount={totalCount}
-          pageChanged={pageChanged}
-          pageSize={pageSize}
-          pageSizeChanged={pageSizeChanged}
-          deleteHotel={deleteHotel}
-          updateHotel={updateHotel}
-          createHotel={createHotel}
-          createRoom={createRoom}
-          updateRoom={updateRoom}
-          deleteRoom={deleteRoom}
-          createService={createService}
-          updateService={updateService}
-          deleteService={deleteService}
-          updateUser={updateUser}
-          createImage={createImage}
-          deleteImage={deleteImage}
-          onError={handleError}
-          onSuccess={handleSuccess}
-        />
-      </div>
-      <Snackbar
-        open={!!error}
-        autoHideDuration={5000}
-        onClose={handleResetError}
-      >
-        <Alert onClose={handleResetError} severity="error" variant="filled">
-          {error}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={!!success}
-        autoHideDuration={5000}
-        onClose={handleResetSuccess}
-      >
-        <Alert onClose={handleResetSuccess} severity="success" variant="filled">
-          {success}
-        </Alert>
-      </Snackbar>
-    </Dialog>
+    <FullScreenDialog
+      isOpen={isOpen}
+      close={close}
+      title="Hotels management"
+      contentComponent={
+        <>
+          <div className={classes.content}>
+            <HotelsTable
+              role={role}
+              users={users}
+              hotels={hotels}
+              totalCount={totalCount}
+              pageChanged={pageChanged}
+              pageSize={pageSize}
+              pageSizeChanged={pageSizeChanged}
+              deleteHotel={deleteHotel}
+              updateHotel={updateHotel}
+              createHotel={createHotel}
+              createRoom={createRoom}
+              updateRoom={updateRoom}
+              deleteRoom={deleteRoom}
+              createService={createService}
+              updateService={updateService}
+              deleteService={deleteService}
+              updateUser={updateUser}
+              createImage={createImage}
+              deleteImage={deleteImage}
+              onError={handleError}
+              onSuccess={handleSuccess}
+            />
+          </div>
+          <Snackbar
+            open={!!error}
+            autoHideDuration={5000}
+            onClose={handleResetError}
+          >
+            <Alert onClose={handleResetError} severity="error" variant="filled">
+              {error}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={!!success}
+            autoHideDuration={5000}
+            onClose={handleResetSuccess}
+          >
+            <Alert
+              onClose={handleResetSuccess}
+              severity="success"
+              variant="filled"
+            >
+              {success}
+            </Alert>
+          </Snackbar>
+        </>
+      }
+    />
   );
 };
 

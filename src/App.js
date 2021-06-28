@@ -63,8 +63,6 @@ function App() {
   };
 
   useEffect(async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const jwt = localStorage.getItem('access_token');
     if (jwt && user == null) {
       const userDecoded = parseJwt(jwt);

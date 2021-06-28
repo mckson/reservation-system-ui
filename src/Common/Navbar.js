@@ -30,7 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ loggedUser, onLogoutClick, openHotelsManagement }) => {
+const Navbar = ({
+  loggedUser,
+  onLogoutClick,
+  openHotelsManagement,
+  openReservations,
+}) => {
   const classes = useStyles();
 
   return (
@@ -46,6 +51,7 @@ const Navbar = ({ loggedUser, onLogoutClick, openHotelsManagement }) => {
               loggedUser={loggedUser}
               logout={onLogoutClick}
               openHotelsManagement={openHotelsManagement}
+              openReservationsSection={openReservations}
             />
           </div>
         </Toolbar>
@@ -58,6 +64,7 @@ Navbar.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   onLogoutClick: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  openReservations: PropTypes.func.isRequired,
 };
 
 Navbar.defaultProps = {

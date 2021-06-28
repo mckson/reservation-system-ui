@@ -10,10 +10,10 @@ import {
   Link,
 } from '@material-ui/core';
 // import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
-// import HistoryIcon from '@material-ui/icons/HistoryOutlined';
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
+import { HistoryOutlined } from '@material-ui/icons';
 import User from '../../Models/User';
 import Constants from '../../Common/Constants';
 
@@ -42,6 +42,7 @@ const AccountSectionComponent = ({
   loggedUser,
   logout,
   openHotelsManagement,
+  openReservationsSection,
 }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -80,14 +81,19 @@ const AccountSectionComponent = ({
                 <AccountIcon className={classes.icon} />
               </ListItemIcon>
               <ListItemText primary="Manage account" />
-            </MenuItem>
+      </MenuItem> */}
 
-            <MenuItem onClick={handleClose}>
+            <MenuItem
+              onClick={() => {
+                openReservationsSection();
+                handleClose();
+              }}
+            >
               <ListItemIcon>
-                <HistoryIcon className={classes.icon} />
+                <HistoryOutlined className={classes.icon} />
               </ListItemIcon>
-              <ListItemText primary="View orders" />
-            </MenuItem> */}
+              <ListItemText primary="View reservations" />
+            </MenuItem>
 
             {loggedUser?.roles.includes(Constants.adminRole) ||
             loggedUser?.roles.includes(Constants.managerRole) ? (
@@ -130,6 +136,7 @@ AccountSectionComponent.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   logout: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  openReservationsSection: PropTypes.func.isRequired,
 };
 
 AccountSectionComponent.defaultProps = {

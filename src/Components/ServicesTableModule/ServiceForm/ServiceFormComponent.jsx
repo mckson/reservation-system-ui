@@ -44,15 +44,6 @@ const ServiceFormComponent = ({
 }) => {
   const classes = useStyles();
 
-  //   const mappedInitialValues = () => {
-  //     const mapped = [];
-  //     // eslint-disable-next-line no-restricted-syntax
-  //     for (const [key] of Object.entries(initialValues)) {
-  //       mapped.push(key);
-  //     }
-  //     return mapped;
-  //   };
-
   return (
     <div>
       <Dialog open={open}>
