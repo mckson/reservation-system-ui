@@ -19,6 +19,8 @@ const HotelRow = ({
   updateUser,
   deleteImage,
   createImage,
+  createRoomImage,
+  deleteRoomImage,
   onError,
   onSuccess,
 }) => {
@@ -38,6 +40,8 @@ const HotelRow = ({
       updateUser={updateUser}
       createImage={createImage}
       deleteImage={deleteImage}
+      createRoomImage={createRoomImage}
+      deleteRoomImage={deleteRoomImage}
       onSuccess={onSuccess}
       onError={onError}
     />
@@ -59,6 +63,8 @@ HotelRow.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };

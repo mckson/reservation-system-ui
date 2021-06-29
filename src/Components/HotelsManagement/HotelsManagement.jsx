@@ -219,24 +219,22 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
     return [response, error];
   };
 
-  const handleCreateImage = async (createdImage) => {
-    const [response, error] = await ManagementService.baseRequestHandler(
-      ManagementService.handleCreateImage,
-      createdImage
-    );
+  const handleCreateHotelImage = async (createdImage) => {
+    const error = await ManagementService.handleCreateHotelImage(createdImage);
 
+    // eslint-disable-next-line no-debugger
+    debugger;
     if (!error) {
       await requestHotels();
       // await refreshHotels();
       // await refreshUsers();
     }
 
-    return [response, error];
+    return error;
   };
 
-  const handleDeleteImage = async (deletedImageId) => {
-    const [response, error] = await ManagementService.baseRequestHandler(
-      ManagementService.handleDeleteImage,
+  const handleDeleteHotelImage = async (deletedImageId) => {
+    const error = await ManagementService.handleDeleteHotelImage(
       deletedImageId
     );
 
@@ -246,7 +244,33 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
       // await refreshUsers();
     }
 
-    return [response, error];
+    return error;
+  };
+
+  const handleCreateRoomImage = async (createdImage) => {
+    const error = await ManagementService.handleCreateRoomImage(createdImage);
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (!error) {
+      await requestHotels();
+      // await refreshHotels();
+      // await refreshUsers();
+    }
+
+    return error;
+  };
+
+  const handleDeleteRoomImage = async (deletedImageId) => {
+    const error = await ManagementService.handleDeleteRoomImage(deletedImageId);
+
+    if (!error) {
+      await requestHotels();
+      // await refreshHotels();
+      // await refreshUsers();
+    }
+
+    return error;
   };
 
   return (
@@ -270,8 +294,10 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
       updateService={handleUpdateService}
       deleteService={handleDeleteService}
       updateUser={handleUpdateUser}
-      createImage={handleCreateImage}
-      deleteImage={handleDeleteImage}
+      createImage={handleCreateHotelImage}
+      deleteImage={handleDeleteHotelImage}
+      createRoomImage={handleCreateRoomImage}
+      deleteRoomImage={handleDeleteRoomImage}
     />
   );
 };

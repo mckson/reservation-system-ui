@@ -6,6 +6,9 @@ import ReservationDetailedResponse from '../../Models/ReservationDetailedRespons
 
 const DetailedOrder = ({ reservationId }) => {
   const [reservation, setReservation] = useState(null);
+  const [roomId, setRoomId] = useState(null);
+  const [openRoom, setOpenRoom] = useState(false);
+
   const requestReservationAsync = async () => {
     const response = await API.getReservation(reservationId);
 
@@ -14,11 +17,31 @@ const DetailedOrder = ({ reservationId }) => {
     }
   };
 
+  const handleSelectedRoomChanged = (selectedRoomId) => {
+    setRoomId(selectedRoomId);
+  };
+
+  const handleOpenRoomDetailed = () => {
+    setOpenRoom(true);
+  };
+
+  const handleCloseRoomDetailed = () => {
+    setOpenRoom(false);
+    setRoomId(null);
+  };
+
   useEffect(async () => {
     await requestReservationAsync(reservationId);
   }, [reservationId]);
   return reservation ? (
-    <DetailedOrderComponent reservation={reservation} />
+    <DetailedOrderComponent
+      reservation={reservation}
+      selectedRoomId={roomId}
+      isRoomDetailedOpen={openRoom}
+      selectedRoomChanged={handleSelectedRoomChanged}
+      closeRoomDetailed={handleCloseRoomDetailed}
+      openRoomDetailed={handleOpenRoomDetailed}
+    />
   ) : null;
 };
 

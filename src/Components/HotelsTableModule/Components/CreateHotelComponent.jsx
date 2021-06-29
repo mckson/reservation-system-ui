@@ -34,7 +34,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
         isMain: true,
       };
 
-      await API.axios.post('/Images', image);
+      await API.createHotelImage(image);
     }
 
     if (errorResponse) {

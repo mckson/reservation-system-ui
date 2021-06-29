@@ -29,9 +29,7 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
     const imageId = splited[splited.length - 1];
 
     // eslint-disable-next-line no-unused-vars
-    const [imageResponse, errorResponse] = await deleteImage(
-      parseInt(imageId, 10)
-    );
+    const errorResponse = await deleteImage(imageId);
 
     if (errorResponse) {
       onError(errorResponse);

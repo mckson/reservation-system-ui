@@ -35,6 +35,8 @@ const HotelsManagementComponent = ({
   updateUser,
   createImage,
   deleteImage,
+  createRoomImage,
+  deleteRoomImage,
 }) => {
   const classes = useStyles();
   const [error, setError] = useState(null);
@@ -92,6 +94,8 @@ const HotelsManagementComponent = ({
               updateUser={updateUser}
               createImage={createImage}
               deleteImage={deleteImage}
+              createRoomImage={createRoomImage}
+              deleteRoomImage={deleteRoomImage}
               onError={handleError}
               onSuccess={handleSuccess}
             />
@@ -146,6 +150,8 @@ HotelsManagementComponent.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
 };
 
 export default HotelsManagementComponent;

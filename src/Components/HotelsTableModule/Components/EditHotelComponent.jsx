@@ -34,12 +34,12 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
         isMain: true,
       };
 
-      await API.axios.post('/Images', image);
+      await API.createHotelImage(image);
     } else if (values.isDeleteMainImage && hotel?.mainImage) {
       const splited = hotel.mainImage.split('/');
       const imageId = splited[splited.length - 1];
 
-      await API.axios.delete(`/Images/${parseInt(imageId, 10)}`);
+      await API.deleteHotelImage(imageId);
     }
 
     const [hotelResponse, errorResponse] = await updateHotel(updatedHotel);

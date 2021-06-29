@@ -11,15 +11,21 @@ import {
   TableContainer,
   Button,
   Paper,
+  Typography,
   IconButton,
   makeStyles,
+  Collapse,
+  Box,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Hotel from '../../Models/Hotel';
 import Room from '../../Models/Room';
 import CreateRoomComponent from './CreateRoomComponent';
 import EditRoomComponent from './EditRoomComponent';
+import ImagesTable from '../ImagesTableModule/ImagesTable/ImagesTable';
 
 import API from '../../Common/API';
 
@@ -46,12 +52,32 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     width: 'auto',
   },
+  row: {
+    '& > *': {
+      borderBottom: 'unset',
+    },
+    background: theme.palette.background.paper,
+    // '&.Mui-selected': { background: theme.palette.grey[400] },
+    // '&.Mui-selected:hover': { background: theme.palette.grey[300] },
+  },
+  subrowTitle: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  subrow: {
+    margin: theme.spacing(0, 5),
+    display: 'flex',
+    flexDirection: 'column',
+    width: 'auto',
+  },
 }));
 
 const RoomsTableComponent = ({
   createRoom,
   updateRoom,
   deleteRoom,
+  createRoomImage,
+  deleteRoomImage,
   hotel,
   onSuccess,
   onError,
@@ -110,10 +136,12 @@ const RoomsTableComponent = ({
             <col width="auto" />
             <col width="auto" />
             <col width="auto" />
+            <col width="auto" />
             <col width="2.5%" />
           </colgroup>
           <TableHead>
             <TableRow>
+              <TableCell />
               <TableCell>Id</TableCell>
               <TableCell>Number</TableCell>
               <TableCell>Floor</TableCell>
@@ -133,6 +161,8 @@ const RoomsTableComponent = ({
                     key={room.id}
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
+                    createRoomImage={createRoomImage}
+                    deleteRoomImage={deleteRoomImage}
                     hotel={hotel}
                     onError={onError}
                     onSuccess={onSuccess}
@@ -182,6 +212,8 @@ RoomsTableComponent.propTypes = {
   deleteRoom: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
 };
@@ -192,11 +224,14 @@ const RoomRow = ({
   onRefresh,
   updateRoom,
   deleteRoom,
+  createRoomImage,
+  deleteRoomImage,
   onError,
   onSuccess,
 }) => {
   const classes = useStyles();
-
+  const [open, setOpen] = useState(false);
+  const [openImages, setOpenImages] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
   const handleEditClose = () => {
@@ -205,7 +240,12 @@ const RoomRow = ({
 
   return (
     <>
-      <TableRow>
+      <TableRow className={classes.row}>
+        <TableCell>
+          <IconButton onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
         <RoomRowMap room={room} />
         <TableCell className={classes.actions}>
           <IconButton
@@ -233,6 +273,47 @@ const RoomRow = ({
           </IconButton>
         </TableCell>
       </TableRow>
+      <TableRow>
+        <TableCell
+          style={{
+            paddingBottom: 0,
+            paddingTop: 0,
+          }}
+          colSpan={7}
+        >
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box>
+              <div className={classes.subrow}>
+                <div className={classes.subrowTitle}>
+                  <IconButton
+                    onClick={() => {
+                      setOpenImages(!openImages);
+                    }}
+                  >
+                    {openImages ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    )}
+                  </IconButton>
+                  <Typography variant="h6">Images</Typography>
+                </div>
+                <Collapse in={openImages} className={classes.table}>
+                  <ImagesTable
+                    hotelId={hotel.id}
+                    roomId={room.id}
+                    images={room.images}
+                    deleteImage={deleteRoomImage}
+                    createImage={createRoomImage}
+                    onSuccess={onSuccess}
+                    onError={onError}
+                  />
+                </Collapse>
+              </div>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
       <EditRoomComponent
         room={room}
         open={isEdit}
@@ -252,6 +333,8 @@ RoomRow.propTypes = {
   onRefresh: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,
   deleteRoom: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };

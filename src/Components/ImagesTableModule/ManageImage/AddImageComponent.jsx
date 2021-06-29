@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Dialog,
   makeStyles,
-  DialogTitle,
   Typography,
   IconButton,
-  DialogContent,
   Button,
   CircularProgress,
   // TextField,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { Alert } from '@material-ui/lab';
-import { CloseOutlined, PhotoCameraOutlined } from '@material-ui/icons';
+import { PhotoCameraOutlined } from '@material-ui/icons';
 import { Formik, Form } from 'formik';
-import Hotel from '../../../Models/Hotel';
 import ImageModelConverter from '../../../Common/ImageModelConverter';
+import BaseDialog from '../../../Common/BaseDialog';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -33,17 +30,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
+const AddImageComponent = ({
+  open,
+  close,
+  onCreateImage,
+  onError,
+  error,
+  processing,
+  title,
+}) => {
   const classes = useStyles();
-  const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
-  const [processing, setProcessing] = useState(false);
-
-  // const outputImage = (fileImage) => {
-  //   const reader = new FileReader();
-
-  //   return reader.readAsDataURL(fileImage);
-  // };
 
   const uploadImage = async (event) => {
     try {
@@ -53,61 +50,32 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
 
       setImage(imageModel);
     } catch (err) {
-      setError(err);
-    }
-  };
-
-  const onCreateImageAsync = async (imageData) => {
-    const createdImage = {
-      image: imageData.image,
-      name: imageData.name,
-      type: imageData.type,
-      hotelId: hotel.id,
-    };
-
-    setProcessing(true);
-    // eslint-disable-next-line no-unused-vars
-    const [imageResponse, errorResponse] = await createImage(createdImage);
-    setProcessing(false);
-
-    if (errorResponse != null) {
-      setError(errorResponse);
-    } else {
-      setImage(null);
-      onSuccess('Image successfully added');
-      close();
+      onError(err);
     }
   };
 
   const handleResetError = () => {
-    setError(null);
+    onError(null);
   };
   return (
-    <div>
-      <Dialog open={open}>
-        <DialogTitle>
-          <div className={classes.titleSection}>
-            <Typography className={classes.title} variant="h6">
-              Add Image
-            </Typography>
-            <IconButton
-              className={classes.closeButton}
-              onClick={() => {
-                setImage(null);
-                close();
-              }}
-            >
-              <CloseOutlined />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <DialogContent>
+    <BaseDialog
+      open={open}
+      title={title}
+      close={() => {
+        setImage(null);
+        close();
+      }}
+      contentComponent={
+        <>
           {processing ? (
             <CircularProgress />
           ) : (
             <Formik
               initialValues={{ image: '' }}
-              onSubmit={() => onCreateImageAsync(image)}
+              onSubmit={() => {
+                onCreateImage(image);
+                setImage(null);
+              }}
             >
               <Form>
                 <label
@@ -159,39 +127,46 @@ const AddImage = ({ open, close, hotel, createImage, onSuccess }) => {
               </Form>
             </Formik>
           )}
-        </DialogContent>
-        {error != null ? (
-          <Alert
-            fullWidth
-            variant="outlined"
-            severity="error"
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  handleResetError();
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-          >
-            {error}
-          </Alert>
-        ) : null}
-      </Dialog>
-    </div>
+          {error != null ? (
+            <Alert
+              fullWidth
+              variant="outlined"
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    handleResetError();
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              {error}
+            </Alert>
+          ) : null}
+        </>
+      }
+    />
   );
 };
 
-AddImage.propTypes = {
+AddImageComponent.propTypes = {
   open: PropTypes.bool.isRequired,
+  processing: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  hotel: PropTypes.instanceOf(Hotel).isRequired,
-  createImage: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func.isRequired,
+  onCreateImage: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  onError: PropTypes.func.isRequired,
+  title: PropTypes.string,
 };
 
-export default AddImage;
+AddImageComponent.defaultProps = {
+  error: null,
+  title: 'Add Image',
+};
+
+export default AddImageComponent;

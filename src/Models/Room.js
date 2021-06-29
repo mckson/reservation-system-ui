@@ -7,6 +7,7 @@ class Room {
     floorNumber,
     capacity,
     reservations,
+    images,
   }) {
     this.id = id;
     this.hotelId = hotelId;
@@ -15,6 +16,7 @@ class Room {
     this.price = price;
     this.capacity = capacity;
     this.reservations = reservations;
+    this.images = images;
   }
 }
 

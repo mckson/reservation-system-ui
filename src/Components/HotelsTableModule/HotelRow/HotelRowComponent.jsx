@@ -19,7 +19,7 @@ import EditHotelComponent from '../Components/EditHotelComponent';
 import Hotel from '../../../Models/Hotel';
 import HotelRowMap from '../HotelRowMap/HotelRowMap';
 import User from '../../../Models/User';
-import ImagesTable from '../../ImagesTableModule/ImagesTable';
+import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
 import Constants from '../../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +72,8 @@ const HotelRowComponent = ({
   updateUser,
   deleteImage,
   createImage,
+  createRoomImage,
+  deleteRoomImage,
   onError,
   onSuccess,
 }) => {
@@ -155,6 +157,8 @@ const HotelRowComponent = ({
                     createRoom={createRoom}
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
+                    createRoomImage={createRoomImage}
+                    deleteRoomImage={deleteRoomImage}
                     hotel={hotel}
                     onSuccess={onSuccess}
                     onError={onError}
@@ -234,7 +238,8 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openImages} className={classes.table}>
                   <ImagesTable
-                    hotel={hotel}
+                    hotelId={hotel.id}
+                    images={hotel.images}
                     deleteImage={deleteImage}
                     createImage={createImage}
                     onSuccess={onSuccess}
@@ -272,6 +277,8 @@ HotelRowComponent.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };

@@ -8,7 +8,8 @@ const hotelUrl = (id) => `/Hotels/${id}`;
 const roomUrl = (id) => `/Rooms/${id}`;
 const serviceUrl = (id) => `/Services/${id}`;
 const userUrl = (id) => `/Users/${id}`;
-const imageUrl = (id) => `/Images/${id}`;
+const hotelImageUrl = (id) => `/Images/Hotel/${id}`;
+const roomImageUrl = (id) => `/Images/Room/${id}`;
 const reservationUrl = (id) => `/Reservations/${id}`;
 
 const usersUrl = '/Users';
@@ -46,7 +47,6 @@ axios.defaults.baseURL = baseURL;
 axios.interceptors.request.use(
   (config) => {
     const accessToken = localStorageService.getAccessToken();
-
     if (accessToken) {
       // eslint-disable-next-line no-param-reassign
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -211,9 +211,17 @@ const createRoom = (room) => {
       .post(roomUrl(''), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        console.log(error.response);
         reject(error);
       });
+  });
+};
+
+const getRoom = (roomId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomUrl(roomId))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -291,10 +299,10 @@ const updateUser = (user) => {
   });
 };
 
-const createImage = (image) => {
+const createHotelImage = (image) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(imageUrl(''), image)
+      .post(hotelImageUrl(''), image)
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.log(error.response);
@@ -303,10 +311,34 @@ const createImage = (image) => {
   });
 };
 
-const deleteImage = (id) => {
+const deleteHotelImage = (id) => {
   return new Promise((resolve, reject) => {
     axios
-      .delete(imageUrl(id))
+      .delete(hotelImageUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const createRoomImage = (image) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(roomImageUrl(''), image)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
+const deleteRoomImage = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(roomImageUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.log(error);
@@ -345,14 +377,17 @@ export default {
   createHotel,
   getHotel,
   createRoom,
+  getRoom,
   updateRoom,
   deleteRoom,
   createService,
   updateService,
   deleteService,
   updateUser,
-  createImage,
-  deleteImage,
+  createHotelImage,
+  deleteHotelImage,
+  createRoomImage,
+  deleteRoomImage,
   createReservation,
   getReservations,
   getReservation,

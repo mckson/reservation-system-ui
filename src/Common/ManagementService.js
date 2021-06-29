@@ -77,15 +77,64 @@ const ManagementService = (function Management() {
     return returnedUser;
   };
 
-  const handleCreateImage = async (image) => {
-    const returnedImage = await API.createImage(image);
-    return returnedImage;
+  const handleCreateHotelImage = async (image) => {
+    try {
+      await API.createHotelImage(image);
+      return null;
+    } catch (error) {
+      if (error.response.data.message) {
+        return error.response.data.message;
+      }
+      if (error.response.data.title) {
+        return error.response.data.title;
+      }
+      return error.message;
+    }
   };
 
-  const handleDeleteImage = async (imageId) => {
-    const returnedImage = await API.deleteImage(imageId);
+  const handleDeleteHotelImage = async (imageId) => {
+    try {
+      await API.deleteHotelImage(imageId);
+      return null;
+    } catch (error) {
+      if (error.response.data.message) {
+        return error.response.data.message;
+      }
+      if (error.response.data.title) {
+        return error.response.data.title;
+      }
+      return error.message;
+    }
+  };
 
-    return returnedImage;
+  const handleCreateRoomImage = async (image) => {
+    try {
+      await API.createRoomImage(image);
+      return null;
+    } catch (error) {
+      if (error.response.data.message) {
+        return error.response.data.message;
+      }
+      if (error.response.data.title) {
+        return error.response.data.title;
+      }
+      return error.message;
+    }
+  };
+
+  const handleDeleteRoomImage = async (imageId) => {
+    try {
+      await API.deleteRoomImage(imageId);
+      return null;
+    } catch (error) {
+      if (error.response.data.message) {
+        return error.response.data.message;
+      }
+      if (error.response.data.title) {
+        return error.response.data.title;
+      }
+      return error.message;
+    }
   };
 
   return {
@@ -101,8 +150,10 @@ const ManagementService = (function Management() {
     handleUpdateService,
     handleDeleteService,
     handleUpdateUser,
-    handleCreateImage,
-    handleDeleteImage,
+    handleCreateHotelImage,
+    handleDeleteHotelImage,
+    handleCreateRoomImage,
+    handleDeleteRoomImage,
   };
 })();
 
