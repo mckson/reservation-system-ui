@@ -62,11 +62,7 @@ const SmallHotelCard = ({ hotel }) => {
       <div className={classes.mediaWrapper}>
         <CardMedia
           className={classes.media}
-          image={
-            hotel.mainImage
-              ? `data:image/jpeg;base64,${hotel.mainImage.image}`
-              : defaultImage
-          }
+          image={hotel.mainImage ? hotel.mainImage : defaultImage}
         />
       </div>
       <div className={classes.info}>

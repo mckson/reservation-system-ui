@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
 }));
+
 const DetailedOrderComponent = ({
   reservation,
   selectedRoomId,

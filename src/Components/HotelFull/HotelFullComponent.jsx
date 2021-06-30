@@ -18,7 +18,11 @@ import TicketIcon from '@material-ui/icons/ConfirmationNumberOutlined';
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import RoomIcon from '@material-ui/icons/AirlineSeatIndividualSuiteOutlined';
 import PropTypes from 'prop-types';
-import { PhotoCameraOutlined, DescriptionOutlined } from '@material-ui/icons';
+import {
+  PhotoCameraOutlined,
+  DescriptionOutlined,
+  InfoOutlined,
+} from '@material-ui/icons';
 import Gallery from '../Gallery';
 import Hotel from '../../Models/Hotel';
 import Default from '../../images/default.png';
@@ -28,6 +32,8 @@ import SearchBar from '../SearchBar/SearchBar';
 import LabeledInfo from './LabeledInfo';
 import Room from '../../Models/Room';
 import ServiceItem from './ServiceItem';
+import BaseDialog from '../../Common/BaseDialog';
+import RoomDetailed from '../RoomDetailed/RoomDetailed';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,6 +116,11 @@ const HotelFullComponent = ({
   searchHotels,
   onDateInChange,
   onDateOutChange,
+  selectedRoomId,
+  isRoomDetailedOpen,
+  selectedRoomChanged,
+  closeRoomDetailed,
+  openRoomDetailed,
 }) => {
   const classes = useStyles();
   const [isReservation, setIsReservation] = useState(false);
@@ -257,6 +268,15 @@ const HotelFullComponent = ({
                       <Typography>
                         <b>Price</b> ${room.price}
                       </Typography>
+                      <Button
+                        startIcon={<InfoOutlined />}
+                        onClick={() => {
+                          selectedRoomChanged(room.id);
+                          openRoomDetailed();
+                        }}
+                      >
+                        Details
+                      </Button>
                     </div>
                   ))}
                 />
@@ -274,6 +294,15 @@ const HotelFullComponent = ({
           dateOut={dateOut}
         />
       </Grid>
+      {selectedRoomId ? (
+        <BaseDialog
+          open={isRoomDetailedOpen}
+          close={closeRoomDetailed}
+          width="md"
+          title="Room details"
+          contentComponent={<RoomDetailed roomId={selectedRoomId} />}
+        />
+      ) : null}
     </div>
   );
 };
@@ -288,6 +317,11 @@ HotelFullComponent.propTypes = {
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
   rooms: PropTypes.arrayOf(Room),
+  selectedRoomId: PropTypes.string,
+  isRoomDetailedOpen: PropTypes.bool.isRequired,
+  selectedRoomChanged: PropTypes.func.isRequired,
+  closeRoomDetailed: PropTypes.func.isRequired,
+  openRoomDetailed: PropTypes.func.isRequired,
 };
 
 HotelFullComponent.defaultProps = {
@@ -295,6 +329,7 @@ HotelFullComponent.defaultProps = {
   loggedUser: null,
   dateIn: null,
   dateOut: null,
+  selectedRoomId: null,
 };
 
 export default HotelFullComponent;

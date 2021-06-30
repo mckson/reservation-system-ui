@@ -25,8 +25,23 @@ const HotelFull = ({
   const [roomsPageNumber, setRoomsPageNumber] = useState(1);
   const [roomsPageSize, setRoomsPageSize] = useState(null);
   const [roomsTotalPages, setRoomsTotalPages] = useState(null);
+  const [roomId, setRoomId] = useState(null);
+  const [openRoom, setOpenRoom] = useState(false);
 
   const history = useHistory();
+
+  const handleSelectedRoomChanged = (selectedRoomId) => {
+    setRoomId(selectedRoomId);
+  };
+
+  const handleOpenRoomDetailed = () => {
+    setOpenRoom(true);
+  };
+
+  const handleCloseRoomDetailed = () => {
+    setOpenRoom(false);
+    setRoomId(null);
+  };
 
   const onBackClick = () => history.push('/Hotels');
 
@@ -99,6 +114,11 @@ const HotelFull = ({
           searchHotels={searchHotels}
           onDateInChange={onDateInChange}
           onDateOutChange={onDateOutChange}
+          selectedRoomId={roomId}
+          isRoomDetailedOpen={openRoom}
+          selectedRoomChanged={handleSelectedRoomChanged}
+          closeRoomDetailed={handleCloseRoomDetailed}
+          openRoomDetailed={handleOpenRoomDetailed}
         />
       ) : (
         <div

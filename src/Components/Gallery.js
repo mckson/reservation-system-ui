@@ -36,6 +36,9 @@ const useStyles = makeStyles((/* theme */) => ({
   closeButton: {
     width: 'auto',
   },
+  content: {
+    padding: 0,
+  },
 }));
 
 // function getColWidth(index) {
@@ -105,7 +108,7 @@ const Gallery = ({ images }) => {
           </GridList>
         </DialogContent>
       </Dialog>
-      <Dialog open={viewImage} fullWidth maxWidth="lg">
+      <Dialog open={viewImage} maxWidth="lg">
         <DialogTitle>
           <div className={classes.titleSection}>
             <Typography className={classes.title} variant="h6">
@@ -119,7 +122,7 @@ const Gallery = ({ images }) => {
             </IconButton>
           </div>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.content}>
           <img src={viewImage} alt={viewImage?.name} />
         </DialogContent>
       </Dialog>
