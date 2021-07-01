@@ -11,6 +11,7 @@ const userUrl = (id) => `/Users/${id}`;
 const hotelImageUrl = (id) => `/Images/Hotel/${id}`;
 const roomImageUrl = (id) => `/Images/Room/${id}`;
 const reservationUrl = (id) => `/Reservations/${id}`;
+const roomViewUrl = (id) => `/RoomViews/${id}`;
 
 const usersUrl = '/Users';
 
@@ -157,6 +158,15 @@ const getReservations = (pageNumber, pageSize, email) => {
   });
 };
 
+const getRoomViews = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomViewUrl(''))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
 const deleteHotel = (id) => {
   return new Promise((resolve, reject) => {
     axios
@@ -207,10 +217,12 @@ const getHotel = (id) => {
 
 const createRoom = (room) => {
   return new Promise((resolve, reject) => {
+    console.log(room);
     axios
       .post(roomUrl(''), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
+        console.log(error);
         reject(error);
       });
   });
@@ -226,6 +238,7 @@ const getRoom = (roomId) => {
 };
 
 const updateRoom = (room) => {
+  console.log(room);
   return new Promise((resolve, reject) => {
     axios
       .put(roomUrl(room.id), room)
@@ -372,6 +385,7 @@ export default {
   getUsers,
   getHotels,
   getRooms,
+  getRoomViews,
   deleteHotel,
   updateHotel,
   createHotel,

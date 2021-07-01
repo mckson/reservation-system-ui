@@ -34,7 +34,11 @@ const BaseDialog = ({ open, close, title, contentComponent, width }) => {
           <Typography className={classes.title} variant="h6">
             {title}
           </Typography>
-          <IconButton className={classes.closeButton} onClick={close}>
+          <IconButton
+            size="small"
+            className={classes.closeButton}
+            onClick={close}
+          >
             <CloseOutlined />
           </IconButton>
         </div>

@@ -16,10 +16,17 @@ const CreateRoomComponent = ({
   const onCreateRoom = async (values) => {
     const createdRoom = {
       hotelId: hotel.id,
+      name: values.name,
       roomNumber: parseInt(values.number, 10),
       floorNumber: parseInt(values.floor, 10),
       price: parseFloat(values.price),
       capacity: parseInt(values.capacity, 10),
+      area: parseFloat(values.area),
+      description: values.description,
+      smoking: values.smoking,
+      parking: values.parking,
+      facilities: values.facilities,
+      views: values.views,
     };
 
     const [roomResponse, errorResponse] = await createRoom(createdRoom);

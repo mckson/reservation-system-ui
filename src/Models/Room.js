@@ -2,6 +2,7 @@ class Room {
   constructor({
     id,
     hotelId,
+    name,
     roomNumber,
     price,
     floorNumber,
@@ -17,6 +18,7 @@ class Room {
   }) {
     this.id = id;
     this.hotelId = hotelId;
+    this.name = name;
     this.roomNumber = roomNumber;
     this.floorNumber = floorNumber;
     this.price = price;
