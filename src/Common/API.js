@@ -232,7 +232,10 @@ const getRoom = (roomId) => {
   return new Promise((resolve, reject) => {
     axios
       .get(roomUrl(roomId))
-      .then((response) => resolve(response.data))
+      .then((response) => {
+        console.log(response);
+        resolve(response.data);
+      })
       .catch((error) => reject(error));
   });
 };
@@ -380,6 +383,33 @@ const getReservation = (id) => {
   });
 };
 
+const createRoomView = (roomView) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(roomViewUrl(''), roomView)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const updateRoomView = (roomView) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(roomViewUrl(roomView.id), roomView)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const deleteRoomView = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(roomViewUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
 export default {
   axios,
   getUsers,
@@ -405,4 +435,7 @@ export default {
   createReservation,
   getReservations,
   getReservation,
+  createRoomView,
+  updateRoomView,
+  deleteRoomView,
 };

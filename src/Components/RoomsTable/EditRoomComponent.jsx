@@ -31,6 +31,7 @@ const EditRoomComponent = ({
       facilities: values.facilities,
       views: values.views,
     };
+    console.log(updatedRoom);
     const [roomResponse, errorResponse] = await updateRoom(updatedRoom);
 
     if (errorResponse != null) {

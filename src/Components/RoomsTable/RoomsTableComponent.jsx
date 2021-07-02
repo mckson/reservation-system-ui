@@ -121,6 +121,7 @@ const RoomsTableComponent = ({
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
 
+      console.log(respondedRooms);
       setRooms(respondedRooms);
       setTotalCount(response.totalResults);
     }
@@ -346,7 +347,7 @@ const RoomRowMap = ({ room }) => {
       <TableCell>{room.roomNumber}</TableCell>
       <TableCell>{room.floorNumber}</TableCell>
       <TableCell>{room.capacity}</TableCell>
-      <TableCell>{room.price}</TableCell>
+      <TableCell>${room.price}</TableCell>
     </>
   );
 };

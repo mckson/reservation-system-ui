@@ -71,9 +71,13 @@ const RoomForm = ({
   resetError,
 }) => {
   const [views, setViews] = useState([]);
-  const [facilities, setFacilities] = useState([]);
+  const [facilities, setFacilities] = useState(
+    room?.facilities ? room.facilities : []
+  );
   const [facility, setFacility] = useState(null);
-  const [selectedViews, setSelectedViews] = useState([]);
+  const [selectedViews, setSelectedViews] = useState(
+    room?.views ? room.views : []
+  );
   const classes = useStyles();
 
   const requestViewsAsync = async () => {
@@ -239,7 +243,13 @@ const RoomForm = ({
                     >
                       {/* <FormLabel component="legend">Allow smoking</FormLabel> */}
                       <FormControlLabel
-                        control={<Checkbox {...field} color="primary" />}
+                        control={
+                          <Checkbox
+                            {...field}
+                            checked={field.value}
+                            color="primary"
+                          />
+                        }
                         label="Allow smoking"
                       />
                     </FormControl>
@@ -259,7 +269,13 @@ const RoomForm = ({
                     >
                       {/* <FormLabel component="legend">Allow smoking</FormLabel> */}
                       <FormControlLabel
-                        control={<Checkbox {...field} color="primary" />}
+                        control={
+                          <Checkbox
+                            {...field}
+                            checked={field.value}
+                            color="primary"
+                          />
+                        }
                         label="Parking provided"
                       />
                     </FormControl>
@@ -289,6 +305,7 @@ const RoomForm = ({
                 <Autocomplete
                   multiple
                   limitTags={3}
+                  value={selectedViews}
                   size="small"
                   options={views}
                   getOptionLabel={(view) => `${view.name}`}

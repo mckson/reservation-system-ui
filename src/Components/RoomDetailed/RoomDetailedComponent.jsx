@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Grid, Box, Typography, makeStyles } from '@material-ui/core';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import Room from '../../Models/Room';
-import Gallery from '../Gallery';
+// import Gallery from '../Gallery';
+import Carousell from '../../Common/Carousell/Carousell';
+import defaultImage from '../../images/default.png';
 
 const useStyles = makeStyles((theme) => ({
   contentGroup: {
@@ -32,12 +34,18 @@ const useStyles = makeStyles((theme) => ({
 
 const RoomDetailedComponent = ({ room }) => {
   const classes = useStyles();
+  const isRoomImagesNonEmpty = room?.images && room?.images.length > 0;
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={7}>
-        <Gallery images={room.images} />
+        <Carousell
+          imagesUrls={
+            isRoomImagesNonEmpty ? room.images : new Array(defaultImage)
+          }
+          altText="Room Image"
+        />
       </Grid>
-      <Grid container item xs={12} md={5}>
+      <Grid container item xs={12} md={5} alignContent="flex-start">
         <Grid item xs={12} className={classes.contentGroup}>
           <Typography variant="h6">
             {room.name ? room.name : `Room #${room.roomNumber}`}
