@@ -83,7 +83,6 @@ const ServiceFormComponent = ({
               />
               <Button
                 fullWidth
-                className={classes.submit}
                 variant="contained"
                 type="submit"
                 color="primary"

@@ -3,13 +3,19 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Alert } from '@material-ui/lab';
 import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
+import RoomViewTable from '../RoomViewTableModule/RoomViewTable/RoomViewTable';
 import Hotel from '../../Models/Hotel';
 import User from '../../Models/User';
 import FullScreenDialog from '../../Common/FullScreenDialog';
+import RoomView from '../../Models/RoomView';
+import Constants from '../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
   content: {
     margin: theme.spacing(3, 7),
+  },
+  contentItem: {
+    margin: theme.spacing(0, 0, 3, 0),
   },
 }));
 
@@ -19,6 +25,7 @@ const HotelsManagementComponent = ({
   close,
   role,
   hotels,
+  roomViews,
   totalCount,
   pageChanged,
   pageSizeChanged,
@@ -37,6 +44,9 @@ const HotelsManagementComponent = ({
   deleteImage,
   createRoomImage,
   deleteRoomImage,
+  createRoomView,
+  updateRoomView,
+  deleteRoomView,
 }) => {
   const classes = useStyles();
   const [error, setError] = useState(null);
@@ -74,31 +84,46 @@ const HotelsManagementComponent = ({
       contentComponent={
         <>
           <div className={classes.content}>
-            <HotelsTable
-              role={role}
-              users={users}
-              hotels={hotels}
-              totalCount={totalCount}
-              pageChanged={pageChanged}
-              pageSize={pageSize}
-              pageSizeChanged={pageSizeChanged}
-              deleteHotel={deleteHotel}
-              updateHotel={updateHotel}
-              createHotel={createHotel}
-              createRoom={createRoom}
-              updateRoom={updateRoom}
-              deleteRoom={deleteRoom}
-              createService={createService}
-              updateService={updateService}
-              deleteService={deleteService}
-              updateUser={updateUser}
-              createImage={createImage}
-              deleteImage={deleteImage}
-              createRoomImage={createRoomImage}
-              deleteRoomImage={deleteRoomImage}
-              onError={handleError}
-              onSuccess={handleSuccess}
-            />
+            <div className={classes.contentItem}>
+              <HotelsTable
+                role={role}
+                users={users}
+                hotels={hotels}
+                totalCount={totalCount}
+                pageChanged={pageChanged}
+                pageSize={pageSize}
+                pageSizeChanged={pageSizeChanged}
+                deleteHotel={deleteHotel}
+                updateHotel={updateHotel}
+                createHotel={createHotel}
+                createRoom={createRoom}
+                updateRoom={updateRoom}
+                deleteRoom={deleteRoom}
+                createService={createService}
+                updateService={updateService}
+                deleteService={deleteService}
+                updateUser={updateUser}
+                createImage={createImage}
+                deleteImage={deleteImage}
+                createRoomImage={createRoomImage}
+                deleteRoomImage={deleteRoomImage}
+                onError={handleError}
+                onSuccess={handleSuccess}
+              />
+            </div>
+            {role && role === Constants.adminRole ? (
+              <div className={classes.contentItem}>
+                <RoomViewTable
+                  role={role}
+                  roomViews={roomViews}
+                  createRoomView={createRoomView}
+                  updateRoomView={updateRoomView}
+                  deleteRoomView={deleteRoomView}
+                  onError={handleError}
+                  onSuccess={handleSuccess}
+                />
+              </div>
+            ) : null}
           </div>
           <Snackbar
             open={!!error}
@@ -134,6 +159,7 @@ HotelsManagementComponent.propTypes = {
   role: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
@@ -152,6 +178,13 @@ HotelsManagementComponent.propTypes = {
   deleteImage: PropTypes.func.isRequired,
   createRoomImage: PropTypes.func.isRequired,
   deleteRoomImage: PropTypes.func.isRequired,
+  createRoomView: PropTypes.func.isRequired,
+  updateRoomView: PropTypes.func.isRequired,
+  deleteRoomView: PropTypes.func.isRequired,
+};
+
+HotelsManagementComponent.defaultProps = {
+  roomViews: [],
 };
 
 export default HotelsManagementComponent;

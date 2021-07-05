@@ -6,10 +6,12 @@ import User from '../../Models/User';
 import API from '../../Common/API';
 import ManagementService from '../../Common/ManagementService';
 import Constants from '../../Common/Constants';
+import RoomView from '../../Models/RoomView';
 
 const HotelsManagement = ({ isOpen, close, loggedUser }) => {
   const [users, setUsers] = useState([]);
   const [hotels, setHotels] = useState([]);
+  const [roomViews, setRoomViews] = useState([]);
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -46,6 +48,16 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
     }
   };
 
+  const requestRoomViews = async () => {
+    const response = await API.getRoomViews();
+
+    if (response != null) {
+      const respondedRoomViews = response.map((item) => new RoomView(item));
+
+      setRoomViews(respondedRoomViews);
+    }
+  };
+
   const getRole = (user) => {
     if (user.roles.includes(Constants.adminRole)) {
       return Constants.adminRole;
@@ -66,10 +78,6 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
     setPageSize(newSize);
   };
 
-  useEffect(async () => {
-    await requestHotels();
-  }, [pageSize, pageNumber]);
-
   const handleCreateHotel = async (createdHotel) => {
     const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateHotel,
@@ -83,14 +91,6 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
 
     return [response, error];
   };
-
-  useEffect(async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
-    if (getRole(loggedUser) === Constants.adminRole) {
-      await requestUsers();
-    }
-  }, []);
 
   const handleUpdateHotel = async (updatedHotel) => {
     const [response, error] = await ManagementService.baseRequestHandler(
@@ -273,10 +273,62 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
     return error;
   };
 
+  const handleCreateRoomView = async (createdRoomView) => {
+    const [response, error] = await ManagementService.baseRequestHandler(
+      ManagementService.handleCreateRoomView,
+      createdRoomView
+    );
+
+    if (!error) {
+      await requestRoomViews();
+    }
+
+    return [response, error];
+  };
+
+  const handleUpdateRoomView = async (updatedRoomView) => {
+    const [response, error] = await ManagementService.baseRequestHandler(
+      ManagementService.handleUpdateRoomView,
+      updatedRoomView
+    );
+
+    if (!error) {
+      await requestRoomViews();
+    }
+
+    return [response, error];
+  };
+
+  const handleDeleteRoomView = async (deleteRoomViewId) => {
+    const [response, error] = await ManagementService.baseRequestHandler(
+      ManagementService.handleDeleteRoomView,
+      deleteRoomViewId
+    );
+
+    if (!error) {
+      await requestRoomViews();
+    }
+
+    return [response, error];
+  };
+
+  useEffect(async () => {
+    await requestHotels();
+  }, [pageSize, pageNumber]);
+
+  useEffect(async () => {
+    await requestRoomViews();
+
+    if (getRole(loggedUser) === Constants.adminRole) {
+      await requestUsers();
+    }
+  }, []);
+
   return (
     <HotelsManagementComponent
       role={getRole(loggedUser)}
       users={users}
+      roomViews={roomViews}
       isOpen={isOpen}
       close={close}
       hotels={hotels}
@@ -298,6 +350,9 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
       deleteImage={handleDeleteHotelImage}
       createRoomImage={handleCreateRoomImage}
       deleteRoomImage={handleDeleteRoomImage}
+      createRoomView={handleCreateRoomView}
+      updateRoomView={handleUpdateRoomView}
+      deleteRoomView={handleDeleteRoomView}
     />
   );
 };

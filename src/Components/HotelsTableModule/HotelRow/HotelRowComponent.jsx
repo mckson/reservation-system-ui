@@ -10,7 +10,6 @@ import {
   Collapse,
   Box,
   Typography,
-  makeStyles,
 } from '@material-ui/core';
 import RoomsTableComponent from '../../RoomsTable/RoomsTableComponent';
 import ServicesTable from '../../ServicesTableModule/ServicesTable/ServicesTable';
@@ -21,41 +20,7 @@ import HotelRowMap from '../HotelRowMap/HotelRowMap';
 import User from '../../../Models/User';
 import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
 import Constants from '../../../Common/Constants';
-
-const useStyles = makeStyles((theme) => ({
-  row: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-    background: theme.palette.background.paper,
-    // '&.Mui-selected': { background: theme.palette.grey[400] },
-    // '&.Mui-selected:hover': { background: theme.palette.grey[300] },
-  },
-  subrowTitle: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  subrow: {
-    margin: theme.spacing(0, 5),
-    display: 'flex',
-    flexDirection: 'column',
-    width: 'auto',
-  },
-  table: {
-    margin: theme.spacing(0, 0, 2),
-  },
-  button: {
-    margin: 0,
-    color: theme.palette.primary.main,
-  },
-  actions: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 'auto',
-  },
-}));
+import useRowStyles from '../../../Common/Styles/TableRowStyles';
 
 const HotelRowComponent = ({
   role,
@@ -77,7 +42,7 @@ const HotelRowComponent = ({
   onError,
   onSuccess,
 }) => {
-  const classes = useStyles();
+  const classes = useRowStyles();
 
   const [open, setOpen] = useState(false);
   const [openRooms, setOpenRooms] = useState(false);

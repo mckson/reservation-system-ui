@@ -21,10 +21,6 @@ import User from '../../../Models/User';
 import Constants from '../../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: 0,
-    color: theme.palette.primary.main,
-  },
   addButton: {
     margin: theme.spacing(1),
     border: 0,
@@ -35,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     textTransform: 'uppercase',
   },
-  footer: {},
 }));
 
 const HotelsTableComponent = ({
@@ -88,7 +83,7 @@ const HotelsTableComponent = ({
   };
 
   const handleAddClose = () => {
-    setIsAdd(!isAdd);
+    setIsAdd(false);
   };
 
   return (

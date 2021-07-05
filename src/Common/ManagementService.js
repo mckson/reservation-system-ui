@@ -137,6 +137,21 @@ const ManagementService = (function Management() {
     }
   };
 
+  const handleCreateRoomView = async (createdRoomView) => {
+    const returnedRoomView = await API.createRoomView(createdRoomView);
+    return returnedRoomView;
+  };
+
+  const handleUpdateRoomView = async (updatedRoomView) => {
+    const returnedRoomView = await API.updateRoomView(updatedRoomView);
+    return returnedRoomView;
+  };
+
+  const handleDeleteRoomView = async (id) => {
+    const returnedRoomView = await API.deleteRoomView(id);
+    return returnedRoomView;
+  };
+
   return {
     getService,
     baseRequestHandler,
@@ -154,6 +169,9 @@ const ManagementService = (function Management() {
     handleDeleteHotelImage,
     handleCreateRoomImage,
     handleDeleteRoomImage,
+    handleCreateRoomView,
+    handleUpdateRoomView,
+    handleDeleteRoomView,
   };
 })();
 
