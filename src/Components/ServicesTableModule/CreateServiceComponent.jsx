@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import ServiceForm from './ServiceForm/ServiceForm';
 import Hotel from '../../Models/Hotel';
 
-const CreateServiceComponent = ({ open, close, hotel, createService }) => {
+const CreateServiceComponent = ({
+  open,
+  close,
+  hotel,
+  createService,
+  onSuccess,
+}) => {
   const formTitle = 'Service creation';
   const formSubmitText = 'Create service';
   const [error, setError] = useState(null);
@@ -14,15 +20,15 @@ const CreateServiceComponent = ({ open, close, hotel, createService }) => {
       name: values.name,
       price: parseFloat(values.price),
     };
-    // eslint-disable-next-line no-debugger
-    debugger;
-    const errorResponse = await createService(createdService);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
+    const [serviceResponse, errorResponse] = await createService(
+      createdService
+    );
+
     if (errorResponse != null) {
       setError(errorResponse);
     } else {
+      onSuccess(`Service ${serviceResponse.name} sucessfully added`);
       close();
     }
   };
@@ -52,6 +58,7 @@ CreateServiceComponent.propTypes = {
   close: PropTypes.func.isRequired,
   createService: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default CreateServiceComponent;

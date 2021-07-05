@@ -41,7 +41,7 @@ ServiceForm.propTypes = {
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
-  service: PropTypes.instanceOf(Service).isRequired,
+  service: PropTypes.instanceOf(Service),
   submitHandler: PropTypes.func.isRequired,
   submitText: PropTypes.string,
   error: PropTypes.string,
@@ -49,6 +49,7 @@ ServiceForm.propTypes = {
 };
 
 ServiceForm.defaultProps = {
+  service: null,
   submitText: 'Submit',
   error: null,
 };

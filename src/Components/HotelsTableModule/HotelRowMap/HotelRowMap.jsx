@@ -31,11 +31,7 @@ const HotelRowMap = ({ hotel }) => {
       <TableCell>
         <img
           style={{ width: 100 }}
-          src={
-            hotel.mainImage
-              ? `data:image/jpeg;base64,${hotel.mainImage.image}`
-              : defaultImage
-          }
+          src={hotel.mainImage ? `${hotel.mainImage}` : defaultImage}
           alt="hotel"
         />
       </TableCell>

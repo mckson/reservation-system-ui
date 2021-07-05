@@ -5,6 +5,7 @@ import Hotel from '../../../Models/Hotel';
 import User from '../../../Models/User';
 
 const HotelsTable = ({
+  role,
   users,
   hotels,
   totalCount,
@@ -23,9 +24,14 @@ const HotelsTable = ({
   updateUser,
   createImage,
   deleteImage,
+  createRoomImage,
+  deleteRoomImage,
+  onError,
+  onSuccess,
 }) => {
   return (
     <HotelsTableComponent
+      role={role}
       users={users}
       hotels={hotels}
       totalCount={totalCount}
@@ -44,11 +50,16 @@ const HotelsTable = ({
       updateUser={updateUser}
       createImage={createImage}
       deleteImage={deleteImage}
+      createRoomImage={createRoomImage}
+      deleteRoomImage={deleteRoomImage}
+      onError={onError}
+      onSuccess={onSuccess}
     />
   );
 };
 
 HotelsTable.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,
@@ -67,6 +78,10 @@ HotelsTable.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default HotelsTable;

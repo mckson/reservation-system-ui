@@ -5,8 +5,8 @@ class User {
     this.lastName = obj.lastName;
     this.userName = obj.name;
     this.email = obj.email;
-    this.roles = obj.role;
-    this.hotel = obj.hotel;
+    this.roles = obj.roles;
+    this.hotels = obj.hotels;
   }
 }
 

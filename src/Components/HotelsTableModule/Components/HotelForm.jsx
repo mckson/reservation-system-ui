@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { CloseOutlined, PhotoCameraOutlined } from '@material-ui/icons';
+import React, { useState /* , useEffect */ } from 'react';
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  PhotoCameraOutlined,
+} from '@material-ui/icons';
 import {
   IconButton,
   Dialog,
@@ -11,9 +15,13 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Form, Formik } from 'formik';
+import { Alert } from '@material-ui/lab';
 import * as Yup from 'yup';
 import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
+import ImageModelConverter from '../../../Common/ImageModelConverter';
+
+// import API from '../../../Common/API';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -64,38 +72,36 @@ const validationSchema = Yup.object({
     .required('Required'),
   deposit: Yup.number().required('Required'),
   description: Yup.string()
-    .max(1000, 'Must be 1000 characters or less')
+    .max(10000, 'Must be 10000 characters or less')
     .min(10, 'Must be 10 characters or more')
     .required('Required'),
 });
 
-const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
+const HotelForm = ({
+  open,
+  close,
+  hotel,
+  submitHandler,
+  title,
+  error,
+  resetError,
+}) => {
   const classes = useStyles();
-  const [mainImage, setMainImage] = useState(null);
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [newMainImage, setNewMainImage] = useState(null);
+  const [isDeleteMainImage, setIsDeleteMainImage] = useState(false);
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        console.log(file);
-        setUploadedFile(file);
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
+  const [mainImagePreview, setMainImagePreview] = useState(
+    hotel?.mainImage ? hotel.mainImage : null
+  );
 
   const uploadImage = async (event) => {
     const file = event.target.files[0];
-    const base64 = await convertBase64(file);
-    console.log(base64);
-    setMainImage(base64);
+
+    const imageModel = await ImageModelConverter.fileToImageModelAsync(file);
+
+    setNewMainImage(imageModel);
+    setMainImagePreview(imageModel.image);
+    setIsDeleteMainImage(false);
   };
 
   return (
@@ -109,8 +115,8 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
             <IconButton
               className={classes.closeButton}
               onClick={() => {
-                setMainImage(null);
-                setUploadedFile(null);
+                setIsDeleteMainImage(false);
+                setNewMainImage(null);
                 close();
               }}
             >
@@ -131,15 +137,20 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
               street: hotel != null ? hotel.location.street : '',
               buildingNumber:
                 hotel != null ? hotel.location.buildingNumber : '',
-              mainImage: hotel != null ? hotel.mainImage : null,
+              newMainImage: null,
+              isDeleteMainImage: false,
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
+              // eslint-disable-next-line no-debugger
+              debugger;
               // eslint-disable-next-line no-param-reassign
-              values.mainImage = mainImage;
+              values.newMainImage = newMainImage;
+              // eslint-disable-next-line no-param-reassign
+              values.isDeleteMainImage = isDeleteMainImage;
               submitHandler(values);
-              setMainImage(null);
-              setUploadedFile(null);
+              setNewMainImage(null);
+              setMainImagePreview(null);
             }}
           >
             <Form autoComplete="on">
@@ -227,22 +238,17 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
                 }}
               >
                 <Typography>
-                  {uploadedFile?.name || 'Upload main picture'}
+                  {mainImagePreview
+                    ? 'Select new one to change'
+                    : 'Upload main picture'}
                 </Typography>
-                {mainImage ? (
+                {mainImagePreview ? (
                   <img
                     className={classes.image}
-                    src={/* `data:image/jpeg;base64, */ `${mainImage}`}
+                    src={mainImagePreview}
                     alt="Hotel"
                   />
                 ) : null}
-                {/* {hotel?.mainImage ? (
-                  <img
-                    className={classes.image}
-                    src={`data:image/jpeg;base64,${hotel.mainImage}`}
-                    alt="hotel"
-                  />
-                ) : null} */}
                 <input
                   accept="image/*"
                   style={{ display: 'none' }}
@@ -257,6 +263,17 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
                 >
                   <PhotoCameraOutlined />
                 </IconButton>
+                <IconButton
+                  color="primary"
+                  disabled={!mainImagePreview}
+                  onClick={() => {
+                    setNewMainImage(null);
+                    setMainImagePreview(null);
+                    setIsDeleteMainImage(true);
+                  }}
+                >
+                  <DeleteOutlined />
+                </IconButton>
               </label>
               <Button
                 fullWidth
@@ -270,17 +287,44 @@ const EditHotelComponent = ({ open, close, hotel, submitHandler, title }) => {
             </Form>
           </Formik>
         </DialogContent>
+        {error != null ? (
+          <Alert
+            fullWidth
+            variant="outlined"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  resetError();
+                }}
+              >
+                <CloseOutlined fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
       </Dialog>
     </div>
   );
 };
 
-EditHotelComponent.propTypes = {
+HotelForm.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   submitHandler: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  resetError: PropTypes.func.isRequired,
 };
 
-export default EditHotelComponent;
+HotelForm.defaultProps = {
+  error: null,
+};
+
+export default HotelForm;
