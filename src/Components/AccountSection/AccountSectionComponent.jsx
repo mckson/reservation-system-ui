@@ -10,13 +10,12 @@ import {
   Link,
 } from '@material-ui/core';
 // import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
-// import HistoryIcon from '@material-ui/icons/HistoryOutlined';
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
+import { HistoryOutlined } from '@material-ui/icons';
 import User from '../../Models/User';
-
-const AdminRole = 'Admin';
+import Constants from '../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -31,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'uppercase',
     '&:hover': {
       background: 'transparent',
+      textDecoration: 'none',
     },
   },
   icon: {
@@ -42,6 +42,7 @@ const AccountSectionComponent = ({
   loggedUser,
   logout,
   openHotelsManagement,
+  openReservationsSection,
 }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -70,6 +71,8 @@ const AccountSectionComponent = ({
           <Menu
             id="menu-area"
             anchorEl={anchorEl}
+            keepMounted
+            elevation={1}
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
@@ -78,39 +81,33 @@ const AccountSectionComponent = ({
                 <AccountIcon className={classes.icon} />
               </ListItemIcon>
               <ListItemText primary="Manage account" />
+      </MenuItem> */}
+
+            <MenuItem
+              onClick={() => {
+                openReservationsSection();
+                handleClose();
+              }}
+            >
+              <ListItemIcon>
+                <HistoryOutlined className={classes.icon} />
+              </ListItemIcon>
+              <ListItemText primary="View reservations" />
             </MenuItem>
 
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <HistoryIcon className={classes.icon} />
-              </ListItemIcon>
-              <ListItemText primary="View orders" />
-            </MenuItem> */}
-
-            {loggedUser.roles.includes(AdminRole) ? (
-              <>
-                <MenuItem
-                  onClick={() => {
-                    openHotelsManagement();
-                    handleClose();
-                  }}
-                >
-                  <ListItemIcon>
-                    <AdminPanelIcon className={classes.icon} />
-                  </ListItemIcon>
-                  <ListItemText primary="Manage hotels" />
-                </MenuItem>
-                {/* <MenuItem
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  <ListItemIcon>
-                    <AdminPanelIcon className={classes.icon} />
-                  </ListItemIcon>
-                  <ListItemText primary="Manage users" />
-                </MenuItem> */}
-              </>
+            {loggedUser?.roles.includes(Constants.adminRole) ||
+            loggedUser?.roles.includes(Constants.managerRole) ? (
+              <MenuItem
+                onClick={() => {
+                  openHotelsManagement();
+                  handleClose();
+                }}
+              >
+                <ListItemIcon>
+                  <AdminPanelIcon className={classes.icon} />
+                </ListItemIcon>
+                <ListItemText primary="Manage hotels" />
+              </MenuItem>
             ) : null}
 
             <MenuItem
@@ -139,6 +136,7 @@ AccountSectionComponent.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   logout: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  openReservationsSection: PropTypes.func.isRequired,
 };
 
 AccountSectionComponent.defaultProps = {

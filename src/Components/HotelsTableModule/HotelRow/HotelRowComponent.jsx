@@ -10,7 +10,6 @@ import {
   Collapse,
   Box,
   Typography,
-  makeStyles,
 } from '@material-ui/core';
 import RoomsTableComponent from '../../RoomsTable/RoomsTableComponent';
 import ServicesTable from '../../ServicesTableModule/ServicesTable/ServicesTable';
@@ -19,44 +18,12 @@ import EditHotelComponent from '../Components/EditHotelComponent';
 import Hotel from '../../../Models/Hotel';
 import HotelRowMap from '../HotelRowMap/HotelRowMap';
 import User from '../../../Models/User';
-import ImagesTable from '../../ImagesTableModule/ImagesTable';
-
-const useStyles = makeStyles((theme) => ({
-  row: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-    background: theme.palette.background.paper,
-    // '&.Mui-selected': { background: theme.palette.grey[400] },
-    // '&.Mui-selected:hover': { background: theme.palette.grey[300] },
-  },
-  subrowTitle: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  subrow: {
-    margin: theme.spacing(0, 5),
-    display: 'flex',
-    flexDirection: 'column',
-    width: 'auto',
-  },
-  table: {
-    margin: theme.spacing(0, 0, 2),
-  },
-  button: {
-    margin: 0,
-    color: theme.palette.primary.main,
-  },
-  actions: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 'auto',
-  },
-}));
+import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
+import Constants from '../../../Common/Constants';
+import useRowStyles from '../../../Common/Styles/TableRowStyles';
 
 const HotelRowComponent = ({
+  role,
   users,
   hotel,
   deleteHotel,
@@ -70,8 +37,12 @@ const HotelRowComponent = ({
   updateUser,
   deleteImage,
   createImage,
+  createRoomImage,
+  deleteRoomImage,
+  onError,
+  onSuccess,
 }) => {
-  const classes = useStyles();
+  const classes = useRowStyles();
 
   const [open, setOpen] = useState(false);
   const [openRooms, setOpenRooms] = useState(false);
@@ -80,8 +51,9 @@ const HotelRowComponent = ({
   const [openImages, setOpenImages] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const handleEditClose = () => {
+  const handleEditClose = (message) => {
     setIsEdit(!isEdit);
+    console.log(message);
   };
 
   return (
@@ -94,20 +66,30 @@ const HotelRowComponent = ({
         </TableCell>
         <HotelRowMap hotel={hotel} isEdit={isEdit} />
         <TableCell className={classes.actions}>
-          <IconButton
-            className={classes.button}
-            onClick={() => setIsEdit(!isEdit)}
-          >
-            <EditOutlined />
-          </IconButton>
-          <IconButton
-            className={classes.button}
-            onClick={() => {
-              deleteHotel(hotel.id);
-            }}
-          >
-            <DeleteOutlined />
-          </IconButton>
+          {role === Constants.adminRole ? (
+            <>
+              <IconButton
+                className={classes.button}
+                onClick={() => setIsEdit(!isEdit)}
+              >
+                <EditOutlined />
+              </IconButton>
+              <IconButton
+                className={classes.button}
+                onClick={async () => {
+                  const errorResponse = await deleteHotel(hotel.id);
+
+                  if (errorResponse) {
+                    onError(errorResponse);
+                  } else {
+                    onSuccess('Hotel successfully deleted');
+                  }
+                }}
+              >
+                <DeleteOutlined />
+              </IconButton>
+            </>
+          ) : null}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -137,11 +119,14 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openRooms}>
                   <RoomsTableComponent
-                    rooms={hotel.rooms}
                     createRoom={createRoom}
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
+                    createRoomImage={createRoomImage}
+                    deleteRoomImage={deleteRoomImage}
                     hotel={hotel}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
@@ -165,35 +150,41 @@ const HotelRowComponent = ({
                     updateService={updateService}
                     deleteService={deleteService}
                     hotel={hotel}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
             </Box>
-            <Box>
-              <div className={classes.subrow}>
-                <div className={classes.subrowTitle}>
-                  <IconButton
-                    onClick={() => {
-                      setOpenManagers(!openManagers);
-                    }}
-                  >
-                    {openManagers ? (
-                      <KeyboardArrowUpIcon />
-                    ) : (
-                      <KeyboardArrowDownIcon />
-                    )}
-                  </IconButton>
-                  <Typography variant="h6">Managers</Typography>
+            {role === Constants.adminRole ? (
+              <Box>
+                <div className={classes.subrow}>
+                  <div className={classes.subrowTitle}>
+                    <IconButton
+                      onClick={() => {
+                        setOpenManagers(!openManagers);
+                      }}
+                    >
+                      {openManagers ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                    </IconButton>
+                    <Typography variant="h6">Managers</Typography>
+                  </div>
+                  <Collapse in={openManagers}>
+                    <ManagersTable
+                      hotel={hotel}
+                      users={users}
+                      updateUser={updateUser}
+                      onSuccess={onSuccess}
+                      onError={onError}
+                    />
+                  </Collapse>
                 </div>
-                <Collapse in={openManagers}>
-                  <ManagersTable
-                    hotel={hotel}
-                    users={users}
-                    updateUser={updateUser}
-                  />
-                </Collapse>
-              </div>
-            </Box>
+              </Box>
+            ) : null}
             <Box>
               <div className={classes.subrow}>
                 <div className={classes.subrowTitle}>
@@ -212,9 +203,12 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openImages} className={classes.table}>
                   <ImagesTable
-                    hotel={hotel}
+                    hotelId={hotel.id}
+                    images={hotel.images}
                     deleteImage={deleteImage}
                     createImage={createImage}
+                    onSuccess={onSuccess}
+                    onError={onError}
                   />
                 </Collapse>
               </div>
@@ -227,12 +221,14 @@ const HotelRowComponent = ({
         open={isEdit}
         close={handleEditClose}
         updateHotel={updateHotel}
+        onSuccess={onSuccess}
       />
     </>
   );
 };
 
 HotelRowComponent.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   deleteHotel: PropTypes.func.isRequired,
@@ -246,6 +242,10 @@ HotelRowComponent.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default HotelRowComponent;

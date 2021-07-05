@@ -1,25 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
 import API from '../../Common/API';
-import Image from '../../Models/HotelImage';
+import User from '../../Models/User';
+import Room from '../../Models/Room';
 
-const HotelFull = () => {
+// import Default from '../../images/default.png';
+
+const HotelFull = ({
+  loggedUser,
+  dateIn,
+  dateOut,
+  searchHotels,
+  onDateInChange,
+  onDateOutChange,
+}) => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
+  const [rooms, setRooms] = useState([]);
+  const [roomsTotalResults, setRoomsTotalResults] = useState(null);
+  const [roomsPageNumber, setRoomsPageNumber] = useState(1);
+  const [roomsPageSize, setRoomsPageSize] = useState(null);
+  const [roomsTotalPages, setRoomsTotalPages] = useState(null);
+  const [roomId, setRoomId] = useState(null);
+  const [openRoom, setOpenRoom] = useState(false);
+
   const history = useHistory();
+
+  const handleSelectedRoomChanged = (selectedRoomId) => {
+    setRoomId(selectedRoomId);
+  };
+
+  const handleOpenRoomDetailed = () => {
+    setOpenRoom(true);
+  };
+
+  const handleCloseRoomDetailed = () => {
+    setOpenRoom(false);
+    setRoomId(null);
+  };
 
   const onBackClick = () => history.push('/Hotels');
 
-  const onReserveClick = () => history.push(`/Reservation/${hotel.id}`);
+  const requestRooms = async (hotelId) => {
+    const response = await API.getRooms(
+      roomsPageNumber,
+      roomsPageSize,
+      hotelId,
+      dateIn,
+      dateOut
+    );
 
-  useEffect(() => {
-    API.axios
+    if (response) {
+      const respondedRooms = response.content.map((item) => new Room(item));
+
+      setRooms(respondedRooms);
+      setRoomsTotalResults(response.totalResults);
+      setRoomsTotalPages(response.totalPages);
+      if (response.pageNumber !== roomsPageNumber) {
+        setRoomsPageNumber(response.pageNumber);
+      }
+      if (response.pageSize !== roomsPageSize) {
+        setRoomsPageSize(response.pageSize);
+      }
+    }
+  };
+
+  useEffect(async () => {
+    await API.axios
       .get(`/Hotels/${id}`)
-      .then((response) => {
+      .then(async (response) => {
+        // if (response.data.mainImage == null) {
+        //   response.data.mainImage = { id: 0, image: Default };
+        // }
         setHotel(new Hotel(response.data));
+
+        await requestRooms(response.data.id);
       })
       .catch((err) => {
         if (err.response) {
@@ -35,20 +94,61 @@ const HotelFull = () => {
       });
   }, []);
 
+  // useEffect(async () => {
+  //   if (hotel) {
+  //   }
+  // }, [hotel /* , roomsPageSize, roomsPageNumber, dateIn, dateOut */]);
+
   return (
     <>
-      {hotel ? (
+      {hotel && hotel !== {} ? (
         <HotelFullComponent
           hotel={hotel}
-          mainImage={new Image(hotel.mainImage)}
+          rooms={rooms}
+          roomsTotalResults={roomsTotalResults}
+          roomsTotalPages={roomsTotalPages}
           onBackClick={onBackClick}
-          onReserveClick={onReserveClick}
+          loggedUser={loggedUser}
+          dateIn={dateIn}
+          dateOut={dateOut}
+          searchHotels={searchHotels}
+          onDateInChange={onDateInChange}
+          onDateOutChange={onDateOutChange}
+          selectedRoomId={roomId}
+          isRoomDetailedOpen={openRoom}
+          selectedRoomChanged={handleSelectedRoomChanged}
+          closeRoomDetailed={handleCloseRoomDetailed}
+          openRoomDetailed={handleOpenRoomDetailed}
         />
       ) : (
-        <Typography variant="h4">Loading</Typography>
+        <div
+          style={{
+            flexGrow: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <CircularProgress />
+        </div>
       )}
     </>
   );
+};
+
+HotelFull.propTypes = {
+  loggedUser: PropTypes.instanceOf(User),
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+  searchHotels: PropTypes.func.isRequired,
+  onDateInChange: PropTypes.func.isRequired,
+  onDateOutChange: PropTypes.func.isRequired,
+};
+
+HotelFull.defaultProps = {
+  loggedUser: null,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default HotelFull;

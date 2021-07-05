@@ -19,29 +19,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ImageRow = ({ image, deleteImage }) => {
+const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
   const classes = useStyles();
 
   const onDeleteImage = async () => {
-    const errorResponse = await deleteImage(image);
-    console.log(errorResponse);
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const splited = image.split('/');
+    const imageId = splited[splited.length - 1];
+
+    // eslint-disable-next-line no-unused-vars
+    const errorResponse = await deleteImage(imageId);
+
+    if (errorResponse) {
+      onError(errorResponse);
+    } else {
+      onSuccess('Image successfully deleted');
+    }
   };
   return (
     <>
       <TableRow>
-        <TableCell>{image.id}</TableCell>
+        {/* <TableCell>{image.id}</TableCell> */}
         <TableCell align="center">
-          <img
-            className={classes.image}
-            src={`data:image/jpeg;base64,${image.image}`}
-            alt="Hotel"
-          />
+          <img className={classes.image} src={image} alt="Hotel" />
         </TableCell>
         <TableCell className={classes.actions}>
-          <IconButton
-            className={classes.button}
-            onClick={async () => onDeleteImage()}
-          >
+          <IconButton className={classes.button} onClick={onDeleteImage}>
             <DeleteOutlined />
           </IconButton>
         </TableCell>
@@ -53,6 +57,8 @@ const ImageRow = ({ image, deleteImage }) => {
 ImageRow.propTypes = {
   image: PropTypes.instanceOf(Image).isRequired,
   deleteImage: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 export default ImageRow;

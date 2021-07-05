@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom';
 import HotelCard from './HotelCard';
 import Hotel from '../Models/Hotel';
 import PaginationBar from '../Common/PaginationBar';
-import HotelSearchComponent from './HotelSearchComponent';
-import SearchBarComponent from './SearchBar/SearchBarComponent';
+// import HotelSearchComponent from './HotelSearchComponent';
+import SearchBar from './SearchBar/SearchBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,25 +37,31 @@ const useStyles = makeStyles((theme) => ({
 const HotelsPage = ({
   hotels,
   totalPages,
-  totalResults,
   onPageChanged,
   searchHotels,
+  dateIn,
+  dateOut,
+  onDateInChange,
+  onDateOutChange,
 }) => {
   const classes = useStyles();
   const hotelInstances = hotels.map((hotel) => new Hotel(hotel));
   const history = useHistory();
 
   const onOpenFullHotel = (hotelToOpen) => {
-    console.log(hotelToOpen);
-    console.log(totalResults);
     history.push(`/Hotels/${hotelToOpen.id}`);
   };
 
   return (
     <Grid container className={classes.root}>
-      <SearchBarComponent />
       <div className={classes.search}>
-        <HotelSearchComponent searchHotels={searchHotels} />
+        <SearchBar
+          searchHotels={searchHotels}
+          dateIn={dateIn}
+          dateOut={dateOut}
+          onDateInChange={onDateInChange}
+          onDateOutChange={onDateOutChange}
+        />
       </div>
       <div>
         {hotelInstances.map((hotel) => (
@@ -78,15 +84,19 @@ const HotelsPage = ({
 HotelsPage.propTypes = {
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
-  totalResults: PropTypes.number,
   onPageChanged: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
+  dateIn: PropTypes.string,
+  dateOut: PropTypes.string,
+  onDateInChange: PropTypes.func.isRequired,
+  onDateOutChange: PropTypes.func.isRequired,
 };
 
 HotelsPage.defaultProps = {
   hotels: [],
   totalPages: 0,
-  totalResults: 0,
+  dateIn: null,
+  dateOut: null,
 };
 
 export default HotelsPage;

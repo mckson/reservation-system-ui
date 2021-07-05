@@ -71,7 +71,7 @@ const SignUp = ({ onSignUp }) => {
       DateOfBirth: values.dateOfBirth,
     };
 
-    await API.axiosInstance
+    await API.axios
       .post(url, request)
       .then((response) => {
         onSignUp(response);

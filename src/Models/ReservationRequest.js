@@ -5,6 +5,9 @@ class ReservationRequest {
     this.services = obj.services;
     this.dateIn = obj.dateIn;
     this.dateOut = obj.dateOut;
+    this.firstName = obj.firstName;
+    this.lastName = obj.lastName;
+    this.email = obj.email;
   }
 }
 

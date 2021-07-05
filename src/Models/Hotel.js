@@ -6,7 +6,7 @@ class Hotel {
     this.deposit = obj.deposit;
     this.description = obj.description;
     this.location = obj.location;
-    this.rooms = obj.rooms;
+    // this.rooms = obj.rooms;
     this.managers = obj.managers;
     this.services = obj.services;
     this.mainImage = obj.mainImage;

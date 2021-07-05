@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import { useHistory } from 'react-router-dom';
 import LocalStorageService from './LocalStorageService';
 
 const localStorageService = LocalStorageService.getService();
@@ -9,21 +8,46 @@ const hotelUrl = (id) => `/Hotels/${id}`;
 const roomUrl = (id) => `/Rooms/${id}`;
 const serviceUrl = (id) => `/Services/${id}`;
 const userUrl = (id) => `/Users/${id}`;
-const imageUrl = (id) => `/Images/${id}`;
+const hotelImageUrl = (id) => `/Images/Hotel/${id}`;
+const roomImageUrl = (id) => `/Images/Room/${id}`;
+const reservationUrl = (id) => `/Reservations/${id}`;
+const roomViewUrl = (id) => `/RoomViews/${id}`;
 
 const usersUrl = '/Users';
 
-const hotelsUrl = (pageNumber, pageSize, name, city, services) =>
-  `/Hotels?pageNumber=${pageNumber}&PageSize=${pageSize}&name=${name}&city=${city}${services
-    .map((service) => `&services=${service}`)
-    .join('')}`;
+const hotelsUrl = (
+  pageNumber,
+  pageSize,
+  dateIn,
+  dateOut,
+  manager,
+  name,
+  city,
+  services
+) =>
+  `/Hotels?pageNumber=${pageNumber}&pageSize=${pageSize}&dateIn=${
+    dateIn || ''
+  }&dateOut=${dateOut || ''}&managerId=${manager || ''}&name=${
+    name || ''
+  }&city=${city || ''}${
+    services ? services.map((service) => `&services=${service}`).join('') : ''
+  }`;
+
+const roomsUrl = (pageNumber, pageSize, hotelId, dateIn, dateOut) =>
+  `/Rooms?pageNumber=${pageNumber}&pageSize=${
+    pageSize || ''
+  }&hotelId=${hotelId}&dateIn=${dateIn || ''}&dateOut=${dateOut || ''}`;
+
+const reservationsUrl = (pageNumber, pageSize, email) =>
+  `/Reservations?pageNumber=${pageNumber}&pageSize=${
+    pageSize || ''
+  }&email=${email}`;
 
 axios.defaults.baseURL = baseURL;
 
 axios.interceptors.request.use(
   (config) => {
     const accessToken = localStorageService.getAccessToken();
-
     if (accessToken) {
       // eslint-disable-next-line no-param-reassign
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -46,18 +70,22 @@ axios.interceptors.response.use(
       window.location.href = '/SignIn';
     }
 
-    if (error.response.status === 401 && !originalRequest.retry) {
-      originalRequest.retry = true;
+    if (error.response) {
+      if (error.response.status === 401 && !originalRequest.retry) {
+        originalRequest.retry = true;
 
-      return axios
-        .post('/Account/RefreshToken', {
-          token: localStorageService.getRefreshToken(),
-        })
-        .then((response) => {
-          localStorageService.setToken(response.data);
-          axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
-          return axios(originalRequest);
-        });
+        return axios
+          .post('/Account/RefreshToken', {
+            token: localStorageService.getRefreshToken(),
+          })
+          .then((response) => {
+            localStorageService.setToken(response.data);
+            axios.defaults.headers.Authorization = `Bearer ${localStorageService.getAccessToken()}`;
+            return axios(originalRequest);
+          });
+      }
+    } else {
+      // handle server down
     }
 
     return Promise.reject(error);
@@ -75,16 +103,67 @@ const getUsers = () => {
   });
 };
 
-const getHotels = (pageNumber, pageSize, name, city, services) => {
+const getHotels = (
+  pageNumber,
+  pageSize,
+  dateIn,
+  dateOut,
+  manager,
+  name,
+  city,
+  services
+) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(hotelsUrl(pageNumber, pageSize, name, city, services))
+      .get(
+        hotelsUrl(
+          pageNumber,
+          pageSize,
+          dateIn,
+          dateOut,
+          manager,
+          name,
+          city,
+          services
+        )
+      )
       .then((response) => {
         resolve(response.data);
       })
       .catch((error) => {
         reject(error);
       });
+  });
+};
+
+const getRooms = (pageNumber, pageSize, hotelId, dateIn, dateOut) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomsUrl(pageNumber, pageSize, hotelId, dateIn, dateOut))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const getReservations = (pageNumber, pageSize, email) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(reservationsUrl(pageNumber, pageSize, email))
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+const getRoomViews = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomViewUrl(''))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -113,8 +192,6 @@ const updateHotel = (hotel) => {
 };
 
 const createHotel = (hotel) => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   return new Promise((resolve, reject) => {
     axios
       .post(hotelUrl(''), hotel)
@@ -140,17 +217,31 @@ const getHotel = (id) => {
 
 const createRoom = (room) => {
   return new Promise((resolve, reject) => {
+    console.log(room);
     axios
       .post(roomUrl(''), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        console.log(error.response);
+        console.log(error);
         reject(error);
       });
   });
 };
 
+const getRoom = (roomId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomUrl(roomId))
+      .then((response) => {
+        console.log(response);
+        resolve(response.data);
+      })
+      .catch((error) => reject(error));
+  });
+};
+
 const updateRoom = (room) => {
+  console.log(room);
   return new Promise((resolve, reject) => {
     axios
       .put(roomUrl(room.id), room)
@@ -180,8 +271,6 @@ const createService = (service) => {
       .post(serviceUrl(''), service)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         console.log(error.response);
         reject(error);
       });
@@ -217,8 +306,6 @@ const updateUser = (user) => {
     axios
       .put(userUrl(user.id), user)
       .then((response) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         resolve(response.data);
       })
       .catch((error) => {
@@ -228,24 +315,22 @@ const updateUser = (user) => {
   });
 };
 
-const createImage = (image) => {
+const createHotelImage = (image) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(imageUrl(''), image)
+      .post(hotelImageUrl(''), image)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         console.log(error.response);
         reject(error);
       });
   });
 };
 
-const deleteImage = (id) => {
+const deleteHotelImage = (id) => {
   return new Promise((resolve, reject) => {
     axios
-      .delete(imageUrl(id))
+      .delete(hotelImageUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.log(error);
@@ -254,21 +339,103 @@ const deleteImage = (id) => {
   });
 };
 
+const createRoomImage = (image) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(roomImageUrl(''), image)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error.response);
+        reject(error);
+      });
+  });
+};
+
+const deleteRoomImage = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(roomImageUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+};
+
+const createReservation = (reservation) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(reservationUrl(''), reservation)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+const getReservation = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(reservationUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const createRoomView = (roomView) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(roomViewUrl(''), roomView)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const updateRoomView = (roomView) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(roomViewUrl(roomView.id), roomView)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const deleteRoomView = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(roomViewUrl(id))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
 export default {
   axios,
   getUsers,
   getHotels,
+  getRooms,
+  getRoomViews,
   deleteHotel,
   updateHotel,
   createHotel,
   getHotel,
   createRoom,
+  getRoom,
   updateRoom,
   deleteRoom,
   createService,
   updateService,
   deleteService,
   updateUser,
-  createImage,
-  deleteImage,
+  createHotelImage,
+  deleteHotelImage,
+  createRoomImage,
+  deleteRoomImage,
+  createReservation,
+  getReservations,
+  getReservation,
+  createRoomView,
+  updateRoomView,
+  deleteRoomView,
 };

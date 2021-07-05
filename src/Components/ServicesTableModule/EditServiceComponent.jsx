@@ -11,6 +11,7 @@ const EditServiceComponent = ({
   hotel,
   service,
   updateService,
+  onSuccess,
 }) => {
   const formTitle = `Service wih id ${service.id} update`;
   const formSubmitText = 'Apply changes';
@@ -24,11 +25,14 @@ const EditServiceComponent = ({
       price: parseFloat(values.price),
     };
 
-    const errorResponse = await updateService(updatedService);
+    const [serviceResponse, errorResponse] = await updateService(
+      updatedService
+    );
 
     if (errorResponse) {
       setError(errorResponse);
     } else {
+      onSuccess(`Service ${serviceResponse.name} successfully updated`);
       close();
     }
   };
@@ -36,6 +40,7 @@ const EditServiceComponent = ({
   const handleResetError = () => {
     setError(null);
   };
+
   return (
     <ServiceForm
       open={open}
@@ -56,6 +61,7 @@ EditServiceComponent.propTypes = {
   updateService: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   service: PropTypes.instanceOf(Service).isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default EditServiceComponent;

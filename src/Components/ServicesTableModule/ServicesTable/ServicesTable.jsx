@@ -10,6 +10,8 @@ const ServicesTable = ({
   createService,
   deleteService,
   updateService,
+  onError,
+  onSuccess,
 }) => {
   return (
     <ServicesTableComponent
@@ -18,6 +20,8 @@ const ServicesTable = ({
       createService={createService}
       deleteService={deleteService}
       updateService={updateService}
+      onSuccess={onSuccess}
+      onError={onError}
     />
   );
 };
@@ -28,6 +32,7 @@ ServicesTable.propTypes = {
   createService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
-
 export default ServicesTable;

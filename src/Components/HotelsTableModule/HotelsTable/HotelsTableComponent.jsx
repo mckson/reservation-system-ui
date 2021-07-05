@@ -8,7 +8,6 @@ import {
   Table,
   TableHead,
   TableBody,
-  Typography,
   makeStyles,
   TableFooter,
   TablePagination,
@@ -19,16 +18,23 @@ import Hotel from '../../../Models/Hotel';
 import CreateHotelComponent from '../Components/CreateHotelComponent';
 import HotelRow from '../HotelRow/HotelRow';
 import User from '../../../Models/User';
+import Constants from '../../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: 0,
-    color: theme.palette.primary.main,
+  addButton: {
+    margin: theme.spacing(1),
+    border: 0,
+    borderRadius: '15px',
+    height: 40,
+    width: 175,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
-  footer: {},
 }));
 
 const HotelsTableComponent = ({
+  role,
   users,
   hotels,
   totalCount,
@@ -47,6 +53,10 @@ const HotelsTableComponent = ({
   updateUser,
   createImage,
   deleteImage,
+  createRoomImage,
+  deleteRoomImage,
+  onError,
+  onSuccess,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
@@ -54,21 +64,26 @@ const HotelsTableComponent = ({
   const [isAdd, setIsAdd] = useState(false);
 
   const handleChangePage = (event, newPage) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     setPage(newPage);
-    pageChanged(event, newPage + 1);
+    pageChanged(newPage + 1);
   };
 
   const handleChangePageSize = (event) => {
     const newSize = parseInt(event.target.value, 10);
 
+    // change request parameters
     pageSizeChanged(newSize);
+    pageChanged(1);
 
-    setPage(1);
+    // change table parameters
+    setPage(0);
     setRowPerPage(newSize);
   };
 
   const handleAddClose = () => {
-    setIsAdd(!isAdd);
+    setIsAdd(false);
   };
 
   return (
@@ -107,6 +122,7 @@ const HotelsTableComponent = ({
             {hotels != null ? (
               hotels.map((hotel) => (
                 <HotelRow
+                  role={role}
                   users={users}
                   deleteHotel={deleteHotel}
                   updateHotel={updateHotel}
@@ -119,8 +135,12 @@ const HotelsTableComponent = ({
                   updateUser={updateUser}
                   createImage={createImage}
                   deleteImage={deleteImage}
+                  createRoomImage={createRoomImage}
+                  deleteRoomImage={deleteRoomImage}
                   hotel={hotel}
                   key={hotel.id}
+                  onSuccess={onSuccess}
+                  onError={onError}
                 />
               ))
             ) : (
@@ -128,14 +148,16 @@ const HotelsTableComponent = ({
             )}
           </TableBody>
           <TableFooter className={classes.footer}>
-            <Button
-              color="primary"
-              className={classes.button}
-              onClick={() => setIsAdd(!isAdd)}
-            >
-              <AddIcon />
-              <Typography>Add new hotel</Typography>
-            </Button>
+            {role === Constants.adminRole ? (
+              <Button
+                color="primary"
+                className={classes.addButton}
+                startIcon={<AddIcon />}
+                onClick={() => setIsAdd(!isAdd)}
+              >
+                Add new hotel
+              </Button>
+            ) : null}
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               rowsPerPage={rowsPerPage}
@@ -149,6 +171,7 @@ const HotelsTableComponent = ({
       </TableContainer>
       <CreateHotelComponent
         open={isAdd}
+        onSuccess={onSuccess}
         close={handleAddClose}
         createHotel={createHotel}
       />
@@ -157,6 +180,7 @@ const HotelsTableComponent = ({
 };
 
 HotelsTableComponent.propTypes = {
+  role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
   totalCount: PropTypes.number.isRequired,
@@ -175,6 +199,10 @@ HotelsTableComponent.propTypes = {
   updateUser: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   deleteImage: PropTypes.func.isRequired,
+  createRoomImage: PropTypes.func.isRequired,
+  deleteRoomImage: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default HotelsTableComponent;
