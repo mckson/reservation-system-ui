@@ -12,16 +12,14 @@ import Hotel from '../../Models/Hotel';
 import Navbar from '../../Common/Navbar';
 import HotelsPage from '../HotelsPage';
 import HotelFull from '../HotelFull/HotelFull';
-// import Reservation from '../Reservation';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
-// eslint-disable-next-line import/no-named-as-default
 import HotelsManagement from '../HotelsManagement/HotelsManagement';
+import UsersManagement from '../UsersManagement/UsersManagement';
 import OrdersSection from '../OrdersSection/OrdersSection';
 import Constants from '../../Common/Constants';
 
 const RoutesComponent = ({
-  users,
   loggedUser,
   hotels,
   totalPages,
@@ -30,12 +28,12 @@ const RoutesComponent = ({
   loguot,
   submit,
   searchHotels,
-  // pageSize,
   isHotelsManagementOpen,
   closeHotelsManagement,
   openHotelsManagement,
-  // refreshUsers,
-  // refreshHotels,
+  isUsersManagementOpen,
+  closeUsersManagement,
+  openUsersManagement,
   dateIn,
   dateOut,
   onDateInChange,
@@ -50,15 +48,22 @@ const RoutesComponent = ({
         loggedUser={loggedUser}
         onLogoutClick={loguot}
         openHotelsManagement={openHotelsManagement}
+        openUsersManagement={openUsersManagement}
         openReservations={openReservations}
       />
       {loggedUser &&
       (loggedUser?.roles.includes(Constants.adminRole) ||
         loggedUser?.roles.includes(Constants.managerRole)) ? (
         <HotelsManagement
-          users={users}
           isOpen={isHotelsManagementOpen}
           close={closeHotelsManagement}
+          loggedUser={loggedUser}
+        />
+      ) : null}
+      {loggedUser && loggedUser.roles.includes(Constants.adminRole) ? (
+        <UsersManagement
+          isOpen={isUsersManagementOpen}
+          close={closeUsersManagement}
           loggedUser={loggedUser}
         />
       ) : null}
@@ -112,7 +117,6 @@ const RoutesComponent = ({
 };
 
 RoutesComponent.propTypes = {
-  users: PropTypes.arrayOf(User),
   loggedUser: PropTypes.instanceOf(User),
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
@@ -124,19 +128,19 @@ RoutesComponent.propTypes = {
   isHotelsManagementOpen: PropTypes.bool.isRequired,
   closeHotelsManagement: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  isUsersManagementOpen: PropTypes.bool.isRequired,
+  closeUsersManagement: PropTypes.func.isRequired,
+  openUsersManagement: PropTypes.func.isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
-  //   refreshUsers: PropTypes.func.isRequired,
-  //   refreshHotels: PropTypes.func.isRequired,
   isReservationsOpen: PropTypes.bool.isRequired,
   openReservations: PropTypes.func.isRequired,
   closeReservations: PropTypes.func.isRequired,
 };
 
 RoutesComponent.defaultProps = {
-  users: [],
   loggedUser: null,
   hotels: null,
   totalPages: 0,

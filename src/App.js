@@ -106,7 +106,6 @@ function App() {
 
   return (
     <Routes
-      // users={users}
       loggedUser={user}
       hotels={hotels}
       totalPages={totalPages}
@@ -119,8 +118,6 @@ function App() {
       dateOut={dateOut}
       onDateInChange={handleDateInChange}
       onDateOutChange={handleDateOutChange}
-      // refreshHotels={requestHotels(searchParameters)}
-      // refreshUsers={requestUsers}
     />
   );
 }

@@ -200,7 +200,7 @@ const Reservation = ({
     setSelectedRooms(changedRooms);
     setActiveStep((previosActiveStep) => ({
       step: previosActiveStep.step,
-      isNextAvailable: rooms && rooms.length !== 0, // ? true : false
+      isNextAvailable: rooms && rooms.length !== 0,
     }));
   };
 

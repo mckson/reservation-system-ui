@@ -3,8 +3,10 @@ class User {
     this.id = obj.id;
     this.firstName = obj.firstName;
     this.lastName = obj.lastName;
-    this.userName = obj.name;
+    this.userName = obj.userName;
     this.email = obj.email;
+    this.dateOfBirth = obj.dateOfBirth;
+    this.phoneNumber = obj.phoneNumber;
     this.roles = obj.roles;
     this.hotels = obj.hotels;
   }

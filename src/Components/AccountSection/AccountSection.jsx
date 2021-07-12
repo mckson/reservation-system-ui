@@ -9,6 +9,7 @@ const AccountSection = ({
   loggedUser,
   logout,
   openHotelsManagement,
+  openUsersManagement,
   openReservationsSection,
 }) => {
   // useEffect(async () => {
@@ -20,6 +21,7 @@ const AccountSection = ({
       loggedUser={loggedUser}
       logout={logout}
       openHotelsManagement={openHotelsManagement}
+      openUsersManagement={openUsersManagement}
       openReservationsSection={openReservationsSection}
     />
   );
@@ -29,6 +31,7 @@ AccountSection.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   logout: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  openUsersManagement: PropTypes.func.isRequired,
   openReservationsSection: PropTypes.func.isRequired,
 };
 

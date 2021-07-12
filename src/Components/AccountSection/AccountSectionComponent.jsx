@@ -13,6 +13,7 @@ import {
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
+import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import { HistoryOutlined } from '@material-ui/icons';
 import User from '../../Models/User';
 import Constants from '../../Common/Constants';
@@ -42,6 +43,7 @@ const AccountSectionComponent = ({
   loggedUser,
   logout,
   openHotelsManagement,
+  openUsersManagement,
   openReservationsSection,
 }) => {
   const classes = useStyles();
@@ -51,7 +53,7 @@ const AccountSectionComponent = ({
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -74,7 +76,7 @@ const AccountSectionComponent = ({
             keepMounted
             elevation={1}
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={handleMenuClose}
           >
             {/* <MenuItem onClick={handleClose}>
               <ListItemIcon>
@@ -86,7 +88,7 @@ const AccountSectionComponent = ({
             <MenuItem
               onClick={() => {
                 openReservationsSection();
-                handleClose();
+                handleMenuClose();
               }}
             >
               <ListItemIcon>
@@ -100,7 +102,7 @@ const AccountSectionComponent = ({
               <MenuItem
                 onClick={() => {
                   openHotelsManagement();
-                  handleClose();
+                  handleMenuClose();
                 }}
               >
                 <ListItemIcon>
@@ -110,10 +112,24 @@ const AccountSectionComponent = ({
               </MenuItem>
             ) : null}
 
+            {loggedUser?.roles.includes(Constants.adminRole) ? (
+              <MenuItem
+                onClick={() => {
+                  openUsersManagement();
+                  handleMenuClose();
+                }}
+              >
+                <ListItemIcon>
+                  <GroupOutlinedIcon className={classes.icon} />
+                </ListItemIcon>
+                <ListItemText primary="Manage users" />
+              </MenuItem>
+            ) : null}
+
             <MenuItem
               onClick={() => {
                 logout();
-                handleClose();
+                handleMenuClose();
               }}
             >
               <ListItemIcon>
@@ -136,6 +152,7 @@ AccountSectionComponent.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   logout: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  openUsersManagement: PropTypes.func.isRequired,
   openReservationsSection: PropTypes.func.isRequired,
 };
 

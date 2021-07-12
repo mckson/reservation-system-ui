@@ -64,7 +64,7 @@ const HotelRowComponent = ({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <HotelRowMap hotel={hotel} isEdit={isEdit} />
+        <HotelRowMap hotel={hotel} />
         <TableCell className={classes.actions}>
           {role === Constants.adminRole ? (
             <>

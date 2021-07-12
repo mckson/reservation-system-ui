@@ -34,6 +34,7 @@ const Navbar = ({
   loggedUser,
   onLogoutClick,
   openHotelsManagement,
+  openUsersManagement,
   openReservations,
 }) => {
   const classes = useStyles();
@@ -51,6 +52,7 @@ const Navbar = ({
               loggedUser={loggedUser}
               logout={onLogoutClick}
               openHotelsManagement={openHotelsManagement}
+              openUsersManagement={openUsersManagement}
               openReservationsSection={openReservations}
             />
           </div>
@@ -64,6 +66,7 @@ Navbar.propTypes = {
   loggedUser: PropTypes.instanceOf(User),
   onLogoutClick: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
+  openUsersManagement: PropTypes.func.isRequired,
   openReservations: PropTypes.func.isRequired,
 };
 

@@ -72,8 +72,18 @@ const ManagementService = (function Management() {
     return returnedService;
   };
 
+  const handleCreateUser = async (createdUser) => {
+    const returnedUser = await API.createUser(createdUser);
+    return returnedUser;
+  };
+
   const handleUpdateUser = async (updatedUser) => {
     const returnedUser = await API.updateUser(updatedUser);
+    return returnedUser;
+  };
+
+  const handleDeleteUser = async (id) => {
+    const returnedUser = await API.deleteUser(id);
     return returnedUser;
   };
 
@@ -164,7 +174,9 @@ const ManagementService = (function Management() {
     handleCreateService,
     handleUpdateService,
     handleDeleteService,
+    handleCreateUser,
     handleUpdateUser,
+    handleDeleteUser,
     handleCreateHotelImage,
     handleDeleteHotelImage,
     handleCreateRoomImage,
