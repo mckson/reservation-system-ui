@@ -25,7 +25,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
 
     // eslint-disable-next-line no-debugger
     debugger;
-    if (values.newMainImage) {
+    if (values.newMainImage && hotel) {
       const image = {
         image: values.newMainImage.image,
         name: values.newMainImage.name,
