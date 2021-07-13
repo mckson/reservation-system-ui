@@ -41,7 +41,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
       setError(errorResponse);
     } else {
       onSuccess('Hotel added successfully');
-      close('Hotel added successfully');
+      close();
     }
   };
 

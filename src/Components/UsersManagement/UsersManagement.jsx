@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import User from '../../Models/User';
+import HotelBrief from '../../Models/HotelBrief';
 import UsersManagementComponent from './UsersManagementComponent';
 import ManagementService from '../../Common/ManagementService';
 import API from '../../Common/API';
@@ -10,6 +11,7 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [hotelsBrief, setHotelsBrief] = useState([]);
 
   const requestUsers = async () => {
     const response = await API.getUsers(pageNumber, pageSize, '');
@@ -25,6 +27,16 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
       if (pageSize !== response.pageSize) {
         setPageSize(response.pageSize);
       }
+    }
+  };
+
+  const requestHotels = async () => {
+    const response = await API.getAllHotelsNameAndId();
+
+    if (response) {
+      const respondedHotels = response.map((hotel) => new HotelBrief(hotel));
+
+      setHotelsBrief(respondedHotels);
     }
   };
 
@@ -79,9 +91,14 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
     await requestUsers();
   }, [pageSize, pageNumber]);
 
+  useEffect(async () => {
+    await requestHotels();
+  }, []);
+
   return (
     <UsersManagementComponent
       users={users}
+      hotels={hotelsBrief}
       isOpen={isOpen}
       close={close}
       loggedUser={loggedUser}

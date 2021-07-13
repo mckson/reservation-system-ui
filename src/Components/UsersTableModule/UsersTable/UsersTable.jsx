@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import User from '../../../Models/User';
 import UsersTableComponent from './UsersTableComponent';
+import HotelBrief from '../../../Models/HotelBrief';
 
 const UsersTable = ({
   users,
+  hotels,
   onError,
   onSuccess,
   createUser,
@@ -18,6 +20,7 @@ const UsersTable = ({
   return (
     <UsersTableComponent
       users={users}
+      hotels={hotels}
       onError={onError}
       onSuccess={onSuccess}
       createUser={createUser}
@@ -33,6 +36,7 @@ const UsersTable = ({
 
 UsersTable.propTypes = {
   users: PropTypes.arrayOf(User),
+  hotels: PropTypes.arrayOf(HotelBrief),
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   createUser: PropTypes.func.isRequired,
@@ -46,6 +50,7 @@ UsersTable.propTypes = {
 
 UsersTable.defaultProps = {
   users: [],
+  hotels: [],
 };
 
 export default UsersTable;

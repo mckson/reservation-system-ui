@@ -16,6 +16,9 @@ const roomViewUrl = (id) => `/RoomViews/${id}`;
 // brief user responses (for example, for search)
 const allUsersUrl = '/Users/All';
 
+// brief hotel responses (for example, for search)
+const allHotelsUrl = '/Hotels/All';
+
 const usersUrl = (pageNumber, pageSize, email) =>
   `/Users?pageNumber=${pageNumber}&pageSize=${pageSize}&email=${email}`;
 
@@ -104,6 +107,15 @@ const getAllUsers = () => {
       .catch((error) => {
         reject(error);
       });
+  });
+};
+
+const getAllHotelsNameAndId = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(allHotelsUrl)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -317,7 +329,7 @@ const deleteService = (id) => {
 const createUser = (user) => {
   return new Promise((resolve, reject) => {
     axios
-      .create(userUrl(''), user)
+      .post(userUrl(''), user)
       .then((response) => {
         resolve(response.data);
       })
@@ -458,6 +470,7 @@ const deleteRoomView = (id) => {
 export default {
   axios,
   getAllUsers,
+  getAllHotelsNameAndId,
   getUsers,
   getHotels,
   getRooms,

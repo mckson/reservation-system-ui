@@ -5,7 +5,7 @@ class User {
     this.lastName = obj.lastName;
     this.userName = obj.userName;
     this.email = obj.email;
-    this.dateOfBirth = obj.dateOfBirth;
+    this.dateOfBirth = new Date(obj.dateOfBirth);
     this.phoneNumber = obj.phoneNumber;
     this.roles = obj.roles;
     this.hotels = obj.hotels;

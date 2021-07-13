@@ -5,9 +5,11 @@ import { Alert } from '@material-ui/lab';
 import FullScreenDialog from '../../Common/FullScreenDialog';
 import UsersTable from '../UsersTableModule/UsersTable/UsersTable';
 import User from '../../Models/User';
+import HotelBrief from '../../Models/HotelBrief';
 
 const UsersManagementComponent = ({
   isOpen,
+  hotels,
   close,
   users,
   createUser,
@@ -55,6 +57,7 @@ const UsersManagementComponent = ({
         <>
           <UsersTable
             users={users}
+            hotels={hotels}
             createUser={createUser}
             updateUser={updateUser}
             deleteUser={deleteUser}
@@ -97,6 +100,7 @@ UsersManagementComponent.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(User),
+  hotels: PropTypes.arrayOf(HotelBrief),
   createUser: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   deleteUser: PropTypes.func.isRequired,
@@ -108,6 +112,7 @@ UsersManagementComponent.propTypes = {
 
 UsersManagementComponent.defaultProps = {
   users: [],
+  hotels: [],
 };
 
 export default UsersManagementComponent;

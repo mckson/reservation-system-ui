@@ -16,9 +16,11 @@ import AddIcon from '@material-ui/icons/Add';
 import User from '../../../Models/User';
 import UserRow from '../UserRow/UserRow';
 import CreateUserComponent from '../CreateUserComponent';
+import HotelBrief from '../../../Models/HotelBrief';
 
 const UsersTableComponent = ({
   users,
+  hotels,
   totalCount,
   pageChanged,
   pageSizeChanged,
@@ -78,7 +80,8 @@ const UsersTableComponent = ({
               users.map((user) => (
                 <UserRow
                   key={user.id}
-                  user={user}
+                  hotels={hotels}
+                  user={new User(user)}
                   createUser={createUser}
                   updateUser={updateUser}
                   deleteUser={deleteUser}
@@ -111,6 +114,7 @@ const UsersTableComponent = ({
       </TableContainer>
       <CreateUserComponent
         open={isAdd}
+        hotels={hotels}
         onSuccess={onSuccess}
         close={handleAddClose}
         createUser={createUser}
@@ -121,6 +125,7 @@ const UsersTableComponent = ({
 
 UsersTableComponent.propTypes = {
   users: PropTypes.arrayOf(User),
+  hotels: PropTypes.arrayOf(HotelBrief),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
@@ -133,6 +138,7 @@ UsersTableComponent.propTypes = {
 };
 UsersTableComponent.defaultProps = {
   users: [],
+  hotels: [],
 };
 
 export default UsersTableComponent;

@@ -28,6 +28,7 @@ import EditRoomComponent from './EditRoomComponent';
 import ImagesTable from '../ImagesTableModule/ImagesTable/ImagesTable';
 
 import API from '../../Common/API';
+import RoomView from '../../Models/RoomView';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RoomsTableComponent = ({
+  roomViews,
   createRoom,
   updateRoom,
   deleteRoom,
@@ -158,6 +160,7 @@ const RoomsTableComponent = ({
                 .map((room) => (
                   <RoomRow
                     room={room}
+                    roomViews={roomViews}
                     onRefresh={handleRefresh}
                     key={room.id}
                     updateRoom={updateRoom}
@@ -195,6 +198,7 @@ const RoomsTableComponent = ({
       </TableContainer>
       <CreateRoomComponent
         open={isAdd}
+        roomViews={roomViews}
         close={handleAddClose}
         onRefresh={handleRefresh}
         createRoom={createRoom}
@@ -210,6 +214,7 @@ RoomsTableComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   // totalCount: PropTypes.number.isRequired,
   // pageSize: PropTypes.number.isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   deleteRoom: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
@@ -219,9 +224,14 @@ RoomsTableComponent.propTypes = {
   onError: PropTypes.func.isRequired,
 };
 
+RoomsTableComponent.defaultProps = {
+  roomViews: [],
+};
+
 const RoomRow = ({
   room,
   hotel,
+  roomViews,
   onRefresh,
   updateRoom,
   deleteRoom,
@@ -318,6 +328,7 @@ const RoomRow = ({
       <EditRoomComponent
         room={room}
         open={isEdit}
+        roomViews={roomViews}
         onRefresh={onRefresh}
         close={handleEditClose}
         hotel={hotel}
@@ -331,6 +342,7 @@ const RoomRow = ({
 RoomRow.propTypes = {
   room: PropTypes.instanceOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   onRefresh: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,
   deleteRoom: PropTypes.func.isRequired,
@@ -338,6 +350,10 @@ RoomRow.propTypes = {
   deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+};
+
+RoomRow.defaultProps = {
+  roomViews: [],
 };
 
 const RoomRowMap = ({ room }) => {

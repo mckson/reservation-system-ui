@@ -12,9 +12,16 @@ import {
 import { Formik, Form } from 'formik';
 import { Alert, Autocomplete } from '@material-ui/lab';
 import BaseDialog from '../../Common/BaseDialog';
+import User from '../../Models/User';
 import MyTextField from '../../Common/MyTextField';
 import Constants from '../../Common/Constants';
 import HotelBrief from '../../Models/HotelBrief';
+
+const toISODate = (date) => {
+  return `${date.getFullYear()}-${`0${date.getMonth() + 1}`.slice(
+    -2
+  )}-${`0${date.getDate()}`.slice(-2)}`;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -60,38 +67,64 @@ const validationSchema = Yup.object({
     )
     .required('Required'),
 
-  password: Yup.string()
-    .min(8, 'Must be 8 characters or more')
-    .required('Required'),
+  oldPassword: Yup.string().when('newPassword', (newPassword) => {
+    if (newPassword) {
+      return Yup.string()
+        .min(8, 'Must be 8 characters or more')
+        .required('Requied to change password');
+    }
 
-  passwordConfirm: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Required'),
+    return Yup.string().min(8, 'Must be 8 characters or more');
+  }),
+
+  newPassword: Yup.string().min(8, 'Must be 8 characters or more'),
+
+  passwordConfirm: Yup.string().when('newPassword', (newPassword) => {
+    if (newPassword) {
+      return Yup.string()
+        .min(8, 'Must be 8 characters or more')
+        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+        .required('Required');
+    }
+
+    return Yup.string().min(8, 'Must be 8 characters or more');
+  }),
 
   dateOfBirth: Yup.date().required('Required'),
 });
 
-const CreateUserComponent = ({
+const EditUserComponent = ({
   open,
   close,
-  onSuccess,
-  createUser,
+  user,
   hotels,
+  updateUser,
+  onSuccess,
 }) => {
   const [error, setError] = useState(null);
-  const [selectedRoles, setSelectedRoles] = useState(['User']);
-  const [selectedHotels, setSelectedHotels] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState(
+    user?.roles ? user.roles : ['User']
+  );
+  const [selectedHotels, setSelectedHotels] = useState(
+    user?.hotels
+      ? user.hotels.map((hotelId) =>
+          hotels.find((hotel) => hotel.id === hotelId)
+        )
+      : []
+  );
 
   const roles = ['User', 'Manager', 'Admin']; // create request for roles
 
-  const dialogTitle = 'User creation';
+  const dialogTitle = `Updating ${user.email} user`;
   const classes = useStyles();
 
-  const onCreateUser = async (values) => {
-    const creatingUser = {
+  const onUpdateUser = async (values) => {
+    const updatingUser = {
+      id: user.id,
       userName: values.userName,
       email: values.email,
-      password: values.password,
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
       passwordConfirm: values.passwordConfirm,
       phoneNumber: values.phoneNumber,
       dateOfBirth: values.dateOfBirth,
@@ -101,15 +134,13 @@ const CreateUserComponent = ({
       hotels: values.hotels,
     };
 
-    const [user, errorResponse] = await createUser(creatingUser);
+    const [updatedUser, errorResponse] = await updateUser(updatingUser);
 
     if (errorResponse) {
       setError(errorResponse);
     } else {
-      onSuccess(`User ${user.email} created successfully`);
+      onSuccess(`User ${updatedUser.email} created successfully`);
       close();
-      setSelectedRoles(['User']);
-      setSelectedHotels([]);
     }
   };
 
@@ -131,14 +162,17 @@ const CreateUserComponent = ({
           <div className={classes.form}>
             <Formik
               initialValues={{
-                userName: '',
-                email: '',
-                firstName: '',
-                lastName: '',
-                phoneNumber: '',
-                password: '',
+                userName: user?.userName ? user.userName : '',
+                email: user?.email ? user.email : '',
+                firstName: user?.firstName ? user.firstName : '',
+                lastName: user?.lastName ? user.lastName : '',
+                phoneNumber: user?.phoneNumber ? user.phoneNumber : '',
+                oldPassword: '',
+                newPassword: '',
                 passwordConfirm: '',
-                dateOfBirth: '',
+                dateOfBirth: user?.dateOfBirth
+                  ? toISODate(user.dateOfBirth)
+                  : '',
               }}
               validationSchema={validationSchema}
               onSubmit={(values) => {
@@ -146,7 +180,7 @@ const CreateUserComponent = ({
                 values.roles = selectedRoles;
                 // eslint-disable-next-line no-param-reassign
                 values.hotels = selectedHotels.map((hotel) => hotel.id);
-                onCreateUser(values);
+                onUpdateUser(values);
               }}
             >
               <Form>
@@ -206,12 +240,11 @@ const CreateUserComponent = ({
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12}>
                     <MyTextField
-                      required
                       fullWidth
-                      label="Password"
-                      name="password"
+                      label="Old password"
+                      name="oldPassword"
                       type="password"
                       placeholder="Password"
                     />
@@ -219,7 +252,16 @@ const CreateUserComponent = ({
 
                   <Grid item xs={12} sm={6}>
                     <MyTextField
-                      required
+                      fullWidth
+                      label="New password"
+                      name="newPassword"
+                      type="password"
+                      placeholder="Password"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <MyTextField
                       fullWidth
                       label="Password Confirm"
                       name="passwordConfirm"
@@ -285,7 +327,7 @@ const CreateUserComponent = ({
                     type="submit"
                     color="primary"
                   >
-                    Create user
+                    Update user
                   </Button>
                 </Grid>
               </Form>
@@ -318,16 +360,17 @@ const CreateUserComponent = ({
   );
 };
 
-CreateUserComponent.propTypes = {
+EditUserComponent.propTypes = {
+  user: PropTypes.instanceOf(User).isRequired,
+  hotels: PropTypes.arrayOf(HotelBrief),
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  createUser: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
-  hotels: PropTypes.arrayOf(HotelBrief),
 };
 
-CreateUserComponent.defaultProps = {
+EditUserComponent.defaultProps = {
   hotels: [],
 };
 
-export default CreateUserComponent;
+export default EditUserComponent;
