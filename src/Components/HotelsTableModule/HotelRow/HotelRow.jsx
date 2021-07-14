@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import Hotel from '../../../Models/Hotel';
 import HotelRowComponent from './HotelRowComponent';
 import User from '../../../Models/User';
+import RoomView from '../../../Models/RoomView';
 
 const HotelRow = ({
   role,
   users,
   hotel,
+  roomViews,
   deleteHotel,
   updateHotel,
   createRoom,
@@ -29,6 +31,7 @@ const HotelRow = ({
       role={role}
       users={users}
       hotel={hotel}
+      roomViews={roomViews}
       deleteHotel={deleteHotel}
       updateHotel={updateHotel}
       createRoom={createRoom}
@@ -52,6 +55,7 @@ HotelRow.propTypes = {
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   deleteHotel: PropTypes.func.isRequired,
   updateHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
@@ -67,6 +71,10 @@ HotelRow.propTypes = {
   deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+};
+
+HotelRow.defaultProps = {
+  roomViews: [],
 };
 
 export default HotelRow;

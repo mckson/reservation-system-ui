@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   IconButton,
   makeStyles,
@@ -6,7 +6,6 @@ import {
   Checkbox,
   TextField,
   FormControl,
-  // FormLabel,
   FormControlLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -17,7 +16,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import Room from '../../Models/Hotel';
 import MyTextField from '../../Common/MyTextField';
-import API from '../../Common/API';
 import RoomView from '../../Models/RoomView';
 import FacilitiesTable from './FacilitiesTable';
 import BaseDialog from '../../Common/BaseDialog';
@@ -63,6 +61,7 @@ const validationSchema = Yup.object({
 const RoomForm = ({
   open,
   close,
+  roomViews,
   room,
   submitHandler,
   title,
@@ -70,7 +69,6 @@ const RoomForm = ({
   error,
   resetError,
 }) => {
-  const [views, setViews] = useState([]);
   const [facilities, setFacilities] = useState(
     room?.facilities ? room.facilities : []
   );
@@ -80,16 +78,16 @@ const RoomForm = ({
   );
   const classes = useStyles();
 
-  const requestViewsAsync = async () => {
-    const response = await API.getRoomViews();
+  // const requestViewsAsync = async () => {
+  //   const response = await API.getRoomViews();
 
-    if (response) {
-      const roomViews = response.map((view) => new RoomView(view));
-      // eslint-disable-next-line no-debugger
-      debugger;
-      setViews(roomViews);
-    }
-  };
+  //   if (response) {
+  //     const respondedRoomViews = response.map((view) => new RoomView(view));
+  //     // eslint-disable-next-line no-debugger
+  //     debugger;
+  //     setViews(respondedRoomViews);
+  //   }
+  // };
 
   const handleFacilityAdd = () => {
     const checkArray = facilities.filter(
@@ -112,9 +110,9 @@ const RoomForm = ({
     setFacilities(newFacilities);
   };
 
-  useEffect(async () => {
-    await requestViewsAsync();
-  }, []);
+  // useEffect(async () => {
+  //   await requestViewsAsync();
+  // }, []);
 
   return (
     <BaseDialog
@@ -140,7 +138,7 @@ const RoomForm = ({
               // eslint-disable-next-line no-param-reassign
               values.facilities = facilities.map((f) => f.name);
               // eslint-disable-next-line no-param-reassign
-              values.views = views.map((view) => view.id);
+              values.views = selectedViews.map((view) => view.id);
               submitHandler(values);
             }}
           >
@@ -229,6 +227,7 @@ const RoomForm = ({
                   type="text"
                   placeholder="Provide some room brief description"
                 />
+
                 <Field name="smoking">
                   {({ field }) => (
                     <FormControl
@@ -255,6 +254,7 @@ const RoomForm = ({
                     </FormControl>
                   )}
                 </Field>
+
                 <Field name="parking">
                   {({ field }) => (
                     <FormControl
@@ -281,10 +281,12 @@ const RoomForm = ({
                     </FormControl>
                   )}
                 </Field>
+
                 <FacilitiesTable
                   facilities={facilities}
                   deleteFacility={handleFacilityDelete}
                 />
+
                 <TextField
                   size="small"
                   value={facility?.name ? facility.name : ''}
@@ -293,6 +295,7 @@ const RoomForm = ({
                     setFacility({ name: event.target.value });
                   }}
                 />
+
                 <Button
                   startIcon={<AddOutlinedIcon />}
                   disabled={!facility}
@@ -302,21 +305,27 @@ const RoomForm = ({
                 >
                   Add facility
                 </Button>
+
                 <Autocomplete
                   multiple
                   limitTags={3}
                   value={selectedViews}
                   size="small"
-                  options={views}
+                  options={roomViews}
                   getOptionLabel={(view) => `${view.name}`}
                   onChange={(event, newValues) => {
-                    console.log(selectedViews);
                     setSelectedViews(newValues);
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} variant="outlined" />
+                    <TextField
+                      {...params}
+                      autoComplete={false}
+                      helperText={null}
+                      variant="outlined"
+                    />
                   )}
                 />
+
                 <Button
                   fullWidth
                   className={classes.submit}
@@ -359,6 +368,7 @@ const RoomForm = ({
 RoomForm.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   room: PropTypes.instanceOf(Room).isRequired,
   submitHandler: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
@@ -370,6 +380,7 @@ RoomForm.propTypes = {
 RoomForm.defaultProps = {
   submitText: 'Submit',
   error: null,
+  roomViews: [],
 };
 
 export default RoomForm;

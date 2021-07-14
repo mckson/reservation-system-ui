@@ -17,7 +17,7 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
   const [pageSize, setPageSize] = useState(10);
 
   const requestUsers = async () => {
-    const response = await API.getUsers();
+    const response = await API.getAllUsers();
 
     if (response) {
       const respondedUsers = response.map((item) => new User(item));
@@ -222,8 +222,6 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
   const handleCreateHotelImage = async (createdImage) => {
     const error = await ManagementService.handleCreateHotelImage(createdImage);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (!error) {
       await requestHotels();
       // await refreshHotels();

@@ -5,26 +5,11 @@ import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
 
 const Routes = ({
-  users,
   loggedUser,
   hotels,
   totalPages,
   totalResults,
-  // pageSize,
   pageChanged,
-  // pageSizeChanged,
-  // deleteHotel,
-  // updateHotel,
-  // createHotel,
-  // createRoom,
-  // updateRoom,
-  // deleteRoom,
-  // createService,
-  // updateService,
-  // deleteService,
-  // updateUser,
-  // createImage,
-  // deleteImage,
   loguot,
   submit,
   searchHotels,
@@ -32,10 +17,9 @@ const Routes = ({
   dateOut,
   onDateInChange,
   onDateOutChange,
-  // refreshUsers,
-  // refreshHotels,
 }) => {
   const [openHotelsManagement, setOpenHotelsManagement] = useState(false);
+  const [openUsersManagement, setOpenUsersManagement] = useState(false);
   const [openReservations, setOpenReservations] = useState(false);
 
   const handleOpenHotelsManagement = () => {
@@ -53,30 +37,20 @@ const Routes = ({
     setOpenReservations(false);
   };
 
+  const handleOpenUsersManagement = () => {
+    setOpenUsersManagement(true);
+  };
+  const handleCloseUsersManagement = () => {
+    setOpenUsersManagement(false);
+  };
+
   return (
     <RoutesComponent
-      users={users}
       loggedUser={loggedUser}
       hotels={hotels}
       totalPages={totalPages}
       totalResults={totalResults}
-      // pageSize={pageSize}
       pageChanged={pageChanged}
-      // refreshHotels={refreshHotels}
-      // refreshUsers={refreshUsers}
-      // pageSizeChanged={pageSizeChanged}
-      // deleteHotel={deleteHotel}
-      // updateHotel={updateHotel}
-      // createHotel={createHotel}
-      // createRoom={createRoom}
-      // updateRoom={updateRoom}
-      // deleteRoom={deleteRoom}
-      // createService={createService}
-      // updateService={updateService}
-      // deleteService={deleteService}
-      // updateUser={updateUser}
-      // createImage={createImage}
-      // deleteImage={deleteImage}
       loguot={loguot}
       submit={submit}
       searchHotels={searchHotels}
@@ -86,6 +60,9 @@ const Routes = ({
       isReservationsOpen={openReservations}
       closeReservations={handleCloseReservations}
       openReservations={handleOpenReservations}
+      isUsersManagementOpen={openUsersManagement}
+      closeUsersManagement={handleCloseUsersManagement}
+      openUsersManagement={handleOpenUsersManagement}
       dateIn={dateIn}
       dateOut={dateOut}
       onDateInChange={onDateInChange}
@@ -95,39 +72,21 @@ const Routes = ({
 };
 
 Routes.propTypes = {
-  users: PropTypes.arrayOf(User),
   loggedUser: PropTypes.instanceOf(User),
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
   totalResults: PropTypes.number,
-  // pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   loguot: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   searchHotels: PropTypes.func.isRequired,
-  // pageSizeChanged: PropTypes.func.isRequired,
-  // deleteHotel: PropTypes.func.isRequired,
-  // updateHotel: PropTypes.func.isRequired,
-  // createHotel: PropTypes.func.isRequired,
-  // createRoom: PropTypes.func.isRequired,
-  // updateRoom: PropTypes.func.isRequired,
-  // deleteRoom: PropTypes.func.isRequired,
-  // createService: PropTypes.func.isRequired,
-  // updateService: PropTypes.func.isRequired,
-  // deleteService: PropTypes.func.isRequired,
-  // updateUser: PropTypes.func.isRequired,
-  // createImage: PropTypes.func.isRequired,
-  // deleteImage: PropTypes.func.isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
-  // refreshUsers: PropTypes.func.isRequired,
-  // refreshHotels: PropTypes.func.isRequired,
 };
 
 Routes.defaultProps = {
-  users: null,
   loggedUser: null,
   hotels: null,
   totalPages: 0,

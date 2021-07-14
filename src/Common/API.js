@@ -13,7 +13,14 @@ const roomImageUrl = (id) => `/Images/Room/${id}`;
 const reservationUrl = (id) => `/Reservations/${id}`;
 const roomViewUrl = (id) => `/RoomViews/${id}`;
 
-const usersUrl = '/Users';
+// brief user responses (for example, for search)
+const allUsersUrl = '/Users/All';
+
+// brief hotel responses (for example, for search)
+const allHotelsUrl = '/Hotels/All';
+
+const usersUrl = (pageNumber, pageSize, email) =>
+  `/Users?pageNumber=${pageNumber}&pageSize=${pageSize}&email=${email}`;
 
 const hotelsUrl = (
   pageNumber,
@@ -92,14 +99,23 @@ axios.interceptors.response.use(
   }
 );
 
-const getUsers = () => {
+const getAllUsers = () => {
   return new Promise((resolve, reject) => {
     axios
-      .get(usersUrl)
+      .get(allUsersUrl)
       .then((response) => resolve(response.data))
       .catch((error) => {
         reject(error);
       });
+  });
+};
+
+const getAllHotelsNameAndId = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(allHotelsUrl)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -133,6 +149,15 @@ const getHotels = (
       .catch((error) => {
         reject(error);
       });
+  });
+};
+
+const getUsers = (pageNumber, pageSize, email) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(usersUrl(pageNumber, pageSize, email))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
   });
 };
 
@@ -301,6 +326,30 @@ const deleteService = (id) => {
   });
 };
 
+const createUser = (user) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(userUrl(''), user)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+const getUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(userUrl(userId))
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => reject(error));
+  });
+};
+
 const updateUser = (user) => {
   return new Promise((resolve, reject) => {
     axios
@@ -309,9 +358,17 @@ const updateUser = (user) => {
         resolve(response.data);
       })
       .catch((error) => {
-        console.log(error);
         reject(error);
       });
+  });
+};
+
+const deleteUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(userUrl(userId))
+      .then((response) => resolve(response))
+      .catch((error) => reject(error));
   });
 };
 
@@ -412,6 +469,8 @@ const deleteRoomView = (id) => {
 
 export default {
   axios,
+  getAllUsers,
+  getAllHotelsNameAndId,
   getUsers,
   getHotels,
   getRooms,
@@ -427,7 +486,10 @@ export default {
   createService,
   updateService,
   deleteService,
+  createUser,
+  getUser,
   updateUser,
+  deleteUser,
   createHotelImage,
   deleteHotelImage,
   createRoomImage,

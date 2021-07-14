@@ -21,11 +21,13 @@ import User from '../../../Models/User';
 import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
 import Constants from '../../../Common/Constants';
 import useRowStyles from '../../../Common/Styles/TableRowStyles';
+import RoomView from '../../../Models/RoomView';
 
 const HotelRowComponent = ({
   role,
   users,
   hotel,
+  roomViews,
   deleteHotel,
   updateHotel,
   createRoom,
@@ -64,7 +66,7 @@ const HotelRowComponent = ({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <HotelRowMap hotel={hotel} isEdit={isEdit} />
+        <HotelRowMap hotel={hotel} />
         <TableCell className={classes.actions}>
           {role === Constants.adminRole ? (
             <>
@@ -77,7 +79,7 @@ const HotelRowComponent = ({
               <IconButton
                 className={classes.button}
                 onClick={async () => {
-                  const errorResponse = await deleteHotel(hotel.id);
+                  const [, errorResponse] = await deleteHotel(hotel.id);
 
                   if (errorResponse) {
                     onError(errorResponse);
@@ -119,6 +121,7 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openRooms}>
                   <RoomsTableComponent
+                    roomViews={roomViews}
                     createRoom={createRoom}
                     updateRoom={updateRoom}
                     deleteRoom={deleteRoom}
@@ -231,6 +234,7 @@ HotelRowComponent.propTypes = {
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   deleteHotel: PropTypes.func.isRequired,
   updateHotel: PropTypes.func.isRequired,
   createRoom: PropTypes.func.isRequired,
@@ -246,6 +250,10 @@ HotelRowComponent.propTypes = {
   deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+};
+
+HotelRowComponent.defaultProps = {
+  roomViews: [],
 };
 
 export default HotelRowComponent;

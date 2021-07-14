@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import RoomForm from './RoomForm';
 import Hotel from '../../Models/Hotel';
+import RoomView from '../../Models/RoomView';
 
 const CreateRoomComponent = ({
   close,
   open,
+  roomViews,
   hotel,
   createRoom,
   onSuccess,
@@ -48,6 +50,7 @@ const CreateRoomComponent = ({
     <RoomForm
       open={open}
       close={close}
+      roomViews={roomViews}
       room={null}
       submitHandler={onCreateRoom}
       title="Room creation"
@@ -61,10 +64,15 @@ const CreateRoomComponent = ({
 CreateRoomComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   createRoom: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onRefresh: PropTypes.func.isRequired,
+};
+
+CreateRoomComponent.defaultProps = {
+  roomViews: [],
 };
 
 export default CreateRoomComponent;

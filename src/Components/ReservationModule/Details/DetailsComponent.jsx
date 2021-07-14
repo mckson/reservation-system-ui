@@ -40,11 +40,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const countTotalPrice = (rooms, services, deposit) => {
+const countTotalPrice = (rooms, services, deposit, totalNights) => {
   let total = 0;
 
   rooms.forEach((room) => {
-    total += room.price;
+    total += room.price * totalNights;
   });
 
   services.forEach((service) => {
@@ -132,7 +132,10 @@ const DetailsComponent = ({
           ? selectedRooms.map((room) => (
               <div className={classes.content} key={room.id}>
                 <Typography component="div">Room #{room.roomNumber}</Typography>
-                <Typography component="div">${room.price}</Typography>
+                <Typography component="div">
+                  (${room.price} * {computeTotalNights(dateIn, dateOut)}{' '}
+                  night(-s)) ${room.price * computeTotalNights(dateIn, dateOut)}
+                </Typography>
               </div>
             ))
           : null}
@@ -156,7 +159,13 @@ const DetailsComponent = ({
           </Typography>
           <Typography component="div">
             <Box fontWeight="fontWeightMedium">
-              ${countTotalPrice(selectedRooms, selectedServices, deposit)}
+              $
+              {countTotalPrice(
+                selectedRooms,
+                selectedServices,
+                deposit,
+                computeTotalNights(dateIn, dateOut)
+              )}
             </Box>
           </Typography>
         </div>

@@ -89,6 +89,7 @@ const HotelsManagementComponent = ({
                 role={role}
                 users={users}
                 hotels={hotels}
+                roomViews={roomViews}
                 totalCount={totalCount}
                 pageChanged={pageChanged}
                 pageSize={pageSize}

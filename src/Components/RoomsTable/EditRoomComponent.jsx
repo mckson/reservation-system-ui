@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import Hotel from '../../Models/Hotel';
 import Room from '../../Models/Room';
 import RoomForm from './RoomForm';
+import RoomView from '../../Models/RoomView';
 
 const EditRoomComponent = ({
   open,
   close,
+  roomViews,
   onRefresh,
   room,
   hotel,
@@ -51,6 +53,7 @@ const EditRoomComponent = ({
     <RoomForm
       open={open}
       close={close}
+      roomViews={roomViews}
       room={room}
       submitHandler={onUpdateRoom}
       title={`Room with id ${room.id} update`}
@@ -64,11 +67,16 @@ const EditRoomComponent = ({
 EditRoomComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   onRefresh: PropTypes.func.isRequired,
   room: PropTypes.instanceOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   updateRoom: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+};
+
+EditRoomComponent.defaultProps = {
+  roomViews: [],
 };
 
 export default EditRoomComponent;

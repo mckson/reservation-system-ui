@@ -25,7 +25,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
 
     // eslint-disable-next-line no-debugger
     debugger;
-    if (values.newMainImage) {
+    if (values.newMainImage && hotel) {
       const image = {
         image: values.newMainImage.image,
         name: values.newMainImage.name,
@@ -41,7 +41,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
       setError(errorResponse);
     } else {
       onSuccess('Hotel added successfully');
-      close('Hotel added successfully');
+      close();
     }
   };
 

@@ -19,6 +19,7 @@ import CreateHotelComponent from '../Components/CreateHotelComponent';
 import HotelRow from '../HotelRow/HotelRow';
 import User from '../../../Models/User';
 import Constants from '../../../Common/Constants';
+import RoomView from '../../../Models/RoomView';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -37,6 +38,7 @@ const HotelsTableComponent = ({
   role,
   users,
   hotels,
+  roomViews,
   totalCount,
   pageChanged,
   pageSizeChanged,
@@ -124,6 +126,7 @@ const HotelsTableComponent = ({
                 <HotelRow
                   role={role}
                   users={users}
+                  roomViews={roomViews}
                   deleteHotel={deleteHotel}
                   updateHotel={updateHotel}
                   createRoom={createRoom}
@@ -183,6 +186,7 @@ HotelsTableComponent.propTypes = {
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
+  roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
@@ -203,6 +207,9 @@ HotelsTableComponent.propTypes = {
   deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+};
+HotelsTableComponent.defaultProps = {
+  roomViews: [],
 };
 
 export default HotelsTableComponent;
