@@ -21,6 +21,7 @@ const Routes = ({
   const [openHotelsManagement, setOpenHotelsManagement] = useState(false);
   const [openUsersManagement, setOpenUsersManagement] = useState(false);
   const [openReservations, setOpenReservations] = useState(false);
+  // const [openProfile, setOpenProfile] = useState(false);
 
   const handleOpenHotelsManagement = () => {
     setOpenHotelsManagement(true);
@@ -40,9 +41,18 @@ const Routes = ({
   const handleOpenUsersManagement = () => {
     setOpenUsersManagement(true);
   };
+
   const handleCloseUsersManagement = () => {
     setOpenUsersManagement(false);
   };
+
+  // const handleOpenProfile = () => {
+  //   setOpenProfile(true);
+  // };
+
+  // const handleCloseProfile = () => {
+  //   setOpenProfile(false);
+  // };
 
   return (
     <RoutesComponent
@@ -63,6 +73,9 @@ const Routes = ({
       isUsersManagementOpen={openUsersManagement}
       closeUsersManagement={handleCloseUsersManagement}
       openUsersManagement={handleOpenUsersManagement}
+      // isProfileOpen={openProfile}
+      // closeProfile={handleCloseProfile}
+      // openProfile={handleOpenProfile}
       dateIn={dateIn}
       dateOut={dateOut}
       onDateInChange={onDateInChange}

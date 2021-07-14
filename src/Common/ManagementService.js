@@ -56,7 +56,6 @@ const ManagementService = (function Management() {
     return returnedRoom;
   };
 
-  // returns error message
   const handleCreateService = async (createdService) => {
     const returnedService = await API.createService(createdService);
     return returnedService;

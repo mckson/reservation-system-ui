@@ -33,8 +33,6 @@ function App() {
       services
     );
 
-    console.log('***');
-
     if (response != null) {
       const respondedHotels = response.content.map((item) => new Hotel(item));
 

@@ -9,12 +9,13 @@ import {
   makeStyles,
   Link,
 } from '@material-ui/core';
-// import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
+import AccountIcon from '@material-ui/icons/AccountCircleOutlined';
 import LogoutIcon from '@material-ui/icons/ExitToAppOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import { HistoryOutlined } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 import User from '../../Models/User';
 import Constants from '../../Common/Constants';
 
@@ -47,6 +48,7 @@ const AccountSectionComponent = ({
   openReservationsSection,
 }) => {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -78,12 +80,17 @@ const AccountSectionComponent = ({
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            {/* <MenuItem onClick={handleClose}>
+            <MenuItem
+              onClick={() => {
+                handleMenuClose();
+                history.push('/Profile');
+              }}
+            >
               <ListItemIcon>
                 <AccountIcon className={classes.icon} />
               </ListItemIcon>
-              <ListItemText primary="Manage account" />
-      </MenuItem> */}
+              <ListItemText primary="Profile" />
+            </MenuItem>
 
             <MenuItem
               onClick={() => {
