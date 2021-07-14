@@ -18,6 +18,7 @@ import HotelsManagement from '../HotelsManagement/HotelsManagement';
 import UsersManagement from '../UsersManagement/UsersManagement';
 import OrdersSection from '../OrdersSection/OrdersSection';
 import Constants from '../../Common/Constants';
+import Profile from '../Profile/Profile';
 
 const RoutesComponent = ({
   loggedUser,
@@ -34,6 +35,9 @@ const RoutesComponent = ({
   isUsersManagementOpen,
   closeUsersManagement,
   openUsersManagement,
+  // isProfileOpen,
+  // closeProfile,
+  // openProfile,
   dateIn,
   dateOut,
   onDateInChange,
@@ -103,6 +107,9 @@ const RoutesComponent = ({
               <CircularProgress />
             )}
           </div>
+        </Route>
+        <Route path="/Profile">
+          <Profile loggedUserId={loggedUser?.id} />
         </Route>
         <Route path="/SignIn">
           <SignIn onSignIn={submit} />
