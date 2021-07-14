@@ -10,6 +10,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import HotelBrief from '../../Models/HotelBrief';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SideSearchBarComponent = ({
+  hotels,
   placeholder,
   validationSchema,
   initialValues,
@@ -50,15 +52,22 @@ const SideSearchBarComponent = ({
               <Typography variant="body1">Hotel</Typography>
               <Field name="search">
                 {({ field }) => (
-                  <TextField
-                    {...field}
-                    className={classes.textfield}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    type="text"
-                    placeholder={placeholder}
-                  />
+                  <>
+                    <TextField
+                      {...field}
+                      className={classes.textfield}
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      type="text"
+                      placeholder={placeholder}
+                    />
+                    {hotels && hotels.length > 0 ? (
+                      hotels.map((hotel) => <div>{hotel.name}</div>)
+                    ) : (
+                      <div>No hotels</div>
+                    )}
+                  </>
                 )}
               </Field>
             </Grid>
@@ -132,6 +141,7 @@ const SideSearchBarComponent = ({
 };
 
 SideSearchBarComponent.propTypes = {
+  hotels: PropTypes.arrayOf(HotelBrief).isRequired,
   placeholder: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   validationSchema: PropTypes.object.isRequired,

@@ -54,6 +54,8 @@ const SearchBarComponent = ({
   validationSchema,
   placeholder,
   onSubmit,
+  // searchName,
+  changedSearchName,
 }) => {
   const classes = useStyles();
   return (
@@ -77,6 +79,9 @@ const SearchBarComponent = ({
                     input: classes.searchInput,
                   }}
                   placeholder={placeholder}
+                  onChange={(event) => {
+                    changedSearchName(event.target.value);
+                  }}
                 />
               </div>
             )}
@@ -149,6 +154,8 @@ const SearchBarComponent = ({
 };
 
 SearchBarComponent.propTypes = {
+  changedSearchName: PropTypes.func.isRequired,
+  // searchName: PropTypes.string,
   placeholder: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   validationSchema: PropTypes.object.isRequired,
@@ -158,6 +165,7 @@ SearchBarComponent.propTypes = {
 };
 
 SearchBarComponent.defaultProps = {
+  // searchName: '',
   placeholder: 'Search... (name city service)',
 };
 
