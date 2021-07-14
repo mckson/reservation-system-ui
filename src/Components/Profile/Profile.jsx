@@ -65,8 +65,6 @@ const Profile = ({ loggedUserId }) => {
   };
 
   const handleUpdateUser = async (user) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const [userResponded, errorResponded] =
       await ManagementService.baseRequestHandler(
         ManagementService.handleUpdateUser,

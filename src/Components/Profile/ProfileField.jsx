@@ -9,6 +9,13 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@material-ui/icons';
+import Constants from '../../Common/Constants';
+
+const toISODate = (date) => {
+  return `${date.getFullYear()}-${`0${date.getMonth() + 1}`.slice(
+    -2
+  )}-${`0${date.getDate()}`.slice(-2)}`;
+};
 
 const useStyles = makeStyles((theme) => ({
   buttonGroup: {
@@ -24,8 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProfileField = ({ fieldTitle, fieldValue, update }) => {
+const ProfileField = ({ fieldTitle, fieldValue, update, isDate }) => {
   const [isEdit, setIsEdit] = useState(false);
+  const [isValid, setIsValid] = useState(true);
+  const [validationError, setValidationError] = useState(null);
   const [newValue, setNewValue] = useState(fieldValue);
 
   const classes = useStyles();
@@ -54,28 +63,43 @@ const ProfileField = ({ fieldTitle, fieldValue, update }) => {
         {isEdit ? (
           <TextField
             fullWidth
-            defaultValue={fieldValue}
+            error={!isValid}
+            helperText={isValid ? null : validationError}
+            defaultValue={isDate ? toISODate(fieldValue) : fieldValue}
             onChange={(event) => {
-              setNewValue(event.target.value);
+              const { value } = event.target;
+              setNewValue(value);
+              if (!value || value === '') {
+                setIsValid(false);
+                setValidationError('Field must be not empty');
+              } else {
+                setIsValid(true);
+                setValidationError(null);
+              }
             }}
+            type={isDate ? 'date' : 'text'}
           />
         ) : (
           <Typography component="div">
-            <Box fontWeight="fontWeightMedium">{fieldValue}</Box>
+            <Box fontWeight="fontWeightMedium">
+              {isDate
+                ? fieldValue.toLocaleDateString('en-US', Constants.dateOptions)
+                : fieldValue}
+            </Box>
           </Typography>
         )}
       </Grid>
       <Grid item xs={2}>
         {isEdit ? (
           <div className={classes.buttonGroup}>
-            {newValue === fieldValue ? null : (
+            {newValue !== fieldValue && isValid !== false ? (
               <IconButton
                 className={classes.greenButton}
                 onClick={() => handleApplyEdit()}
               >
                 <CheckOutlined />
               </IconButton>
-            )}
+            ) : null}
             <IconButton
               className={classes.redButton}
               onClick={() => handleCancelEdit()}
@@ -97,6 +121,11 @@ ProfileField.propTypes = {
   fieldValue: PropTypes.string.isRequired,
   fieldTitle: PropTypes.string.isRequired,
   update: PropTypes.func.isRequired,
+  isDate: PropTypes.bool,
+};
+
+ProfileField.defaultProps = {
+  isDate: false,
 };
 
 export default ProfileField;

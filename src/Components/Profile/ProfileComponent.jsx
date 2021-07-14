@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Avatar, Grid, Typography, makeStyles } from '@material-ui/core';
 import User from '../../Models/User';
 import ProfileField from './ProfileField';
-import Constants from '../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,12 +103,14 @@ const ProfileComponent = ({ loggedUser, updateUser }) => {
         </Grid>
         <Grid item xs={12}>
           <ProfileField
+            isDate
             fieldTitle="Date of birth"
-            fieldValue={loggedUser.dateOfBirth.toLocaleDateString(
-              'en-US',
-              Constants.dateOptions
-            )}
-            update={() => updateUser(loggedUser)}
+            fieldValue={loggedUser.dateOfBirth}
+            update={(newDate) => {
+              const updatingUser = { ...loggedUser };
+              updatingUser.dateOfBirth = new Date(newDate);
+              updateUser(updatingUser);
+            }}
           />
         </Grid>
       </Grid>
