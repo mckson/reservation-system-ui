@@ -20,6 +20,8 @@ import HotelRow from '../HotelRow/HotelRow';
 import User from '../../../Models/User';
 import Constants from '../../../Common/Constants';
 import RoomView from '../../../Models/RoomView';
+import SearchHotels from '../SearchHotels/SearchHotels';
+import HotelBrief from '../../../Models/HotelBrief';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -32,14 +34,19 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     textTransform: 'uppercase',
   },
+  search: {
+    margin: theme.spacing(0, 0, 2, 0),
+  },
 }));
 
 const HotelsTableComponent = ({
   role,
   users,
   hotels,
+  hotelsBrief,
   roomViews,
   totalCount,
+  onSearch,
   pageChanged,
   pageSizeChanged,
   pageSize,
@@ -90,6 +97,12 @@ const HotelsTableComponent = ({
 
   return (
     <>
+      <div className={classes.search}>
+        <SearchHotels
+          onChangeSearchParameters={onSearch}
+          hotels={hotelsBrief}
+        />
+      </div>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
@@ -186,9 +199,11 @@ HotelsTableComponent.propTypes = {
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
+  hotelsBrief: PropTypes.arrayOf(HotelBrief).isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
+  onSearch: PropTypes.func.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
   deleteHotel: PropTypes.func.isRequired,

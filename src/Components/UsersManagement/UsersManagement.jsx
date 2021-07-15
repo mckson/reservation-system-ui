@@ -5,16 +5,25 @@ import HotelBrief from '../../Models/HotelBrief';
 import UsersManagementComponent from './UsersManagementComponent';
 import ManagementService from '../../Common/ManagementService';
 import API from '../../Common/API';
+import UserBrief from '../../Models/UserBrief';
 
 const UsersManagement = ({ isOpen, close, loggedUser }) => {
   const [users, setUsers] = useState([]);
+  const [usersBrief, setUsersBrief] = useState([]);
+  const [searchClauses, setSearchClauses] = useState('');
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [hotelsBrief, setHotelsBrief] = useState([]);
 
   const requestUsers = async () => {
-    const response = await API.getUsers(pageNumber, pageSize, '');
+    const response = await API.getUsers(
+      pageNumber,
+      pageSize,
+      searchClauses[0] || '',
+      searchClauses[1] || '',
+      searchClauses[2] || ''
+    );
 
     if (response) {
       const respondedUsers = response.content.map((item) => new User(item));
@@ -28,6 +37,12 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
         setPageSize(response.pageSize);
       }
     }
+
+    const respondedUsersBrief = await API.getAllUsers();
+    const usersBriefBuffer = respondedUsersBrief.map(
+      (user) => new UserBrief(user)
+    );
+    setUsersBrief(usersBriefBuffer);
   };
 
   const requestHotels = async () => {
@@ -38,6 +53,10 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
 
       setHotelsBrief(respondedHotels);
     }
+  };
+
+  const handleSearchClausesChanged = (value) => {
+    setSearchClauses(value);
   };
 
   const handlePageChanged = (value) => {
@@ -89,7 +108,7 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
 
   useEffect(async () => {
     await requestUsers();
-  }, [pageSize, pageNumber]);
+  }, [pageSize, pageNumber, searchClauses]);
 
   useEffect(async () => {
     await requestHotels();
@@ -98,6 +117,8 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
   return (
     <UsersManagementComponent
       users={users}
+      usersBrief={usersBrief}
+      onChangeSearchClauses={handleSearchClausesChanged}
       hotels={hotelsBrief}
       isOpen={isOpen}
       close={close}
