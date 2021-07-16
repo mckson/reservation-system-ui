@@ -49,13 +49,16 @@ const HotelFull = ({
     const response = await API.getRooms(
       roomsPageNumber,
       roomsPageSize,
-      hotelId,
+      hotelId || hotel?.id,
       dateIn,
       dateOut
     );
 
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
+
+      // eslint-disable-next-line no-debugger
+      debugger;
 
       setRooms(respondedRooms);
       setRoomsTotalResults(response.totalResults);
@@ -119,6 +122,7 @@ const HotelFull = ({
           selectedRoomChanged={handleSelectedRoomChanged}
           closeRoomDetailed={handleCloseRoomDetailed}
           openRoomDetailed={handleOpenRoomDetailed}
+          onRequestRooms={requestRooms}
         />
       ) : (
         <div

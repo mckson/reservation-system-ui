@@ -121,6 +121,7 @@ const HotelFullComponent = ({
   selectedRoomChanged,
   closeRoomDetailed,
   openRoomDetailed,
+  onRequestRooms,
 }) => {
   const classes = useStyles();
   const [isReservation, setIsReservation] = useState(false);
@@ -292,6 +293,7 @@ const HotelFullComponent = ({
           loggedUser={loggedUser}
           dateIn={dateIn}
           dateOut={dateOut}
+          onRequestRooms={onRequestRooms}
         />
       </Grid>
       {selectedRoomId ? (
@@ -322,6 +324,7 @@ HotelFullComponent.propTypes = {
   selectedRoomChanged: PropTypes.func.isRequired,
   closeRoomDetailed: PropTypes.func.isRequired,
   openRoomDetailed: PropTypes.func.isRequired,
+  onRequestRooms: PropTypes.isRequired,
 };
 
 HotelFullComponent.defaultProps = {

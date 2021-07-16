@@ -13,6 +13,9 @@ const roomImageUrl = (id) => `/Images/Room/${id}`;
 const reservationUrl = (id) => `/Reservations/${id}`;
 const roomViewUrl = (id) => `/RoomViews/${id}`;
 
+const roomLockUrl = (id) => `${roomUrl(id)}/lock`;
+const roomUnlockUrl = (id) => `${roomUrl(id)}/unlock`;
+
 // brief user responses (for example, for search)
 const allUsersUrl = '/Users/All';
 
@@ -274,7 +277,6 @@ const updateRoom = (room) => {
       .put(roomUrl(room.id), room)
       .then((response) => resolve(response.data))
       .catch((error) => {
-        console.log(error);
         reject(error);
       });
   });
@@ -286,9 +288,26 @@ const deleteRoom = (id) => {
       .delete(roomUrl(id))
       .then((response) => resolve(response.data))
       .catch((error) => {
-        console.log(error);
         reject(error);
       });
+  });
+};
+
+const lockRoom = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(roomLockUrl(id))
+      .then(() => resolve())
+      .catch((error) => reject(error));
+  });
+};
+
+const unlockRoom = (id) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(roomUnlockUrl(id))
+      .then(() => resolve())
+      .catch((error) => reject(error));
   });
 };
 
@@ -502,4 +521,6 @@ export default {
   createRoomView,
   updateRoomView,
   deleteRoomView,
+  lockRoom,
+  unlockRoom,
 };
