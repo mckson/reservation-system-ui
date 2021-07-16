@@ -32,6 +32,12 @@ const getSteps = () => [
   'Final details',
 ];
 
+const arrayDifference = (oldArray, newArray) => {
+  const addedItems = newArray.filter((item) => !oldArray.includes(item));
+
+  return addedItems;
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     justifySelf: 'center',
@@ -130,6 +136,7 @@ const Reservation = ({
   hotel,
   dateIn,
   dateOut,
+  onRequestRooms,
 }) => {
   const [activeStep, setActiveStep] = useState({
     step: 0,
@@ -151,6 +158,11 @@ const Reservation = ({
   //     setRooms(respondedRooms);
   //   }
   // };
+  const onClose = () => {
+    selectedRooms.forEach((room) => API.unlockRoom(room.id));
+    onRequestRooms();
+    close();
+  };
 
   const handleReservationComplete = async () => {
     const reservation = new ReservationRequest({
@@ -171,7 +183,7 @@ const Reservation = ({
       console.log(error);
     }
 
-    close();
+    onClose();
     setActiveStep({ step: 0, isNextAvailable: false });
     setSelectedRooms([]);
     setSelectedServices([]);
@@ -197,6 +209,18 @@ const Reservation = ({
   // };
 
   const handleRoomsChange = (changedRooms) => {
+    const addedRoom = arrayDifference(selectedRooms, changedRooms);
+
+    if (addedRoom[0]) {
+      API.lockRoom(addedRoom[0].id);
+    } else {
+      const removedRoom = arrayDifference(changedRooms, selectedRooms);
+
+      if (removedRoom[0]) {
+        API.unlockRoom(removedRoom[0].id);
+      }
+    }
+
     setSelectedRooms(changedRooms);
     setActiveStep((previosActiveStep) => ({
       step: previosActiveStep.step,
@@ -237,7 +261,7 @@ const Reservation = ({
           <IconButton
             className={classes.closeButton}
             onClick={() => {
-              close();
+              onClose();
               setActiveStep({ step: 0, isNextAvailable: false });
               setSelectedRooms([]);
               setSelectedServices([]);
@@ -335,6 +359,7 @@ Reservation.propTypes = {
   rooms: PropTypes.arrayOf(Room).isRequired,
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
+  onRequestRooms: PropTypes.func.isRequired,
 };
 
 Reservation.defaultProps = {
