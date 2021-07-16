@@ -11,15 +11,36 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  makeStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import User from '../../../Models/User';
 import UserRow from '../UserRow/UserRow';
 import CreateUserComponent from '../CreateUserComponent';
 import HotelBrief from '../../../Models/HotelBrief';
+import SearchUsers from '../SearchUsers/SearchUsers';
+import UserBrief from '../../../Models/UserBrief';
+
+const useStyles = makeStyles((theme) => ({
+  addButton: {
+    margin: theme.spacing(1),
+    border: 0,
+    borderRadius: '15px',
+    height: 40,
+    width: 175,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  search: {
+    margin: theme.spacing(0, 0, 2, 0),
+  },
+}));
 
 const UsersTableComponent = ({
   users,
+  usersBrief,
+  onChangeSearchClauses,
   hotels,
   totalCount,
   pageChanged,
@@ -34,6 +55,8 @@ const UsersTableComponent = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(pageSize);
   const [isAdd, setIsAdd] = useState(false);
+
+  const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
     // eslint-disable-next-line no-debugger
@@ -60,6 +83,12 @@ const UsersTableComponent = ({
 
   return (
     <>
+      <div className={classes.search}>
+        <SearchUsers
+          users={usersBrief}
+          onChangeSearchClauses={onChangeSearchClauses}
+        />
+      </div>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <TableHead>
@@ -98,6 +127,7 @@ const UsersTableComponent = ({
               color="primary"
               startIcon={<AddIcon />}
               onClick={() => setIsAdd(!isAdd)}
+              className={classes.addButton}
             >
               Add new user
             </Button>
@@ -125,6 +155,8 @@ const UsersTableComponent = ({
 
 UsersTableComponent.propTypes = {
   users: PropTypes.arrayOf(User),
+  usersBrief: PropTypes.arrayOf(UserBrief).isRequired,
+  onChangeSearchClauses: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(HotelBrief),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,

@@ -7,14 +7,18 @@ import API from '../../Common/API';
 import ManagementService from '../../Common/ManagementService';
 import Constants from '../../Common/Constants';
 import RoomView from '../../Models/RoomView';
+import HotelBrief from '../../Models/HotelBrief';
 
 const HotelsManagement = ({ isOpen, close, loggedUser }) => {
   const [users, setUsers] = useState([]);
+
+  const [hotelsBrief, setHotelsBrief] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [roomViews, setRoomViews] = useState([]);
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [searchName, setSearchName] = useState('');
 
   const requestUsers = async () => {
     const response = await API.getAllUsers();
@@ -31,7 +35,8 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
       pageSize,
       '',
       '',
-      loggedUser.roles.includes(Constants.adminRole) ? '' : loggedUser.id
+      loggedUser.roles.includes(Constants.adminRole) ? '' : loggedUser.id,
+      searchName
     );
 
     if (response != null) {
@@ -46,6 +51,13 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
         setPageSize(response.pageSize);
       }
     }
+
+    const respondedHotels = await API.getAllHotelsNameAndId();
+    const respondedHotelsBrief = respondedHotels.map(
+      (hotel) => new HotelBrief(hotel)
+    );
+
+    setHotelsBrief(respondedHotelsBrief);
   };
 
   const requestRoomViews = async () => {
@@ -68,6 +80,10 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
     }
 
     return Constants.userRole;
+  };
+
+  const handleSearchNameChanged = (value) => {
+    setSearchName(value);
   };
 
   const handlePageChanged = (value) => {
@@ -312,7 +328,7 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
 
   useEffect(async () => {
     await requestHotels();
-  }, [pageSize, pageNumber]);
+  }, [pageSize, pageNumber, searchName]);
 
   useEffect(async () => {
     await requestRoomViews();
@@ -330,6 +346,8 @@ const HotelsManagement = ({ isOpen, close, loggedUser }) => {
       isOpen={isOpen}
       close={close}
       hotels={hotels}
+      hotelsBrief={hotelsBrief}
+      onSearch={handleSearchNameChanged}
       totalCount={totalResults}
       pageChanged={handlePageChanged}
       pageSizeChanged={handlePageSizeChanged}

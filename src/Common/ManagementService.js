@@ -16,14 +16,37 @@ const ManagementService = (function Management() {
 
       return [returnedValue, null];
     } catch (error) {
-      if (error.response.data.message) {
+      if (error.response?.data?.message) {
         return [null, error.response.data.message];
       }
-      if (error.response.data.title) {
+      if (error.response?.data?.title) {
         return [null, error.response.data.title];
       }
       return [null, error.message];
     }
+  };
+
+  const handleGetHotels = async ({
+    pageNumber,
+    pageSize,
+    dateIn,
+    dateOut,
+    manager,
+    name,
+    city,
+    services,
+  }) => {
+    const returnedHotels = await API.getHotels(
+      pageNumber,
+      pageSize,
+      dateIn,
+      dateOut,
+      manager,
+      name,
+      city,
+      services
+    );
+    return returnedHotels;
   };
 
   const handleCreateHotel = async (createdHotel) => {
@@ -162,6 +185,7 @@ const ManagementService = (function Management() {
   };
 
   return {
+    handleGetHotels,
     getService,
     baseRequestHandler,
     handleCreateHotel,

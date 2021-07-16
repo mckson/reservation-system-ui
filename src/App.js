@@ -1,9 +1,12 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
+import { Alert } from '@material-ui/lab';
+import { Snackbar } from '@material-ui/core';
 import Hotel from './Models/Hotel';
 import User from './Models/User';
 import API from './Common/API';
 import Routes from './Components/RoutesComponent/Routes';
+import ManagementService from './Common/ManagementService';
 
 function App() {
   const [hotels, setHotels] = useState([]);
@@ -15,23 +18,37 @@ function App() {
   const [user, setUser] = useState(null);
   const [dateIn, setDateIn] = useState(null);
   const [dateOut, setDateOut] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleResetError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setError(null);
+  };
 
   const requestHotels = async (searchRequest) => {
-    const searchClauses = searchRequest?.split(' ');
-    const hotelname = searchClauses?.length > 0 ? searchClauses[0] : '';
-    const city = searchClauses?.length > 1 ? searchClauses[1] : '';
-    const services = searchClauses?.length > 2 ? searchClauses.slice(2) : [];
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const hotelname = searchRequest?.[0] ? searchRequest[0] : '';
+    const city = searchRequest?.[1] ? searchRequest[1] : '';
+    const services = searchRequest?.[2] ? searchRequest[2] : [];
 
-    const response = await API.getHotels(
-      pageNumber,
-      pageSize,
-      dateIn,
-      dateOut,
-      '',
-      hotelname,
-      city,
-      services
-    );
+    const [response, respondedError] =
+      await ManagementService.baseRequestHandler(
+        ManagementService.handleGetHotels,
+        {
+          pageNumber,
+          pageSize,
+          dateIn,
+          dateOut,
+          manager: '',
+          name: hotelname,
+          city,
+          services,
+        }
+      );
 
     if (response != null) {
       const respondedHotels = response.content.map((item) => new Hotel(item));
@@ -45,6 +62,8 @@ function App() {
       if (response.pageSize !== pageSize) {
         setPageSize(response.pageSize);
       }
+    } else if (respondedError) {
+      setError(respondedError);
     }
   };
 
@@ -103,20 +122,31 @@ function App() {
   };
 
   return (
-    <Routes
-      loggedUser={user}
-      hotels={hotels}
-      totalPages={totalPages}
-      totalResults={totalResults}
-      pageChanged={onPageChanged}
-      loguot={onLogout}
-      submit={onSubmit}
-      searchHotels={onSearchHotels}
-      dateIn={dateIn}
-      dateOut={dateOut}
-      onDateInChange={handleDateInChange}
-      onDateOutChange={handleDateOutChange}
-    />
+    <>
+      <Routes
+        loggedUser={user}
+        hotels={hotels}
+        totalPages={totalPages}
+        totalResults={totalResults}
+        pageChanged={onPageChanged}
+        loguot={onLogout}
+        submit={onSubmit}
+        searchHotels={onSearchHotels}
+        dateIn={dateIn}
+        dateOut={dateOut}
+        onDateInChange={handleDateInChange}
+        onDateOutChange={handleDateOutChange}
+      />
+      <Snackbar
+        open={!!error}
+        autoHideDuration={5000}
+        onClose={handleResetError}
+      >
+        <Alert onClose={handleResetError} severity="error" variant="filled">
+          {error}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

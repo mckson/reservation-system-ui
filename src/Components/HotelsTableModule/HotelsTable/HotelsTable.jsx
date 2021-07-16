@@ -4,13 +4,16 @@ import HotelsTableComponent from './HotelsTableComponent';
 import Hotel from '../../../Models/Hotel';
 import User from '../../../Models/User';
 import RoomView from '../../../Models/RoomView';
+import HotelBrief from '../../../Models/HotelBrief';
 
 const HotelsTable = ({
   role,
   users,
   hotels,
+  hotelsBrief,
   roomViews,
   totalCount,
+  onSearch,
   pageChanged,
   pageSize,
   pageSizeChanged,
@@ -36,8 +39,10 @@ const HotelsTable = ({
       role={role}
       users={users}
       hotels={hotels}
+      hotelsBrief={hotelsBrief}
       roomViews={roomViews}
       totalCount={totalCount}
+      onSearch={onSearch}
       pageChanged={pageChanged}
       pageSize={pageSize}
       pageSizeChanged={pageSizeChanged}
@@ -65,8 +70,10 @@ HotelsTable.propTypes = {
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
+  hotelsBrief: PropTypes.arrayOf(HotelBrief).isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
+  onSearch: PropTypes.func.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
   pageSize: PropTypes.number.isRequired,

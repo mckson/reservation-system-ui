@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import User from '../../../Models/User';
 import UsersTableComponent from './UsersTableComponent';
 import HotelBrief from '../../../Models/HotelBrief';
+import UserBrief from '../../../Models/UserBrief';
 
 const UsersTable = ({
   users,
+  usersBrief,
+  onChangeSearchClauses,
   hotels,
   onError,
   onSuccess,
@@ -20,6 +23,8 @@ const UsersTable = ({
   return (
     <UsersTableComponent
       users={users}
+      usersBrief={usersBrief}
+      onChangeSearchClauses={onChangeSearchClauses}
       hotels={hotels}
       onError={onError}
       onSuccess={onSuccess}
@@ -36,6 +41,8 @@ const UsersTable = ({
 
 UsersTable.propTypes = {
   users: PropTypes.arrayOf(User),
+  usersBrief: PropTypes.arrayOf(UserBrief).isRequired,
+  onChangeSearchClauses: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(HotelBrief),
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,

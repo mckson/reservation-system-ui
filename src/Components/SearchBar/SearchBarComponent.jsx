@@ -1,24 +1,31 @@
-import { Button, InputBase, makeStyles, Tooltip } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
-import { Field, Form, Formik } from 'formik';
+import {
+  Button,
+  InputBase,
+  TextField,
+  makeStyles,
+  IconButton,
+} from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Autocomplete } from '@material-ui/lab';
+import { AddOutlined } from '@material-ui/icons';
+import HotelBrief from '../../Models/HotelBrief';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     display: 'flex',
     backgroundColor: theme.palette.common.white,
+    alignItems: 'center',
   },
   search: {
     display: 'flex',
     alignItems: 'center',
-    borderRadius: theme.shape.borderRadius,
     width: '100%',
-    borderColor: theme.palette.grey[300],
-    borderStyle: 'solid',
-    borderWidth: 1,
-    margin: theme.spacing(0, 1, 0, 0),
+  },
+  multipleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
   },
   searchIcon: {
     color: theme.palette.primary.main,
@@ -27,14 +34,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  searchRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
   searchInput: {
     width: '100%',
-    padding: 5,
-    height: 30,
+    border: 'none',
+    margin: theme.spacing(0, 1, 0, 0),
   },
   dateRange: {
     display: 'flex',
@@ -50,115 +53,168 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SearchBarComponent = ({
-  initialValues,
-  validationSchema,
-  placeholder,
+  hotels,
+  cities,
+  searchName,
+  searchCity,
+  selectedServices,
+  creatingService,
   onSubmit,
+  onChangeName,
+  onChangeCity,
+  onAddNewService,
+  onChangeNewService,
+  onChangeServices,
+  onChangeDateIn,
+  onChangeDateOut,
 }) => {
   const classes = useStyles();
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {({ errors, touched }) => (
-        <Form className={classes.root}>
-          <Field name="search">
-            {({ field }) => (
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <Search />
-                </div>
-                <InputBase
-                  {...field}
-                  classes={{
-                    root: classes.searchRoot,
-                    input: classes.searchInput,
-                  }}
-                  placeholder={placeholder}
-                />
-              </div>
-            )}
-          </Field>
-          <div className={classes.dateRange}>
-            <Field name="dateIn">
-              {({ field }) => (
-                <Tooltip
-                  title={
-                    errors.dateIn && touched.dateIn
-                      ? `${errors.dateIn}`
-                      : 'date in'
-                  }
-                >
-                  <InputBase
-                    {...field}
-                    inputProps={{
-                      style: {
-                        padding: 5,
-                        height: 30,
-                      },
-                    }}
-                    variant="outlined"
-                    type="date"
-                    className={classes.datepicker}
-                  />
-                </Tooltip>
-              )}
-            </Field>
-            <Field name="dateOut">
-              {({ field }) => (
-                <Tooltip
-                  title={
-                    errors.dateOut && touched.dateOut
-                      ? `${errors.dateOut}`
-                      : 'date out'
-                  }
-                >
-                  <InputBase
-                    {...field}
-                    inputProps={{
-                      style: {
-                        padding: 5,
-                        height: 30,
-                      },
-                    }}
-                    variant="outlined"
-                    type="date"
-                    className={classes.datepicker}
-                  />
-                </Tooltip>
-              )}
-            </Field>
-          </div>
-          <div className={classes.button}>
-            <Button
-              type="submit"
-              style={{ height: 40 }}
-              variant="contained"
-              color="primary"
-              disabled={!!(errors.dateIn || errors.dateOut)}
-            >
-              Search
-            </Button>
-          </div>
-        </Form>
-      )}
-    </Formik>
+    <div className={classes.root}>
+      <div className={classes.search}>
+        <Autocomplete
+          className={classes.searchInput}
+          inputValue={searchName || ''}
+          fullWidth
+          freeSolo
+          disableClearable
+          options={hotels}
+          autoSelect={false}
+          getOptionLabel={(option) => {
+            return option.name;
+          }}
+          renderOption={(option) => `${option.name} (${option.location.city})`}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              size="small"
+              variant="outlined"
+              placeholder="Hotel"
+            />
+          )}
+          onInputChange={(event, value) => {
+            onChangeName(value);
+          }}
+        />
+        <Autocomplete
+          className={classes.searchInput}
+          value={searchCity}
+          fullWidth
+          freeSolo
+          disableClearable
+          autoSelect={false}
+          options={cities}
+          getOptionLabel={(option) => option}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              size="small"
+              variant="outlined"
+              placeholder="City"
+            />
+          )}
+          onInputChange={(event, value) => {
+            onChangeCity(value);
+          }}
+        />
+        <Autocomplete
+          className={classes.searchInput}
+          value={selectedServices}
+          fullWidth
+          freeSolo
+          multiple
+          ChipProps={{ size: 'small' }}
+          limitTags={1}
+          disableClearable
+          options={[]}
+          getOptionLabel={(option) => option}
+          renderInput={(params) => (
+            <div className={classes.multipleWrapper}>
+              <TextField
+                {...params}
+                size="small"
+                variant="outlined"
+                placeholder="Services"
+              />
+              {creatingService ? (
+                <IconButton size="small" onClick={() => onAddNewService()}>
+                  <AddOutlined />
+                </IconButton>
+              ) : null}
+            </div>
+          )}
+          onInputChange={(event, value) => {
+            onChangeNewService(value);
+          }}
+          onChange={(event, value) => onChangeServices(value)}
+        />
+      </div>
+      <div className={classes.dateRange}>
+        <div name="dateIn">
+          <InputBase
+            inputProps={{
+              style: {
+                padding: 5,
+                height: 28,
+              },
+            }}
+            variant="outlined"
+            type="date"
+            onChange={(event) => onChangeDateIn(event.target.value)}
+            className={classes.datepicker}
+          />
+        </div>
+        <div name="dateOut">
+          <InputBase
+            inputProps={{
+              style: {
+                padding: 5,
+                height: 28,
+              },
+            }}
+            variant="outlined"
+            type="date"
+            onChange={(event) => onChangeDateOut(event.target.value)}
+            className={classes.datepicker}
+          />
+        </div>
+      </div>
+      <div className={classes.button}>
+        <Button
+          onClick={() => onSubmit()}
+          style={{ height: 40 }}
+          variant="contained"
+          color="primary"
+        >
+          Search
+        </Button>
+      </div>
+    </div>
   );
 };
 
 SearchBarComponent.propTypes = {
-  placeholder: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  validationSchema: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  initialValues: PropTypes.object.isRequired,
+  hotels: PropTypes.arrayOf(HotelBrief).isRequired,
+  cities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  searchName: PropTypes.string,
+  searchCity: PropTypes.string,
+  selectedServices: PropTypes.arrayOf(PropTypes.string).isRequired,
+  creatingService: PropTypes.string,
+  onAddNewService: PropTypes.func.isRequired,
+  onChangeNewService: PropTypes.isRequired,
+  onChangeServices: PropTypes.isRequired,
+  onChangeDateIn: PropTypes.isRequired,
+  onChangeDateOut: PropTypes.isRequired,
+  onChangeName: PropTypes.func.isRequired,
+  onChangeCity: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
 SearchBarComponent.defaultProps = {
-  placeholder: 'Search... (name city service)',
+  searchName: null,
+  searchCity: null,
+  creatingService: null,
 };
 
 export default SearchBarComponent;

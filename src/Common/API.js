@@ -19,8 +19,10 @@ const allUsersUrl = '/Users/All';
 // brief hotel responses (for example, for search)
 const allHotelsUrl = '/Hotels/All';
 
-const usersUrl = (pageNumber, pageSize, email) =>
-  `/Users?pageNumber=${pageNumber}&pageSize=${pageSize}&email=${email}`;
+const usersUrl = (pageNumber, pageSize, email, firstName, lastName) =>
+  `/Users?pageNumber=${pageNumber}&pageSize=${pageSize}&email=${
+    email || ''
+  }&firstName=${firstName || ''}&lastName=${lastName || ''}`;
 
 const hotelsUrl = (
   pageNumber,
@@ -152,10 +154,10 @@ const getHotels = (
   });
 };
 
-const getUsers = (pageNumber, pageSize, email) => {
+const getUsers = (pageNumber, pageSize, email, firstName, lastName) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(usersUrl(pageNumber, pageSize, email))
+      .get(usersUrl(pageNumber, pageSize, email, firstName, lastName))
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
