@@ -8,6 +8,8 @@ class ReservationRequest {
     this.firstName = obj.firstName;
     this.lastName = obj.lastName;
     this.email = obj.email;
+    this.passportNumber = obj.passportNumber;
+    this.phoneNumber = obj.phoneNumber;
   }
 }
 

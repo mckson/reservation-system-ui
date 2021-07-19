@@ -165,6 +165,8 @@ const Reservation = ({
   };
 
   const handleReservationComplete = async () => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     const reservation = new ReservationRequest({
       hotelId: hotel.id,
       rooms: selectedRooms.map((room) => room.id),
@@ -174,6 +176,8 @@ const Reservation = ({
       firstName: customerInfo.firstName,
       lastName: customerInfo.lastName,
       email: customerInfo.email,
+      passportNumber: customerInfo.passportNumber,
+      phoneNumber: customerInfo.phoneNumber,
     });
 
     try {
