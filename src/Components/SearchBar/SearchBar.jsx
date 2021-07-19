@@ -57,8 +57,6 @@ const SearchBar = ({
   };
 
   const handleSubmit = () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     searchHotels(searchClauses);
     onDateInChange(selectedDateIn);
     onDateOutChange(selectedDateOut);
@@ -66,16 +64,12 @@ const SearchBar = ({
   };
 
   const handleChangeName = (value) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const newSearchClauses = { ...searchClauses };
     newSearchClauses[0] = value;
     setSearchClauses(newSearchClauses);
   };
 
   const handleChangeCity = (value) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const newSearchClauses = { ...searchClauses };
     newSearchClauses[1] = value;
     setSearchClauses(newSearchClauses);
