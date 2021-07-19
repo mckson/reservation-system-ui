@@ -29,6 +29,9 @@ const PersonalInfo = ({ onSetCustomer, loggedUser }) => {
       : loggedUser != null
       ? loggedUser.email
       : '',
+
+    passportNumber: '',
+    phoneNumber: '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -43,6 +46,16 @@ const PersonalInfo = ({ onSetCustomer, loggedUser }) => {
       .email('Invalid email adress')
       .required('Required')
       .oneOf([Yup.ref('email'), null], 'Emails must be the same'),
+    passportNumber: Yup.string()
+      .max(50, 'Must be 20 characters or shorter')
+      .required('Required'),
+    phoneNumber: Yup.string()
+      .max(50, 'Must be 20 characters or shorter')
+      .matches(
+        /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
+        'Invalid phone number'
+      )
+      .required('Required'),
   });
 
   const handleSetCustomer = (values) => {
@@ -50,6 +63,8 @@ const PersonalInfo = ({ onSetCustomer, loggedUser }) => {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
+      passportNumber: values.passportNumber,
+      phoneNumber: values.phoneNumber,
     };
     setCustomer(customerToSet);
     onSetCustomer(customerToSet);

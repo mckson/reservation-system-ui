@@ -41,6 +41,30 @@ const PersonalInfoComponent = ({
             />
           </Grid>
 
+          <Grid item xs={12} md={6}>
+            <MyTextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Passport number"
+              name="passportNumber"
+              type="text"
+              placeholder="AUF000222"
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <MyTextField
+              fullWidth
+              variant="outlined"
+              size="small"
+              label="Phone number"
+              name="phoneNumber"
+              type="text"
+              placeholder="+375111234567"
+            />
+          </Grid>
+
           <Grid item xs={12}>
             <MyTextField
               fullWidth

@@ -122,6 +122,10 @@ const DetailsComponent = ({
               {customerInfo.firstName} {customerInfo.lastName}
             </Box>
             <Box fontWeight="fontWeightMedium">{customerInfo.email}</Box>
+            <Box fontWeight="fontWeightMedium">
+              {customerInfo.passportNumber}
+            </Box>
+            <Box fontWeight="fontWeightMedium">{customerInfo.phoneNumber}</Box>
           </Typography>
         </div>
       ) : null}
