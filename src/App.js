@@ -8,7 +8,8 @@ import API from './Common/API';
 import Routes from './Components/RoutesComponent/Routes';
 import ManagementService from './Common/ManagementService';
 import BaseSearch from './Common/BaseSearch/BaseSearch';
-import SearchClause from './Common/BaseSearch/SearchClauses';
+import SearchClause from './Common/BaseSearch/SearchClause';
+import SearchOption from './Common/BaseSearch/SearchOption';
 
 function App() {
   const [hotels, setHotels] = useState([]);
@@ -141,7 +142,20 @@ function App() {
               false
             ),
             new SearchClause('Services', [], [], true),
+            new SearchClause(
+              'Country',
+              '',
+              hotels.map((hotel) => hotel.location.country),
+              false
+            ),
           ]}
+          options={[
+            new SearchOption('Parking included', false),
+            new SearchOption('Smoking allowed', false),
+          ]}
+          onSearch={(searchClauses) =>
+            onSearchHotels(searchClauses.map((item) => item.value))
+          }
         />
       ) : null}
       <Routes
