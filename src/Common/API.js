@@ -22,6 +22,11 @@ const allUsersUrl = '/Users/All';
 // brief hotel responses (for example, for search)
 const allHotelsUrl = '/Hotels/All';
 
+// all unique room names
+const roomNamesUrl = (hotelId) => `/Rooms/Names/${hotelId || ''}`;
+
+const roomNumbersUrl = (hotelId) => `/Rooms/Numbers/${hotelId || ''}`;
+
 const usersUrl = (pageNumber, pageSize, email, firstName, lastName) =>
   `/Users?pageNumber=${pageNumber}&pageSize=${pageSize}&email=${
     email || ''
@@ -45,10 +50,44 @@ const hotelsUrl = (
     services ? services.map((service) => `&services=${service}`).join('') : ''
   }`;
 
-const roomsUrl = (pageNumber, pageSize, hotelId, dateIn, dateOut) =>
+const roomsUrl = (
+  pageNumber,
+  pageSize,
+  hotelId,
+  dateIn,
+  dateOut,
+  name,
+  number,
+  minFloorNumber,
+  maxFloorNumber,
+  minCapacity,
+  maxCapacity,
+  minArea,
+  maxArea,
+  minPrice,
+  maxPrice,
+  facilities,
+  roomViews
+) =>
   `/Rooms?pageNumber=${pageNumber}&pageSize=${
     pageSize || ''
-  }&hotelId=${hotelId}&dateIn=${dateIn || ''}&dateOut=${dateOut || ''}`;
+  }&hotelId=${hotelId}&dateIn=${dateIn || ''}&dateOut=${dateOut || ''}&name=${
+    name || ''
+  }&number=${number || ''}&minFloorNumber=${
+    minFloorNumber || ''
+  }&maxFloorNumber=${maxFloorNumber || ''}&minCapacity=${
+    minCapacity || ''
+  }&maxCapacity=${maxCapacity || ''}&minArea=${minArea || ''}&maxArea=${
+    maxArea || ''
+  }&minPrice=${minPrice || ''}&maxPrice=${maxPrice || ''}${
+    facilities
+      ? facilities.map((facility) => `&facilities=${facility}`).join('')
+      : ''
+  }${
+    roomViews
+      ? roomViews.map((roomView) => `&roomViews=${roomView}`).join('')
+      : ''
+  }`;
 
 const reservationsUrl = (pageNumber, pageSize, email) =>
   `/Reservations?pageNumber=${pageNumber}&pageSize=${
@@ -166,10 +205,48 @@ const getUsers = (pageNumber, pageSize, email, firstName, lastName) => {
   });
 };
 
-const getRooms = (pageNumber, pageSize, hotelId, dateIn, dateOut) => {
+const getRooms = (
+  pageNumber,
+  pageSize,
+  hotelId,
+  dateIn,
+  dateOut,
+  name,
+  number,
+  minFloorNumber,
+  maxFloorNumber,
+  minCapacity,
+  maxCapacity,
+  minArea,
+  maxArea,
+  minPrice,
+  maxPrice,
+  facilities,
+  roomViews
+) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(roomsUrl(pageNumber, pageSize, hotelId, dateIn, dateOut))
+      .get(
+        roomsUrl(
+          pageNumber,
+          pageSize,
+          hotelId,
+          dateIn,
+          dateOut,
+          name,
+          number,
+          minFloorNumber,
+          maxFloorNumber,
+          minCapacity,
+          maxCapacity,
+          minArea,
+          maxArea,
+          minPrice,
+          maxPrice,
+          facilities,
+          roomViews
+        )
+      )
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
@@ -488,6 +565,24 @@ const deleteRoomView = (id) => {
   });
 };
 
+const getRoomNames = (hotelId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomNamesUrl(hotelId))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const getRoomNumbers = (hotelId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(roomNumbersUrl(hotelId))
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
 export default {
   axios,
   getAllUsers,
@@ -523,4 +618,6 @@ export default {
   deleteRoomView,
   lockRoom,
   unlockRoom,
+  getRoomNames,
+  getRoomNumbers,
 };

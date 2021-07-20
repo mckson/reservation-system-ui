@@ -7,9 +7,10 @@ import User from './Models/User';
 import API from './Common/API';
 import Routes from './Components/RoutesComponent/Routes';
 import ManagementService from './Common/ManagementService';
-import BaseSearch from './Common/BaseSearch/BaseSearch';
-import SearchClause from './Common/BaseSearch/SearchClause';
-import SearchOption from './Common/BaseSearch/SearchOption';
+// import BaseSearch from './Common/BaseSearch/BaseSearch';
+// import SearchClause from './Common/BaseSearch/SearchClause';
+// import SearchOption from './Common/BaseSearch/SearchOption';
+// import SearchRange from './Common/BaseSearch/SearchRange';
 
 function App() {
   const [hotels, setHotels] = useState([]);
@@ -32,8 +33,6 @@ function App() {
   };
 
   const requestHotels = async (searchRequest) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const hotelname = searchRequest?.[0] ? searchRequest[0] : '';
     const city = searchRequest?.[1] ? searchRequest[1] : '';
     const services = searchRequest?.[2] ? searchRequest[2] : [];
@@ -126,38 +125,6 @@ function App() {
 
   return (
     <>
-      {hotels && hotels.length > 0 ? (
-        <BaseSearch
-          clauses={[
-            new SearchClause(
-              'Name',
-              '',
-              hotels.map((hotel) => hotel.name),
-              false
-            ),
-            new SearchClause(
-              'City',
-              '',
-              hotels.map((hotel) => hotel.location.city),
-              false
-            ),
-            new SearchClause('Services', [], [], true),
-            new SearchClause(
-              'Country',
-              '',
-              hotels.map((hotel) => hotel.location.country),
-              false
-            ),
-          ]}
-          options={[
-            new SearchOption('Parking included', false),
-            new SearchOption('Smoking allowed', false),
-          ]}
-          onSearch={(searchClauses) =>
-            onSearchHotels(searchClauses.map((item) => item.value))
-          }
-        />
-      ) : null}
       <Routes
         loggedUser={user}
         hotels={hotels}

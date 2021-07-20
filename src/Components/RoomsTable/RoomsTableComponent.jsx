@@ -16,9 +16,14 @@ import {
   makeStyles,
   Collapse,
   Box,
+  Drawer,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from '@material-ui/icons';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Hotel from '../../Models/Hotel';
@@ -29,6 +34,9 @@ import ImagesTable from '../ImagesTableModule/ImagesTable/ImagesTable';
 
 import API from '../../Common/API';
 import RoomView from '../../Models/RoomView';
+import BaseSearch from '../../Common/BaseSearch/BaseSearch';
+import SearchClause from '../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../Common/BaseSearch/SearchRange';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -71,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     width: 'auto',
   },
+  searchSection: {
+    width: '20%',
+    padding: theme.spacing(2),
+  },
 }));
 
 const RoomsTableComponent = ({
@@ -90,8 +102,42 @@ const RoomsTableComponent = ({
   const [rowsPerPage, setRowPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [refresh, setRefresh] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
+  // const [roomNames, setRoomNames] = useState([]);
 
   const classes = useStyles();
+
+  const [searchClauses, setSearchClauses] = useState([
+    new SearchClause('Room name', '', []),
+    new SearchClause('Room number', '', []),
+    // new SearchClause('Smoking', 'Both', ['Allowed', 'No smoking', 'Both']),
+    // new SearchClause('Parking', 'Both', ['Available', 'Unavailable', 'Both']),
+    new SearchClause('Facilities', [], [], true),
+    new SearchClause('Room views', [], [], true),
+  ]);
+
+  const [searchRanges, setSearchRanges] = useState([
+    new SearchRange('Floor number', '', '', null, 1, 500),
+    new SearchRange('Amount of beds', '', '', null, 1, 15),
+    new SearchRange(
+      'Appartment area in m2',
+      '',
+      '',
+      (value) => `${value} m2`,
+      1,
+      1000
+    ),
+    new SearchRange(
+      'Price per night in USD',
+      '',
+      '',
+      (value) => `$${value}`,
+      1,
+      1000000
+    ),
+  ]);
+
+  const [searchOptions, setSearchOptions] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -111,13 +157,42 @@ const RoomsTableComponent = ({
     setRefresh(!refresh);
   };
 
+  const handleChangeSearchClauses = (newClauses) => {
+    setSearchClauses(newClauses);
+  };
+
+  const handleChangeSearchOptions = (newOptions) => {
+    setSearchOptions(newOptions);
+  };
+
+  const handleChangeSearchRanges = (newRanges) => {
+    setSearchRanges(newRanges);
+  };
+
+  const handleSearch = () => {
+    setPage(0);
+    setRefresh(!refresh);
+  };
+
   useEffect(async () => {
     const response = await API.getRooms(
       page + 1,
       rowsPerPage,
       hotel.id,
       '',
-      ''
+      '',
+      searchClauses[0].value,
+      searchClauses[1].value,
+      searchRanges[0].value[0],
+      searchRanges[0].value[1],
+      searchRanges[1].value[0],
+      searchRanges[1].value[1],
+      searchRanges[2].value[0],
+      searchRanges[2].value[1],
+      searchRanges[3].value[0],
+      searchRanges[3].value[1],
+      searchClauses[2].value,
+      searchClauses[3].value
     );
 
     if (response) {
@@ -129,8 +204,47 @@ const RoomsTableComponent = ({
     }
   }, [page, rowsPerPage, refresh]);
 
+  useEffect(async () => {
+    const responseNames = await API.getRoomNames(hotel.id);
+    const responseNumbers = await API.getRoomNumbers(hotel.id);
+
+    const newSearchClauses = [...searchClauses];
+    newSearchClauses[0] = new SearchClause('Room name', '', responseNames);
+    newSearchClauses[1] = new SearchClause(
+      'Room number',
+      '',
+      responseNumbers.map((number) => number.toString())
+    );
+    setSearchClauses(newSearchClauses);
+  }, []);
+
   return (
     <>
+      <Button
+        onClick={() => setOpenSearch(true)}
+        startIcon={<SearchOutlined />}
+      >
+        Search options
+      </Button>
+      <div className={classes.searchSection}>
+        <Drawer
+          open={openSearch}
+          onClose={() => setOpenSearch(false)}
+          classes={{ paper: classes.searchSection }}
+        >
+          <div>
+            <BaseSearch
+              clauses={searchClauses}
+              ranges={searchRanges}
+              options={searchOptions}
+              onChangeClauses={handleChangeSearchClauses}
+              onChangeOptions={handleChangeSearchOptions}
+              onChangeRanges={handleChangeSearchRanges}
+              onSearch={handleSearch}
+            />
+          </div>
+        </Drawer>
+      </div>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
