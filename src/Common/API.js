@@ -32,7 +32,7 @@ const usersUrl = (pageNumber, pageSize, email, firstName, lastName) =>
     email || ''
   }&firstName=${firstName || ''}&lastName=${lastName || ''}`;
 
-const hotelsUrl = (
+const hotelsUrl = ({
   pageNumber,
   pageSize,
   dateIn,
@@ -40,15 +40,21 @@ const hotelsUrl = (
   manager,
   name,
   city,
-  services
-) =>
+  services,
+  minDeposit,
+  maxDeposit,
+  minFloors,
+  maxFloors,
+}) =>
   `/Hotels?pageNumber=${pageNumber}&pageSize=${pageSize}&dateIn=${
     dateIn || ''
   }&dateOut=${dateOut || ''}&managerId=${manager || ''}&name=${
     name || ''
   }&city=${city || ''}${
     services ? services.map((service) => `&services=${service}`).join('') : ''
-  }`;
+  }&minDeposit=${minDeposit || ''}&maxDeposit=${maxDeposit || ''}&minFloors=${
+    minFloors || ''
+  }&maxFloors=${maxFloors || ''}`;
 
 const roomsUrl = ({
   pageNumber,
@@ -167,7 +173,7 @@ const getAllHotelsNameAndId = () => {
   });
 };
 
-const getHotels = (
+const getHotels = ({
   pageNumber,
   pageSize,
   dateIn,
@@ -175,12 +181,16 @@ const getHotels = (
   manager,
   name,
   city,
-  services
-) => {
+  services,
+  minDeposit,
+  maxDeposit,
+  minFloors,
+  maxFloors,
+}) => {
   return new Promise((resolve, reject) => {
     axios
       .get(
-        hotelsUrl(
+        hotelsUrl({
           pageNumber,
           pageSize,
           dateIn,
@@ -188,8 +198,12 @@ const getHotels = (
           manager,
           name,
           city,
-          services
-        )
+          services,
+          minDeposit,
+          maxDeposit,
+          minFloors,
+          maxFloors,
+        })
       )
       .then((response) => {
         resolve(response.data);

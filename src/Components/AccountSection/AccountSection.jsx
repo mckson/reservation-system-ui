@@ -1,24 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import User from '../../Models/User';
+import { useSelector } from 'react-redux';
 import AccountSectionComponent from './AccountSectionComponent';
-// import { useEffect } from 'react';
-// import API from '../../Common/API';
+import LoggedUser from '../../Models/LoggedUser';
 
 const AccountSection = ({
-  loggedUser,
   logout,
   openHotelsManagement,
   openUsersManagement,
   openReservationsSection,
 }) => {
-  // useEffect(async () => {
-  //   const response = await API.getReservations();
-  // })
+  const user = useSelector((state) => state.loggedUser.loggedUser);
 
   return (
     <AccountSectionComponent
-      loggedUser={loggedUser}
+      loggedUser={user ? new LoggedUser(user) : null}
       logout={logout}
       openHotelsManagement={openHotelsManagement}
       openUsersManagement={openUsersManagement}
@@ -28,15 +24,10 @@ const AccountSection = ({
 };
 
 AccountSection.propTypes = {
-  loggedUser: PropTypes.instanceOf(User),
   logout: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
   openUsersManagement: PropTypes.func.isRequired,
   openReservationsSection: PropTypes.func.isRequired,
-};
-
-AccountSection.defaultProps = {
-  loggedUser: null,
 };
 
 export default AccountSection;

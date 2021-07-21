@@ -35,8 +35,12 @@ const ManagementService = (function Management() {
     name,
     city,
     services,
+    minDeposit,
+    maxDeposit,
+    minFloors,
+    maxFloors,
   }) => {
-    const returnedHotels = await API.getHotels(
+    const returnedHotels = await API.getHotels({
       pageNumber,
       pageSize,
       dateIn,
@@ -44,8 +48,12 @@ const ManagementService = (function Management() {
       manager,
       name,
       city,
-      services
-    );
+      services,
+      minDeposit,
+      maxDeposit,
+      minFloors,
+      maxFloors,
+    });
     return returnedHotels;
   };
 

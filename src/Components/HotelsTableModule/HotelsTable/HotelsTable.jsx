@@ -5,6 +5,9 @@ import Hotel from '../../../Models/Hotel';
 import User from '../../../Models/User';
 import RoomView from '../../../Models/RoomView';
 import HotelBrief from '../../../Models/HotelBrief';
+import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../../Common/BaseSearch/SearchOption';
 
 const HotelsTable = ({
   role,
@@ -14,6 +17,12 @@ const HotelsTable = ({
   roomViews,
   totalCount,
   onSearch,
+  clauses,
+  ranges,
+  options,
+  onChangeClauses,
+  onChangeRanges,
+  onChangeOptions,
   pageChanged,
   pageSize,
   pageSizeChanged,
@@ -43,6 +52,12 @@ const HotelsTable = ({
       roomViews={roomViews}
       totalCount={totalCount}
       onSearch={onSearch}
+      clauses={clauses}
+      options={options}
+      ranges={ranges}
+      onChangeClauses={onChangeClauses}
+      onChangeRanges={onChangeRanges}
+      onChangeOptions={onChangeOptions}
       pageChanged={pageChanged}
       pageSize={pageSize}
       pageSizeChanged={pageSizeChanged}
@@ -67,6 +82,12 @@ const HotelsTable = ({
 };
 
 HotelsTable.propTypes = {
+  clauses: PropTypes.arrayOf(SearchClause),
+  ranges: PropTypes.arrayOf(SearchRange),
+  options: PropTypes.arrayOf(SearchOption),
+  onChangeClauses: PropTypes.func,
+  onChangeRanges: PropTypes.func,
+  onChangeOptions: PropTypes.func,
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
@@ -97,6 +118,12 @@ HotelsTable.propTypes = {
 
 HotelsTable.defaultProps = {
   roomViews: [],
+  clauses: [],
+  ranges: [],
+  options: [],
+  onChangeClauses: null,
+  onChangeRanges: null,
+  onChangeOptions: null,
 };
 
 export default HotelsTable;

@@ -78,8 +78,17 @@ const useStyles = makeStyles((theme) => ({
     width: 'auto',
   },
   searchSection: {
-    width: '20%',
+    width: `calc('100%'-${theme.spacing(2)})`,
     padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      width: '40%',
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '30%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '20%',
+    },
   },
 }));
 
@@ -222,7 +231,7 @@ const RoomsTableComponent = ({
         onClick={() => setOpenSearch(true)}
         startIcon={<SearchOutlined />}
       >
-        Search options
+        Setup room search options
       </Button>
       <div className={classes.searchSection}>
         <Drawer

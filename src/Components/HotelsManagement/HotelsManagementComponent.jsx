@@ -10,6 +10,9 @@ import FullScreenDialog from '../../Common/FullScreenDialog';
 import RoomView from '../../Models/RoomView';
 import Constants from '../../Common/Constants';
 import HotelBrief from '../../Models/HotelBrief';
+import SearchClause from '../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../Common/BaseSearch/SearchOption';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -30,6 +33,12 @@ const HotelsManagementComponent = ({
   roomViews,
   totalCount,
   onSearch,
+  clauses,
+  ranges,
+  options,
+  onChangeClauses,
+  onChangeRanges,
+  onChangeOptions,
   pageChanged,
   pageSizeChanged,
   pageSize,
@@ -96,6 +105,12 @@ const HotelsManagementComponent = ({
                 roomViews={roomViews}
                 totalCount={totalCount}
                 onSearch={onSearch}
+                clauses={clauses}
+                options={options}
+                ranges={ranges}
+                onChangeClauses={onChangeClauses}
+                onChangeRanges={onChangeRanges}
+                onChangeOptions={onChangeOptions}
                 pageChanged={pageChanged}
                 pageSize={pageSize}
                 pageSizeChanged={pageSizeChanged}
@@ -160,6 +175,12 @@ const HotelsManagementComponent = ({
 };
 
 HotelsManagementComponent.propTypes = {
+  clauses: PropTypes.arrayOf(SearchClause),
+  ranges: PropTypes.arrayOf(SearchRange),
+  options: PropTypes.arrayOf(SearchOption),
+  onChangeClauses: PropTypes.func,
+  onChangeRanges: PropTypes.func,
+  onChangeOptions: PropTypes.func,
   users: PropTypes.arrayOf(User).isRequired,
   isOpen: PropTypes.bool.isRequired,
   role: PropTypes.string.isRequired,
@@ -193,6 +214,12 @@ HotelsManagementComponent.propTypes = {
 
 HotelsManagementComponent.defaultProps = {
   roomViews: [],
+  clauses: [],
+  ranges: [],
+  options: [],
+  onChangeClauses: null,
+  onChangeRanges: null,
+  onChangeOptions: null,
 };
 
 export default HotelsManagementComponent;

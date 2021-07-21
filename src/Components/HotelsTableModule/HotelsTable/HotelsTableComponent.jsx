@@ -12,7 +12,9 @@ import {
   TableFooter,
   TablePagination,
   Button,
+  Drawer,
 } from '@material-ui/core';
+import { SearchOutlined } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import Hotel from '../../../Models/Hotel';
 import CreateHotelComponent from '../Components/CreateHotelComponent';
@@ -20,8 +22,10 @@ import HotelRow from '../HotelRow/HotelRow';
 import User from '../../../Models/User';
 import Constants from '../../../Common/Constants';
 import RoomView from '../../../Models/RoomView';
-import SearchHotels from '../SearchHotels/SearchHotels';
-import HotelBrief from '../../../Models/HotelBrief';
+import BaseSearch from '../../../Common/BaseSearch/BaseSearch';
+import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../../Common/BaseSearch/SearchOption';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -34,8 +38,18 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     textTransform: 'uppercase',
   },
-  search: {
-    margin: theme.spacing(0, 0, 2, 0),
+  searchSection: {
+    width: `calc('100%'-${theme.spacing(2)})`,
+    padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      width: '40%',
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '30%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '20%',
+    },
   },
 }));
 
@@ -43,10 +57,15 @@ const HotelsTableComponent = ({
   role,
   users,
   hotels,
-  hotelsBrief,
   roomViews,
   totalCount,
   onSearch,
+  clauses,
+  ranges,
+  options,
+  onChangeClauses,
+  onChangeRanges,
+  onChangeOptions,
   pageChanged,
   pageSizeChanged,
   pageSize,
@@ -71,10 +90,9 @@ const HotelsTableComponent = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(pageSize);
   const [isAdd, setIsAdd] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
 
   const handleChangePage = (event, newPage) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     setPage(newPage);
     pageChanged(newPage + 1);
   };
@@ -97,12 +115,32 @@ const HotelsTableComponent = ({
 
   return (
     <>
-      <div className={classes.search}>
-        <SearchHotels
-          onChangeSearchParameters={onSearch}
-          hotels={hotelsBrief}
-        />
+      <Button
+        onClick={() => setOpenSearch(true)}
+        startIcon={<SearchOutlined />}
+      >
+        Setup hotel search options
+      </Button>
+      <div className={classes.searchSection}>
+        <Drawer
+          open={openSearch}
+          onClose={() => setOpenSearch(false)}
+          classes={{ paper: classes.searchSection }}
+        >
+          <div>
+            <BaseSearch
+              clauses={clauses}
+              ranges={ranges}
+              options={options}
+              onChangeClauses={onChangeClauses}
+              onChangeOptions={onChangeOptions}
+              onChangeRanges={onChangeRanges}
+              onSearch={onSearch}
+            />
+          </div>
+        </Drawer>
       </div>
+
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
@@ -196,10 +234,15 @@ const HotelsTableComponent = ({
 };
 
 HotelsTableComponent.propTypes = {
+  clauses: PropTypes.arrayOf(SearchClause),
+  ranges: PropTypes.arrayOf(SearchRange),
+  options: PropTypes.arrayOf(SearchOption),
+  onChangeClauses: PropTypes.func,
+  onChangeRanges: PropTypes.func,
+  onChangeOptions: PropTypes.func,
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
-  hotelsBrief: PropTypes.arrayOf(HotelBrief).isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
@@ -225,6 +268,12 @@ HotelsTableComponent.propTypes = {
 };
 HotelsTableComponent.defaultProps = {
   roomViews: [],
+  clauses: [],
+  ranges: [],
+  options: [],
+  onChangeClauses: null,
+  onChangeRanges: null,
+  onChangeOptions: null,
 };
 
 export default HotelsTableComponent;
