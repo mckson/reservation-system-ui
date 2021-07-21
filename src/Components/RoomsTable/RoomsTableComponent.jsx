@@ -17,6 +17,7 @@ import {
   Collapse,
   Box,
   Drawer,
+  Checkbox,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import {
@@ -37,12 +38,11 @@ import RoomView from '../../Models/RoomView';
 import BaseSearch from '../../Common/BaseSearch/BaseSearch';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../Common/BaseSearch/SearchOption';
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    margin: 0,
     color: theme.palette.primary.main,
-    height: 40,
   },
   addButton: {
     margin: theme.spacing(1),
@@ -66,8 +66,6 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: 'unset',
     },
     background: theme.palette.background.paper,
-    // '&.Mui-selected': { background: theme.palette.grey[400] },
-    // '&.Mui-selected:hover': { background: theme.palette.grey[300] },
   },
   subrowTitle: {
     display: 'flex',
@@ -103,15 +101,12 @@ const RoomsTableComponent = ({
   const [totalCount, setTotalCount] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
-  // const [roomNames, setRoomNames] = useState([]);
 
   const classes = useStyles();
 
   const [searchClauses, setSearchClauses] = useState([
     new SearchClause('Room name', '', []),
     new SearchClause('Room number', '', []),
-    // new SearchClause('Smoking', 'Both', ['Allowed', 'No smoking', 'Both']),
-    // new SearchClause('Parking', 'Both', ['Available', 'Unavailable', 'Both']),
     new SearchClause('Facilities', [], [], true),
     new SearchClause('Room views', [], [], true),
   ]);
@@ -137,7 +132,10 @@ const RoomsTableComponent = ({
     ),
   ]);
 
-  const [searchOptions, setSearchOptions] = useState([]);
+  const [searchOptions, setSearchOptions] = useState([
+    new SearchOption('Allowed smoking', false),
+    new SearchOption('Parking', false),
+  ]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -175,25 +173,25 @@ const RoomsTableComponent = ({
   };
 
   useEffect(async () => {
-    const response = await API.getRooms(
-      page + 1,
-      rowsPerPage,
-      hotel.id,
-      '',
-      '',
-      searchClauses[0].value,
-      searchClauses[1].value,
-      searchRanges[0].value[0],
-      searchRanges[0].value[1],
-      searchRanges[1].value[0],
-      searchRanges[1].value[1],
-      searchRanges[2].value[0],
-      searchRanges[2].value[1],
-      searchRanges[3].value[0],
-      searchRanges[3].value[1],
-      searchClauses[2].value,
-      searchClauses[3].value
-    );
+    const response = await API.getRooms({
+      pageNumber: page + 1,
+      pageSize: rowsPerPage,
+      hotelId: hotel.id,
+      name: searchClauses[0].value,
+      number: searchClauses[1].value,
+      minFloorNumber: searchRanges[0].value[0],
+      maxFloorNumber: searchRanges[0].value[1],
+      minCapacity: searchRanges[1].value[0],
+      maxCapacity: searchRanges[1].value[1],
+      minArea: searchRanges[2].value[0],
+      maxArea: searchRanges[2].value[1],
+      minPrice: searchRanges[3].value[0],
+      maxPrice: searchRanges[3].value[1],
+      smoking: searchOptions[0].value,
+      parking: searchOptions[1].value,
+      facilities: searchClauses[2].value,
+      roomViews: searchClauses[3].value,
+    });
 
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
@@ -254,38 +252,42 @@ const RoomsTableComponent = ({
             <col width="auto" />
             <col width="auto" />
             <col width="auto" />
-            <col width="2.5%" />
+            <col width="auto" />
+            <col width="auto" />
+            <col width="1%" />
           </colgroup>
           <TableHead>
             <TableRow>
               <TableCell />
               <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Number</TableCell>
               <TableCell>Floor</TableCell>
-              <TableCell>Capacity</TableCell>
+              <TableCell>Beds</TableCell>
               <TableCell>Price</TableCell>
+              <TableCell>Area</TableCell>
+              <TableCell>Smoking</TableCell>
+              <TableCell>Parking</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
             {rooms != null ? (
-              rooms
-                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((room) => (
-                  <RoomRow
-                    room={room}
-                    roomViews={roomViews}
-                    onRefresh={handleRefresh}
-                    key={room.id}
-                    updateRoom={updateRoom}
-                    deleteRoom={deleteRoom}
-                    createRoomImage={createRoomImage}
-                    deleteRoomImage={deleteRoomImage}
-                    hotel={hotel}
-                    onError={onError}
-                    onSuccess={onSuccess}
-                  />
-                ))
+              rooms.map((room) => (
+                <RoomRow
+                  room={room}
+                  roomViews={roomViews}
+                  onRefresh={handleRefresh}
+                  key={room.id}
+                  updateRoom={updateRoom}
+                  deleteRoom={deleteRoom}
+                  createRoomImage={createRoomImage}
+                  deleteRoomImage={deleteRoomImage}
+                  hotel={hotel}
+                  onError={onError}
+                  onSuccess={onSuccess}
+                />
+              ))
             ) : (
               <div>Loading</div>
             )}
@@ -404,7 +406,7 @@ const RoomRow = ({
             paddingBottom: 0,
             paddingTop: 0,
           }}
-          colSpan={7}
+          colSpan={11}
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
@@ -474,10 +476,20 @@ const RoomRowMap = ({ room }) => {
   return (
     <>
       <TableCell>{room.id}</TableCell>
+      <TableCell>{room.name}</TableCell>
       <TableCell>{room.roomNumber}</TableCell>
       <TableCell>{room.floorNumber}</TableCell>
       <TableCell>{room.capacity}</TableCell>
       <TableCell>${room.price}</TableCell>
+      <TableCell>
+        {room.area} m<sup>2</sup>
+      </TableCell>
+      <TableCell>
+        <Checkbox checked={room.smoking} readOnly color="primary" />
+      </TableCell>
+      <TableCell>
+        <Checkbox checked={room.parking} readOnly color="primary" />
+      </TableCell>
     </>
   );
 };

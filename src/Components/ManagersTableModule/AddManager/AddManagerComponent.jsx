@@ -37,6 +37,9 @@ const AddManagerComponent = ({
       user.hotels.push(hotel.id);
 
       [managerResponse, errorResponse] = await updateUser(user);
+      if (errorResponse) {
+        user.hotels.pop();
+      }
     } else {
       errorResponse = 'User is already manager of current hotel';
     }

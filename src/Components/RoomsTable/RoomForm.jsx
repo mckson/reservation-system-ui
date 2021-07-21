@@ -187,7 +187,7 @@ const RoomForm = ({
                   type="number"
                   InputProps={{
                     inputProps: {
-                      step: 1,
+                      step: 0.01,
                       min: 0,
                     },
                   }}

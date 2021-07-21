@@ -50,7 +50,7 @@ const hotelsUrl = (
     services ? services.map((service) => `&services=${service}`).join('') : ''
   }`;
 
-const roomsUrl = (
+const roomsUrl = ({
   pageNumber,
   pageSize,
   hotelId,
@@ -66,9 +66,11 @@ const roomsUrl = (
   maxArea,
   minPrice,
   maxPrice,
+  smoking,
+  parking,
   facilities,
-  roomViews
-) =>
+  roomViews,
+}) =>
   `/Rooms?pageNumber=${pageNumber}&pageSize=${
     pageSize || ''
   }&hotelId=${hotelId}&dateIn=${dateIn || ''}&dateOut=${dateOut || ''}&name=${
@@ -79,7 +81,9 @@ const roomsUrl = (
     minCapacity || ''
   }&maxCapacity=${maxCapacity || ''}&minArea=${minArea || ''}&maxArea=${
     maxArea || ''
-  }&minPrice=${minPrice || ''}&maxPrice=${maxPrice || ''}${
+  }&minPrice=${minPrice || ''}&maxPrice=${maxPrice || ''}&smoking=${
+    smoking || false
+  }&parking=${parking || false}${
     facilities
       ? facilities.map((facility) => `&facilities=${facility}`).join('')
       : ''
@@ -205,48 +209,10 @@ const getUsers = (pageNumber, pageSize, email, firstName, lastName) => {
   });
 };
 
-const getRooms = (
-  pageNumber,
-  pageSize,
-  hotelId,
-  dateIn,
-  dateOut,
-  name,
-  number,
-  minFloorNumber,
-  maxFloorNumber,
-  minCapacity,
-  maxCapacity,
-  minArea,
-  maxArea,
-  minPrice,
-  maxPrice,
-  facilities,
-  roomViews
-) => {
+const getRooms = (searchOptions) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(
-        roomsUrl(
-          pageNumber,
-          pageSize,
-          hotelId,
-          dateIn,
-          dateOut,
-          name,
-          number,
-          minFloorNumber,
-          maxFloorNumber,
-          minCapacity,
-          maxCapacity,
-          minArea,
-          maxArea,
-          minPrice,
-          maxPrice,
-          facilities,
-          roomViews
-        )
-      )
+      .get(roomsUrl(searchOptions))
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });

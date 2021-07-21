@@ -11,7 +11,7 @@ import {
   Grid,
   Slider,
   Typography,
-  Input,
+  OutlinedInput,
 } from '@material-ui/core';
 import { AddOutlined, RotateLeftOutlined } from '@material-ui/icons';
 import SearchClause from './SearchClause';
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   },
   rangeInput: {
     margin: theme.spacing(0, 1),
+  },
+  input: {
+    height: 30,
   },
 }));
 
@@ -174,6 +177,7 @@ const BaseSearchComponent = ({
               <FormControlLabel
                 control={
                   <Switch
+                    color="primary"
                     size="small"
                     checked={searchOption.value}
                     onChange={() => onChangeSearchOption(searchOption)}
@@ -194,6 +198,7 @@ const BaseSearchComponent = ({
                 {searchRange.displayValue(searchRange.value[1])})
               </Typography>
               <Slider
+                color="primary"
                 value={searchRange.value}
                 aria-labelledby="range-slider"
                 onChange={(event, value) =>
@@ -205,8 +210,8 @@ const BaseSearchComponent = ({
                 max={searchRange.max}
               />
               <div className={classes.itemContent}>
-                <Input
-                  className={classes.rangeInput}
+                <OutlinedInput
+                  classes={{ root: classes.input }}
                   value={searchRange.value[0]}
                   onBlur={() => {
                     const currentRange = searchRange.value;
@@ -237,9 +242,10 @@ const BaseSearchComponent = ({
                     onChangeSearchRange(searchRange, newValue);
                   }}
                 />
-                <Input
+                <OutlinedInput
                   className={classes.rangeInput}
                   value={searchRange.value[1]}
+                  classes={{ root: classes.input }}
                   onBlur={() => {
                     const currentRange = searchRange.value;
                     let newValue = searchRange.value[1];
@@ -288,6 +294,38 @@ const BaseSearchComponent = ({
             color="primary"
           >
             Search
+          </Button>
+        </Grid>
+        <Grid item xs={12} className={classes.item}>
+          <Button
+            fullWidth
+            onClick={() => {
+              const newSearchClauses = [...searchClauses];
+              newSearchClauses.forEach((searchClause) => {
+                // eslint-disable-next-line no-param-reassign
+                searchClause.value = '';
+              });
+              onChangeSearchClauses(newSearchClauses);
+
+              const newSearchOptions = [...searchOptions];
+              newSearchOptions.forEach((searchOption) => {
+                // eslint-disable-next-line no-param-reassign
+                searchOption.value = false;
+              });
+              onChangeSearchOptions(newSearchOptions);
+
+              const newSearchRanges = [...searchRanges];
+              newSearchRanges.forEach((searchRange) => {
+                // eslint-disable-next-line no-param-reassign
+                searchRange.value = ['', ''];
+              });
+              onChangeSearchRanges(newSearchRanges);
+            }}
+            style={{ height: 40 }}
+            variant="contained"
+            color="primary"
+          >
+            Reset all
           </Button>
         </Grid>
       </Grid>
