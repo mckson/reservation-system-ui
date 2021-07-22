@@ -17,8 +17,6 @@ const parseJwt = (token) => {
 
 const getUserIdFromStorage = () => {
   const jwt = localStorage.getItem('access_token');
-  // eslint-disable-next-line no-debugger
-  debugger;
   if (jwt) {
     const userDecoded = parseJwt(jwt);
     const userId = userDecoded.id;

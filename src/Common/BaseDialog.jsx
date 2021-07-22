@@ -25,10 +25,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const BaseDialog = ({ open, close, title, contentComponent, width }) => {
+const BaseDialog = ({ open, close, title, width, children, notFullWidth }) => {
   const classes = useStyles();
   return (
-    <Dialog open={open} maxWidth={width} fullWidth>
+    <Dialog open={open} maxWidth={width} fullWidth={!notFullWidth}>
       <DialogTitle>
         <div className={classes.titleSection}>
           <Typography className={classes.title} variant="h6">
@@ -43,22 +43,27 @@ const BaseDialog = ({ open, close, title, contentComponent, width }) => {
           </IconButton>
         </div>
       </DialogTitle>
-      <DialogContent>{contentComponent}</DialogContent>
+      <DialogContent>{children}</DialogContent>
     </Dialog>
   );
 };
 
 BaseDialog.propTypes = {
   open: PropTypes.bool.isRequired,
+  notFullWidth: PropTypes.bool,
   close: PropTypes.func.isRequired,
   title: PropTypes.string,
-  contentComponent: PropTypes.elementType.isRequired,
   width: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };
 
 BaseDialog.defaultProps = {
   title: 'Default title',
   width: 'sm',
+  notFullWidth: false,
 };
 
 export default BaseDialog;

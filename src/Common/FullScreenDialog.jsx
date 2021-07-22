@@ -26,7 +26,7 @@ const Transition = forwardRef(function Transistion(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const FullScreenDialog = ({ isOpen, close, title, contentComponent }) => {
+const FullScreenDialog = ({ isOpen, close, title, children }) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +43,7 @@ const FullScreenDialog = ({ isOpen, close, title, contentComponent }) => {
           <CloseIcon />
         </IconButton>
       </Toolbar>
-      {contentComponent}
+      {children}
     </Dialog>
   );
 };
@@ -52,7 +52,10 @@ FullScreenDialog.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  contentComponent: PropTypes.elementType.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };
 
 export default FullScreenDialog;

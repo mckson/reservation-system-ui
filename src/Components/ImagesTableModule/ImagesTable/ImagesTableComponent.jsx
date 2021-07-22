@@ -15,7 +15,6 @@ import {
 } from '@material-ui/core';
 import { AddOutlined } from '@material-ui/icons';
 import ImageRow from '../ImageRow/ImageRow';
-import Image from '../../../Models/HotelImage';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -117,7 +116,7 @@ const ImagesTableComponent = ({
 
 ImagesTableComponent.propTypes = {
   openCreate: PropTypes.func.isRequired,
-  images: PropTypes.arrayOf(Image).isRequired,
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
   deleteImage: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,

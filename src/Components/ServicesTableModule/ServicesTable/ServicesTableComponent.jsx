@@ -134,10 +134,10 @@ const ServicesTableComponent = ({
 
 ServicesTableComponent.propTypes = {
   services: PropTypes.arrayOf(Service).isRequired,
+  hotel: PropTypes.instanceOf(Hotel).isRequired,
   createService: PropTypes.func.isRequired,
   deleteService: PropTypes.func.isRequired,
   updateService: PropTypes.func.isRequired,
-  hotel: PropTypes.instanceOf(Hotel).isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
 };

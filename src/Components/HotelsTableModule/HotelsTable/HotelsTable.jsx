@@ -82,6 +82,7 @@ const HotelsTable = ({
 };
 
 HotelsTable.propTypes = {
+  onSearch: PropTypes.func.isRequired,
   clauses: PropTypes.arrayOf(SearchClause),
   ranges: PropTypes.arrayOf(SearchRange),
   options: PropTypes.arrayOf(SearchOption),
@@ -94,7 +95,6 @@ HotelsTable.propTypes = {
   hotelsBrief: PropTypes.arrayOf(HotelBrief).isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
-  onSearch: PropTypes.func.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
   pageSize: PropTypes.number.isRequired,

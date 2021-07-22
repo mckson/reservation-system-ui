@@ -144,219 +144,208 @@ const EditUserComponent = ({
     }
   };
 
-  // const handleResetRolesSelection = () => {
-  //   setSelectedRoles(['User']);
-  // };
-
   const handleResetError = () => {
     setError(null);
   };
 
   return (
-    <BaseDialog
-      title={dialogTitle}
-      open={open}
-      close={close}
-      contentComponent={
-        <div className={classes.paper}>
-          <div className={classes.form}>
-            <Formik
-              initialValues={{
-                userName: user?.userName ? user.userName : '',
-                email: user?.email ? user.email : '',
-                firstName: user?.firstName ? user.firstName : '',
-                lastName: user?.lastName ? user.lastName : '',
-                phoneNumber: user?.phoneNumber ? user.phoneNumber : '',
-                oldPassword: '',
-                newPassword: '',
-                passwordConfirm: '',
-                dateOfBirth: user?.dateOfBirth
-                  ? toISODate(user.dateOfBirth)
-                  : '',
-              }}
-              validationSchema={validationSchema}
-              onSubmit={(values) => {
-                // eslint-disable-next-line no-param-reassign
-                values.roles = selectedRoles;
-                // eslint-disable-next-line no-param-reassign
-                values.hotels = selectedHotels.map((hotel) => hotel.id);
-                onUpdateUser(values);
-              }}
-            >
-              <Form>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <MyTextField
-                      required
-                      fullWidth
-                      label="Email"
-                      name="email"
-                      type="email"
-                      placeholder="email@email.com"
-                    />
-                  </Grid>
+    <BaseDialog title={dialogTitle} open={open} close={close}>
+      <div className={classes.paper}>
+        <div className={classes.form}>
+          <Formik
+            initialValues={{
+              userName: user?.userName ? user.userName : '',
+              email: user?.email ? user.email : '',
+              firstName: user?.firstName ? user.firstName : '',
+              lastName: user?.lastName ? user.lastName : '',
+              phoneNumber: user?.phoneNumber ? user.phoneNumber : '',
+              oldPassword: '',
+              newPassword: '',
+              passwordConfirm: '',
+              dateOfBirth: user?.dateOfBirth ? toISODate(user.dateOfBirth) : '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => {
+              // eslint-disable-next-line no-param-reassign
+              values.roles = selectedRoles;
+              // eslint-disable-next-line no-param-reassign
+              values.hotels = selectedHotels.map((hotel) => hotel.id);
+              onUpdateUser(values);
+            }}
+          >
+            <Form>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <MyTextField
+                    required
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="email@email.com"
+                  />
+                </Grid>
 
-                  <Grid item xs={12}>
-                    <MyTextField
-                      required
-                      fullWidth
-                      label="User Name"
-                      name="userName"
-                      type="text"
-                      placeholder="nickname"
-                    />
-                  </Grid>
+                <Grid item xs={12}>
+                  <MyTextField
+                    required
+                    fullWidth
+                    label="User Name"
+                    name="userName"
+                    type="text"
+                    placeholder="nickname"
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <MyTextField
-                      required
-                      fullWidth
-                      label="First Name"
-                      name="firstName"
-                      type="text"
-                      placeholder="Surname"
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MyTextField
+                    required
+                    fullWidth
+                    label="First Name"
+                    name="firstName"
+                    type="text"
+                    placeholder="Surname"
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <MyTextField
-                      required
-                      fullWidth
-                      label="Last Name"
-                      name="lastName"
-                      type="text"
-                      placeholder="Name"
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MyTextField
+                    required
+                    fullWidth
+                    label="Last Name"
+                    name="lastName"
+                    type="text"
+                    placeholder="Name"
+                  />
+                </Grid>
 
-                  <Grid item xs={12}>
-                    <MyTextField
-                      required
-                      fullWidth
-                      label="Phone"
-                      name="phoneNumber"
-                      type="text"
-                      placeholder="+375101234567"
-                    />
-                  </Grid>
+                <Grid item xs={12}>
+                  <MyTextField
+                    required
+                    fullWidth
+                    label="Phone"
+                    name="phoneNumber"
+                    type="text"
+                    placeholder="+375101234567"
+                  />
+                </Grid>
 
-                  <Grid item xs={12}>
-                    <MyTextField
-                      fullWidth
-                      label="Old password"
-                      name="oldPassword"
-                      type="password"
-                      placeholder="Password"
-                    />
-                  </Grid>
+                <Grid item xs={12}>
+                  <MyTextField
+                    fullWidth
+                    label="Old password"
+                    name="oldPassword"
+                    type="password"
+                    placeholder="Password"
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <MyTextField
-                      fullWidth
-                      label="New password"
-                      name="newPassword"
-                      type="password"
-                      placeholder="Password"
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MyTextField
+                    fullWidth
+                    label="New password"
+                    name="newPassword"
+                    type="password"
+                    placeholder="Password"
+                  />
+                </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <MyTextField
-                      fullWidth
-                      label="Password Confirm"
-                      name="passwordConfirm"
-                      type="password"
-                      placeholder="Password"
-                    />
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MyTextField
+                    fullWidth
+                    label="Password Confirm"
+                    name="passwordConfirm"
+                    type="password"
+                    placeholder="Password"
+                  />
+                </Grid>
 
-                  <Grid item xs={12}>
-                    <MyTextField
-                      required
-                      fullWidth
-                      label="Date of Birth"
-                      name="dateOfBirth"
-                      type="date"
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
+                <Grid item xs={12}>
+                  <MyTextField
+                    required
+                    fullWidth
+                    label="Date of Birth"
+                    name="dateOfBirth"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
 
+                <Grid item xs={12}>
+                  <Autocomplete
+                    multiple
+                    limitTags={3}
+                    value={selectedRoles}
+                    size="small"
+                    options={roles}
+                    getOptionLabel={(role) => `${role}`}
+                    onChange={(event, newValues) => {
+                      setSelectedRoles(newValues);
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="outlined" />
+                    )}
+                  />
+                </Grid>
+
+                {selectedRoles.includes(Constants.managerRole) ||
+                selectedRoles.includes(Constants.adminRole) ? (
                   <Grid item xs={12}>
                     <Autocomplete
                       multiple
                       limitTags={3}
-                      value={selectedRoles}
+                      value={selectedHotels}
                       size="small"
-                      options={roles}
-                      getOptionLabel={(role) => `${role}`}
+                      options={hotels}
+                      getOptionLabel={(hotel) =>
+                        `${hotel.name} (${hotel.location.buildingNumber} ${hotel.location.street} St., ${hotel.location.city}, ${hotel.location.region}, ${hotel.location.country})`
+                      }
                       onChange={(event, newValues) => {
-                        setSelectedRoles(newValues);
+                        setSelectedHotels(newValues);
                       }}
                       renderInput={(params) => (
                         <TextField {...params} variant="outlined" />
                       )}
                     />
                   </Grid>
+                ) : null}
 
-                  {selectedRoles.includes(Constants.managerRole) ||
-                  selectedRoles.includes(Constants.adminRole) ? (
-                    <Grid item xs={12}>
-                      <Autocomplete
-                        multiple
-                        limitTags={3}
-                        value={selectedHotels}
-                        size="small"
-                        options={hotels}
-                        getOptionLabel={(hotel) =>
-                          `${hotel.name} (${hotel.location.buildingNumber} ${hotel.location.street} St., ${hotel.location.city}, ${hotel.location.region}, ${hotel.location.country})`
-                        }
-                        onChange={(event, newValues) => {
-                          setSelectedHotels(newValues);
-                        }}
-                        renderInput={(params) => (
-                          <TextField {...params} variant="outlined" />
-                        )}
-                      />
-                    </Grid>
-                  ) : null}
-
-                  <Button
-                    fullWidth
-                    className={classes.submit}
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                  >
-                    Update user
-                  </Button>
-                </Grid>
-              </Form>
-            </Formik>
-          </div>
-          {error != null ? (
-            <Alert
-              fullWidth
-              variant="outlined"
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    handleResetError();
-                  }}
+                <Button
+                  fullWidth
+                  className={classes.submit}
+                  variant="contained"
+                  type="submit"
+                  color="primary"
                 >
-                  <CloseOutlined fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {error}
-            </Alert>
-          ) : null}
+                  Update user
+                </Button>
+              </Grid>
+            </Form>
+          </Formik>
         </div>
-      }
-    />
+        {error != null ? (
+          <Alert
+            fullWidth
+            variant="outlined"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  handleResetError();
+                }}
+              >
+                <CloseOutlined fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
+      </div>
+    </BaseDialog>
   );
 };
 

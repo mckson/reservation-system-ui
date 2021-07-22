@@ -198,28 +198,32 @@ const HotelsTableComponent = ({
                 />
               ))
             ) : (
-              <div>Loading</div>
+              <TableRow>Loading</TableRow>
             )}
           </TableBody>
           <TableFooter className={classes.footer}>
-            {role === Constants.adminRole ? (
-              <Button
-                color="primary"
-                className={classes.addButton}
-                startIcon={<AddIcon />}
-                onClick={() => setIsAdd(!isAdd)}
-              >
-                Add new hotel
-              </Button>
-            ) : null}
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              rowsPerPage={rowsPerPage}
-              count={totalCount}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangePageSize}
-            />
+            <TableRow>
+              {role === Constants.adminRole ? (
+                <TableCell>
+                  <Button
+                    color="primary"
+                    className={classes.addButton}
+                    startIcon={<AddIcon />}
+                    onClick={() => setIsAdd(!isAdd)}
+                  >
+                    Add new hotel
+                  </Button>
+                </TableCell>
+              ) : null}
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPage={rowsPerPage}
+                count={totalCount}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangePageSize}
+              />
+            </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>
@@ -234,6 +238,7 @@ const HotelsTableComponent = ({
 };
 
 HotelsTableComponent.propTypes = {
+  onSearch: PropTypes.func.isRequired,
   clauses: PropTypes.arrayOf(SearchClause),
   ranges: PropTypes.arrayOf(SearchRange),
   options: PropTypes.arrayOf(SearchOption),
@@ -246,7 +251,6 @@ HotelsTableComponent.propTypes = {
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
-  onSearch: PropTypes.func.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
   deleteHotel: PropTypes.func.isRequired,

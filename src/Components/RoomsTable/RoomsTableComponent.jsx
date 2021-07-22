@@ -198,8 +198,8 @@ const RoomsTableComponent = ({
       maxPrice: searchRanges[3].value[1],
       smoking: searchOptions[0].value,
       parking: searchOptions[1].value,
-      facilities: searchClauses[2].value,
-      roomViews: searchClauses[3].value,
+      facilities: searchClauses[2].value.map((value) => value.value),
+      roomViews: searchClauses[3].value.map((value) => value.value),
     });
 
     if (response) {

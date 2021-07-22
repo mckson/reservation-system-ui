@@ -89,88 +89,77 @@ const HotelsManagementComponent = ({
   };
 
   return (
-    <FullScreenDialog
-      isOpen={isOpen}
-      close={close}
-      title="Hotels management"
-      contentComponent={
-        <>
-          <div className={classes.content}>
-            <div className={classes.contentItem}>
-              <HotelsTable
-                role={role}
-                users={users}
-                hotels={hotels}
-                hotelsBrief={hotelsBrief}
-                roomViews={roomViews}
-                totalCount={totalCount}
-                onSearch={onSearch}
-                clauses={clauses}
-                options={options}
-                ranges={ranges}
-                onChangeClauses={onChangeClauses}
-                onChangeRanges={onChangeRanges}
-                onChangeOptions={onChangeOptions}
-                pageChanged={pageChanged}
-                pageSize={pageSize}
-                pageSizeChanged={pageSizeChanged}
-                deleteHotel={deleteHotel}
-                updateHotel={updateHotel}
-                createHotel={createHotel}
-                createRoom={createRoom}
-                updateRoom={updateRoom}
-                deleteRoom={deleteRoom}
-                createService={createService}
-                updateService={updateService}
-                deleteService={deleteService}
-                updateUser={updateUser}
-                createImage={createImage}
-                deleteImage={deleteImage}
-                createRoomImage={createRoomImage}
-                deleteRoomImage={deleteRoomImage}
-                onError={handleError}
-                onSuccess={handleSuccess}
-              />
-            </div>
-            {role && role === Constants.adminRole ? (
-              <div className={classes.contentItem}>
-                <RoomViewTable
-                  role={role}
-                  roomViews={roomViews}
-                  createRoomView={createRoomView}
-                  updateRoomView={updateRoomView}
-                  deleteRoomView={deleteRoomView}
-                  onError={handleError}
-                  onSuccess={handleSuccess}
-                />
-              </div>
-            ) : null}
+    <FullScreenDialog isOpen={isOpen} close={close} title="Hotels management">
+      <div className={classes.content}>
+        <div className={classes.contentItem}>
+          <HotelsTable
+            role={role}
+            users={users}
+            hotels={hotels}
+            hotelsBrief={hotelsBrief}
+            roomViews={roomViews}
+            totalCount={totalCount}
+            onSearch={onSearch}
+            clauses={clauses}
+            options={options}
+            ranges={ranges}
+            onChangeClauses={onChangeClauses}
+            onChangeRanges={onChangeRanges}
+            onChangeOptions={onChangeOptions}
+            pageChanged={pageChanged}
+            pageSize={pageSize}
+            pageSizeChanged={pageSizeChanged}
+            deleteHotel={deleteHotel}
+            updateHotel={updateHotel}
+            createHotel={createHotel}
+            createRoom={createRoom}
+            updateRoom={updateRoom}
+            deleteRoom={deleteRoom}
+            createService={createService}
+            updateService={updateService}
+            deleteService={deleteService}
+            updateUser={updateUser}
+            createImage={createImage}
+            deleteImage={deleteImage}
+            createRoomImage={createRoomImage}
+            deleteRoomImage={deleteRoomImage}
+            onError={handleError}
+            onSuccess={handleSuccess}
+          />
+        </div>
+        {role && role === Constants.adminRole ? (
+          <div className={classes.contentItem}>
+            <RoomViewTable
+              role={role}
+              roomViews={roomViews}
+              createRoomView={createRoomView}
+              updateRoomView={updateRoomView}
+              deleteRoomView={deleteRoomView}
+              onError={handleError}
+              onSuccess={handleSuccess}
+            />
           </div>
-          <Snackbar
-            open={!!error}
-            autoHideDuration={5000}
-            onClose={handleResetError}
-          >
-            <Alert onClose={handleResetError} severity="error" variant="filled">
-              {error}
-            </Alert>
-          </Snackbar>
-          <Snackbar
-            open={!!success}
-            autoHideDuration={5000}
-            onClose={handleResetSuccess}
-          >
-            <Alert
-              onClose={handleResetSuccess}
-              severity="success"
-              variant="filled"
-            >
-              {success}
-            </Alert>
-          </Snackbar>
-        </>
-      }
-    />
+        ) : null}
+      </div>
+      <Snackbar
+        open={!!error}
+        autoHideDuration={5000}
+        onClose={handleResetError}
+      >
+        <Alert onClose={handleResetError} severity="error" variant="filled">
+          {error}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={!!success}
+        autoHideDuration={5000}
+        onClose={handleResetSuccess}
+      >
+        <Alert onClose={handleResetSuccess} severity="success" variant="filled">
+          {success}
+        </Alert>
+      </Snackbar>
+    </FullScreenDialog>
   );
 };
 

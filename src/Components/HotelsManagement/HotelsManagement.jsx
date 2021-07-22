@@ -11,15 +11,15 @@ import RoomView from '../../Models/RoomView';
 import HotelBrief from '../../Models/HotelBrief';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../Common/BaseSearch/SearchRange';
-// import HotelSearchParameters from '../../Models/HotelSearchparameters';
 
 const HotelsManagement = ({ isOpen, close }) => {
   const [users, setUsers] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [hotelsBrief, setHotelsBrief] = useState([]);
+  const [, setHotelNames] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [roomViews, setRoomViews] = useState([]);
-  const [totalResults, setTotalResults] = useState(null);
+  const [totalResults, setTotalResults] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchClauses, setSearchClauses] = useState([
@@ -70,6 +70,15 @@ const HotelsManagement = ({ isOpen, close }) => {
     );
 
     setHotelsBrief(respondedHotelsBrief);
+  };
+
+  const requestHotelNames = async () => {
+    const respondedHotelNames = await API.getAllHotelNames();
+
+    setHotelNames(respondedHotelNames);
+    const newClauses = [...searchClauses];
+    newClauses[0] = new SearchClause('Hotel name', null, respondedHotelNames);
+    setSearchClauses(newClauses);
   };
 
   const requestHotels = async () => {
@@ -373,6 +382,7 @@ const HotelsManagement = ({ isOpen, close }) => {
   useEffect(async () => {
     await requestRoomViews();
     await requestHotelsBrief();
+    await requestHotelNames();
 
     if (getRole(loggedUser) === Constants.adminRole) {
       await requestUsers();

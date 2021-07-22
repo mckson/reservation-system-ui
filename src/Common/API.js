@@ -1,4 +1,6 @@
 import axios from 'axios';
+import QueryString from 'qs';
+// import QueryString from 'qs';
 import LocalStorageService from './LocalStorageService';
 
 const localStorageService = LocalStorageService.getService();
@@ -27,10 +29,7 @@ const roomNamesUrl = (hotelId) => `/Rooms/Names/${hotelId || ''}`;
 
 const roomNumbersUrl = (hotelId) => `/Rooms/Numbers/${hotelId || ''}`;
 
-const usersUrl = (pageNumber, pageSize, email, firstName, lastName) =>
-  `/Users?pageNumber=${pageNumber}&pageSize=${pageSize}&email=${
-    email || ''
-  }&firstName=${firstName || ''}&lastName=${lastName || ''}`;
+// const usersUrl = () => `/Users`;
 
 const hotelsUrl = ({
   pageNumber,
@@ -173,6 +172,15 @@ const getAllHotelsNameAndId = () => {
   });
 };
 
+const getAllHotelNames = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get('Hotels/Names')
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
 const getHotels = ({
   pageNumber,
   pageSize,
@@ -214,10 +222,28 @@ const getHotels = ({
   });
 };
 
-const getUsers = (pageNumber, pageSize, email, firstName, lastName) => {
+const getUsers = ({
+  pageNumber,
+  pageSize,
+  email,
+  firstName,
+  lastName,
+  roles,
+}) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(usersUrl(pageNumber, pageSize, email, firstName, lastName))
+      .get('/Users', {
+        params: {
+          pageNumber,
+          pageSize,
+          email,
+          firstName,
+          lastName,
+          roles,
+        },
+        paramsSerializer: (params) =>
+          QueryString.stringify(params, { arrayFormat: 'repeat' }),
+      })
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
@@ -600,4 +626,5 @@ export default {
   unlockRoom,
   getRoomNames,
   getRoomNumbers,
+  getAllHotelNames,
 };

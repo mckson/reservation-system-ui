@@ -56,7 +56,7 @@ const ImagesTable = ({
 ImagesTable.propTypes = {
   hotelId: PropTypes.string,
   roomId: PropTypes.string,
-  images: PropTypes.arrayOf(Image).isRequired,
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
   deleteImage: PropTypes.func.isRequired,
   createImage: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,

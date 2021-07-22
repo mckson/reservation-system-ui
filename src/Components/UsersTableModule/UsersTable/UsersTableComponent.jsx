@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
+  Drawer,
   Paper,
   Table,
   TableBody,
@@ -13,13 +14,15 @@ import {
   TableRow,
   makeStyles,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { SearchOutlined, AddOutlined } from '@material-ui/icons';
 import User from '../../../Models/User';
 import UserRow from '../UserRow/UserRow';
 import CreateUserComponent from '../CreateUserComponent';
 import HotelBrief from '../../../Models/HotelBrief';
-import SearchUsers from '../SearchUsers/SearchUsers';
-import UserBrief from '../../../Models/UserBrief';
+import BaseSearch from '../../../Common/BaseSearch/BaseSearch';
+import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../../Common/BaseSearch/SearchOption';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -39,8 +42,6 @@ const useStyles = makeStyles((theme) => ({
 
 const UsersTableComponent = ({
   users,
-  usersBrief,
-  onChangeSearchClauses,
   hotels,
   totalCount,
   pageChanged,
@@ -51,16 +52,22 @@ const UsersTableComponent = ({
   deleteUser,
   onError,
   onSuccess,
+  onSearch,
+  clauses,
+  ranges,
+  options,
+  onChangeClauses,
+  onChangeRanges,
+  onChangeOptions,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(pageSize);
   const [isAdd, setIsAdd] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
 
   const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     setPage(newPage);
     pageChanged(newPage + 1);
   };
@@ -83,11 +90,30 @@ const UsersTableComponent = ({
 
   return (
     <>
-      <div className={classes.search}>
-        <SearchUsers
-          users={usersBrief}
-          onChangeSearchClauses={onChangeSearchClauses}
-        />
+      <Button
+        onClick={() => setOpenSearch(true)}
+        startIcon={<SearchOutlined />}
+      >
+        Setup user search options
+      </Button>
+      <div className={classes.searchSection}>
+        <Drawer
+          open={openSearch}
+          onClose={() => setOpenSearch(false)}
+          classes={{ paper: classes.searchSection }}
+        >
+          <div>
+            <BaseSearch
+              clauses={clauses}
+              ranges={ranges}
+              options={options}
+              onChangeClauses={onChangeClauses}
+              onChangeOptions={onChangeOptions}
+              onChangeRanges={onChangeRanges}
+              onSearch={onSearch}
+            />
+          </div>
+        </Drawer>
       </div>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
@@ -119,26 +145,30 @@ const UsersTableComponent = ({
                 />
               ))
             ) : (
-              <div>No users</div>
+              <TableRow>No users</TableRow>
             )}
           </TableBody>
           <TableFooter>
-            <Button
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={() => setIsAdd(!isAdd)}
-              className={classes.addButton}
-            >
-              Add new user
-            </Button>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 15]}
-              rowsPerPage={rowsPerPage}
-              count={totalCount}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangePageSize}
-            />
+            <TableRow>
+              <TableCell>
+                <Button
+                  color="primary"
+                  startIcon={<AddOutlined />}
+                  onClick={() => setIsAdd(!isAdd)}
+                  className={classes.addButton}
+                >
+                  Add new user
+                </Button>
+              </TableCell>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 15]}
+                rowsPerPage={rowsPerPage}
+                count={totalCount}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangePageSize}
+              />
+            </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>
@@ -154,9 +184,14 @@ const UsersTableComponent = ({
 };
 
 UsersTableComponent.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+  clauses: PropTypes.arrayOf(SearchClause),
+  ranges: PropTypes.arrayOf(SearchRange),
+  options: PropTypes.arrayOf(SearchOption),
+  onChangeClauses: PropTypes.func,
+  onChangeRanges: PropTypes.func,
+  onChangeOptions: PropTypes.func,
   users: PropTypes.arrayOf(User),
-  usersBrief: PropTypes.arrayOf(UserBrief).isRequired,
-  onChangeSearchClauses: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(HotelBrief),
   totalCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
@@ -171,6 +206,12 @@ UsersTableComponent.propTypes = {
 UsersTableComponent.defaultProps = {
   users: [],
   hotels: [],
+  clauses: [],
+  ranges: [],
+  options: [],
+  onChangeClauses: null,
+  onChangeRanges: null,
+  onChangeOptions: null,
 };
 
 export default UsersTableComponent;

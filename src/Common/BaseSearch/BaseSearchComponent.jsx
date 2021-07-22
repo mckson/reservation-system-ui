@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Autocomplete } from '@material-ui/lab';
@@ -104,8 +105,13 @@ const BaseSearchComponent = ({
     <div className={classes.root}>
       <Grid container>
         <Grid container item xs={12}>
-          {searchClauses.map((searchClause) => (
-            <Grid item xs={12} className={classes.item}>
+          {searchClauses.map((searchClause, index) => (
+            <Grid
+              item
+              xs={12}
+              className={classes.item}
+              key={`${searchClause.name}-${index}`}
+            >
               <Typography gutterBottom>{searchClause.name}</Typography>
               <div className={classes.itemContent}>
                 <Autocomplete
@@ -161,7 +167,12 @@ const BaseSearchComponent = ({
                   }
                 />
                 <IconButton
-                  onClick={() => onChangeSearchClause(searchClause, '')}
+                  onClick={() =>
+                    onChangeSearchClause(
+                      searchClause,
+                      searchClause.multiple ? [] : ''
+                    )
+                  }
                   size="small"
                 >
                   <RotateLeftOutlined />
@@ -172,8 +183,13 @@ const BaseSearchComponent = ({
         </Grid>
 
         <Grid container item xs={12}>
-          {searchOptions.map((searchOption) => (
-            <Grid item xs={12} className={classes.item}>
+          {searchOptions.map((searchOption, index) => (
+            <Grid
+              item
+              xs={12}
+              className={classes.item}
+              key={`${searchOption.name}-${index}`}
+            >
               <FormControlLabel
                 control={
                   <Switch
@@ -190,8 +206,13 @@ const BaseSearchComponent = ({
         </Grid>
 
         <Grid container item xs={12}>
-          {searchRanges.map((searchRange) => (
-            <Grid item xs={12} className={classes.item}>
+          {searchRanges.map((searchRange, index) => (
+            <Grid
+              item
+              xs={12}
+              className={classes.item}
+              key={`${searchRange.name}-${index}`}
+            >
               <Typography id="range-slider" gutterBottom>
                 {searchRange.name} (
                 {searchRange.displayValue(searchRange.value[0])} -{' '}
@@ -303,7 +324,7 @@ const BaseSearchComponent = ({
               const newSearchClauses = [...searchClauses];
               newSearchClauses.forEach((searchClause) => {
                 // eslint-disable-next-line no-param-reassign
-                searchClause.value = '';
+                searchClause.value = searchClause.multiple ? [] : '';
               });
               onChangeSearchClauses(newSearchClauses);
 

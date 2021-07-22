@@ -22,6 +22,7 @@ import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
 import Constants from '../../../Common/Constants';
 import useRowStyles from '../../../Common/Styles/TableRowStyles';
 import RoomView from '../../../Models/RoomView';
+import Service from '../../../Models/Service';
 
 const HotelRowComponent = ({
   role,
@@ -148,7 +149,9 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openServices}>
                   <ServicesTable
-                    services={hotel.services}
+                    services={hotel.services.map(
+                      (service) => new Service(service)
+                    )}
                     createService={createService}
                     updateService={updateService}
                     deleteService={deleteService}
@@ -219,13 +222,23 @@ const HotelRowComponent = ({
           </Collapse>
         </TableCell>
       </TableRow>
-      <EditHotelComponent
-        hotel={hotel}
-        open={isEdit}
-        close={handleEditClose}
-        updateHotel={updateHotel}
-        onSuccess={onSuccess}
-      />
+      <TableRow>
+        <TableCell
+          style={{
+            paddingBottom: 0,
+            paddingTop: 0,
+          }}
+          colSpan={11}
+        >
+          <EditHotelComponent
+            hotel={hotel}
+            open={isEdit}
+            close={handleEditClose}
+            updateHotel={updateHotel}
+            onSuccess={onSuccess}
+          />
+        </TableCell>
+      </TableRow>
     </>
   );
 };

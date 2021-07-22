@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LabeledInfo = ({ icon, labelComponent, infoComponent }) => {
+const LabeledInfo = ({ icon, labelComponent, children }) => {
   const classes = useStyles();
   return (
     <div className={classes.labeledInfo}>
@@ -25,7 +25,7 @@ const LabeledInfo = ({ icon, labelComponent, infoComponent }) => {
         {icon}
         {labelComponent}
       </div>
-      <div className={classes.info}>{infoComponent}</div>
+      <div className={classes.info}>{children}</div>
     </div>
   );
 };
@@ -33,7 +33,10 @@ const LabeledInfo = ({ icon, labelComponent, infoComponent }) => {
 LabeledInfo.propTypes = {
   icon: PropTypes.element.isRequired,
   labelComponent: PropTypes.element.isRequired,
-  infoComponent: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };
 
 export default LabeledInfo;

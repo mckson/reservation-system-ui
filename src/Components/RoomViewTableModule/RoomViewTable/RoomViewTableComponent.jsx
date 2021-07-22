@@ -10,6 +10,7 @@ import {
   Paper,
   Button,
   makeStyles,
+  TableRow,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RoomView from '../../../Models/RoomView';
@@ -52,35 +53,44 @@ const RoomViewTableComponent = ({
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableCell>Id</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell />
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell />
+            </TableRow>
           </TableHead>
           <TableBody>
-            {roomViews && roomViews.length > 0
-              ? roomViews.map((roomView) => (
-                  <RoomViewRowComponent
-                    role={role}
-                    roomView={roomView}
-                    updateRoomView={updateRoomView}
-                    deleteRoomView={deleteRoomView}
-                    onError={onError}
-                    onSuccess={onSuccess}
-                  />
-                ))
-              : 'No views were created yet'}
+            {roomViews && roomViews.length > 0 ? (
+              roomViews.map((roomView) => (
+                <RoomViewRowComponent
+                  key={roomView.id}
+                  role={role}
+                  roomView={roomView}
+                  updateRoomView={updateRoomView}
+                  deleteRoomView={deleteRoomView}
+                  onError={onError}
+                  onSuccess={onSuccess}
+                />
+              ))
+            ) : (
+              <TableRow>No views were created yet</TableRow>
+            )}
           </TableBody>
           <TableFooter>
-            {role === Constants.adminRole ? (
-              <Button
-                color="primary"
-                className={classes.addButton}
-                startIcon={<AddIcon />}
-                onClick={() => setIsAdd(true)}
-              >
-                Add new view
-              </Button>
-            ) : null}
+            <TableRow>
+              {role === Constants.adminRole ? (
+                <TableCell>
+                  <Button
+                    color="primary"
+                    className={classes.addButton}
+                    startIcon={<AddIcon />}
+                    onClick={() => setIsAdd(true)}
+                  >
+                    Add new view
+                  </Button>
+                </TableCell>
+              ) : null}
+            </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>

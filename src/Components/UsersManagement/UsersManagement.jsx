@@ -6,24 +6,56 @@ import UsersManagementComponent from './UsersManagementComponent';
 import ManagementService from '../../Common/ManagementService';
 import API from '../../Common/API';
 import UserBrief from '../../Models/UserBrief';
+import SearchClause from '../../Common/BaseSearch/SearchClause';
+import Constants from '../../Common/Constants';
 
-const UsersManagement = ({ isOpen, close, loggedUser }) => {
+const UsersManagement = ({ isOpen, close }) => {
   const [users, setUsers] = useState([]);
   const [usersBrief, setUsersBrief] = useState([]);
-  const [searchClauses, setSearchClauses] = useState('');
-  const [totalResults, setTotalResults] = useState(null);
+  const [totalResults, setTotalResults] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [hotelsBrief, setHotelsBrief] = useState([]);
+  const [searchClauses, setSearchClauses] = useState([
+    new SearchClause('Email', '', []),
+    new SearchClause('Surname', '', []),
+    new SearchClause('Name', '', []),
+    new SearchClause(
+      'Roles',
+      [],
+      [Constants.adminRole, Constants.managerRole, Constants.userRole],
+      true
+    ),
+  ]);
+  const [searchRanges, setSearchRanges] = useState([]);
+  const [searchOptions, setSearchOptions] = useState([]);
+
+  const [refresh, setRefresh] = useState(false);
+
+  const handleChangeSearchClauses = (newClauses) => {
+    setSearchClauses(newClauses);
+  };
+
+  const handleChangeSearchRanges = (newRanges) => {
+    setSearchRanges(newRanges);
+  };
+  const handleChangeSearchOptions = (newOptions) => {
+    setSearchOptions(newOptions);
+  };
+  const handleSearch = () => {
+    setPageNumber(0);
+    setRefresh(!refresh);
+  };
 
   const requestUsers = async () => {
-    const response = await API.getUsers(
+    const response = await API.getUsers({
       pageNumber,
       pageSize,
-      searchClauses[0] || '',
-      searchClauses[1] || '',
-      searchClauses[2] || ''
-    );
+      email: searchClauses[0].value,
+      firstName: searchClauses[1].value,
+      lastName: searchClauses[2].value,
+      roles: searchClauses[3].value,
+    });
 
     if (response) {
       const respondedUsers = response.content.map((item) => new User(item));
@@ -53,10 +85,6 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
 
       setHotelsBrief(respondedHotels);
     }
-  };
-
-  const handleSearchClausesChanged = (value) => {
-    setSearchClauses(value);
   };
 
   const handlePageChanged = (value) => {
@@ -108,21 +136,30 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
 
   useEffect(async () => {
     await requestUsers();
-  }, [pageSize, pageNumber, searchClauses]);
+  }, [pageSize, pageNumber, refresh]);
 
   useEffect(async () => {
     await requestHotels();
   }, []);
 
+  useEffect(() => {
+    console.log('rerender');
+  }, [searchClauses]);
+
   return (
     <UsersManagementComponent
+      clauses={searchClauses}
+      options={searchOptions}
+      ranges={searchRanges}
+      onChangeClauses={handleChangeSearchClauses}
+      onChangeOptions={handleChangeSearchOptions}
+      onChangeRanges={handleChangeSearchRanges}
+      onSearch={handleSearch}
       users={users}
       usersBrief={usersBrief}
-      onChangeSearchClauses={handleSearchClausesChanged}
       hotels={hotelsBrief}
       isOpen={isOpen}
       close={close}
-      loggedUser={loggedUser}
       createUser={handleCreateUser}
       updateUser={handleUpdateUser}
       deleteUser={handleDeleteUser}
@@ -137,7 +174,6 @@ const UsersManagement = ({ isOpen, close, loggedUser }) => {
 UsersManagement.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  loggedUser: PropTypes.instanceOf(User).isRequired,
 };
 
 export default UsersManagement;

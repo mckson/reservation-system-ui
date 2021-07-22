@@ -46,19 +46,16 @@ const HotelFull = ({
   const onBackClick = () => history.push('/Hotels');
 
   const requestRooms = async (hotelId) => {
-    const response = await API.getRooms(
-      roomsPageNumber,
-      roomsPageSize,
-      hotelId || hotel?.id,
+    const response = await API.getRooms({
+      pageNumber: roomsPageNumber,
+      pageSize: roomsPageSize,
+      hotelId: hotelId || hotel?.id,
       dateIn,
-      dateOut
-    );
+      dateOut,
+    });
 
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
-
-      // eslint-disable-next-line no-debugger
-      debugger;
 
       setRooms(respondedRooms);
       setRoomsTotalResults(response.totalResults);
@@ -76,9 +73,6 @@ const HotelFull = ({
     await API.axios
       .get(`/Hotels/${id}`)
       .then(async (response) => {
-        // if (response.data.mainImage == null) {
-        //   response.data.mainImage = { id: 0, image: Default };
-        // }
         setHotel(new Hotel(response.data));
 
         await requestRooms(response.data.id);
@@ -96,11 +90,6 @@ const HotelFull = ({
         console.log(err.config);
       });
   }, []);
-
-  // useEffect(async () => {
-  //   if (hotel) {
-  //   }
-  // }, [hotel /* , roomsPageSize, roomsPageNumber, dateIn, dateOut */]);
 
   return (
     <>

@@ -34,6 +34,7 @@ import Room from '../../Models/Room';
 import ServiceItem from './ServiceItem';
 import BaseDialog from '../../Common/BaseDialog';
 import RoomDetailed from '../RoomDetailed/RoomDetailed';
+import Service from '../../Models/Service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -184,12 +185,11 @@ const HotelFullComponent = ({
                 <LabeledInfo
                   icon={<PhotoCameraOutlined />}
                   labelComponent={<Typography variant="h6">Album</Typography>}
-                  infoComponent={
-                    <div className={classes.gallery}>
-                      <Gallery images={hotel.images} />
-                    </div>
-                  }
-                />
+                >
+                  <div className={classes.gallery}>
+                    <Gallery images={hotel.images} />
+                  </div>
+                </LabeledInfo>
               ) : null}
 
               <LabeledInfo
@@ -197,43 +197,40 @@ const HotelFullComponent = ({
                 labelComponent={
                   <Typography variant="h6">Description</Typography>
                 }
-                infoComponent={
-                  <Typography variant="body1">{hotel.description}</Typography>
-                }
-              />
+              >
+                <Typography variant="body1">{hotel.description}</Typography>
+              </LabeledInfo>
 
               <LabeledInfo
                 icon={<LocationIcon />}
                 labelComponent={<Typography variant="h6">Location</Typography>}
-                infoComponent={
-                  <>
-                    {' '}
-                    <Typography>
-                      <b>Country:</b> {hotel.location.country}
-                    </Typography>
-                    <Typography>
-                      <b>Region:</b> {hotel.location.region}
-                    </Typography>
-                    <Typography>
-                      <b>City:</b> {hotel.location.city}
-                    </Typography>
-                    <Typography>
-                      <b>Street:</b> {hotel.location.street},{' '}
-                      {hotel.location.buildingNumber}
-                    </Typography>
-                  </>
-                }
-              />
+              >
+                <>
+                  <Typography>
+                    <b>Country:</b> {hotel.location.country}
+                  </Typography>
+                  <Typography>
+                    <b>Region:</b> {hotel.location.region}
+                  </Typography>
+                  <Typography>
+                    <b>City:</b> {hotel.location.city}
+                  </Typography>
+                  <Typography>
+                    <b>Street:</b> {hotel.location.street},{' '}
+                    {hotel.location.buildingNumber}
+                  </Typography>
+                </>
+              </LabeledInfo>
 
               <LabeledInfo
                 icon={<MoneyIcon />}
                 labelComponent={<Typography variant="h6">Deposit</Typography>}
-                infoComponent={
-                  <Typography>
-                    {hotel.deposit === 0 ? 'None' : hotel.deposit}
-                  </Typography>
-                }
-              />
+              >
+                {' '}
+                <Typography>
+                  {hotel.deposit === 0 ? 'None' : hotel.deposit}
+                </Typography>
+              </LabeledInfo>
 
               {hotel.services.lenght !== 0 ? (
                 <LabeledInfo
@@ -241,21 +238,24 @@ const HotelFullComponent = ({
                   labelComponent={
                     <Typography variant="h6">Services</Typography>
                   }
-                  infoComponent={
-                    <div className={classes.serviceContainer}>
-                      {hotel.services.map((service) => (
-                        <ServiceItem key={service.id} service={service} />
-                      ))}
-                    </div>
-                  }
-                />
+                >
+                  <div className={classes.serviceContainer}>
+                    {hotel.services.map((service) => (
+                      <ServiceItem
+                        key={service.id}
+                        service={new Service(service)}
+                      />
+                    ))}
+                  </div>
+                </LabeledInfo>
               ) : null}
 
               {rooms && rooms.lenght !== 0 ? (
                 <LabeledInfo
                   icon={<RoomIcon />}
                   labelComponent={<Typography variant="h6">Rooms</Typography>}
-                  infoComponent={rooms.map((room) => (
+                >
+                  {rooms.map((room) => (
                     <div key={room.id} className={classes.room}>
                       <Typography>
                         <b>Number</b> {room.roomNumber}
@@ -280,7 +280,7 @@ const HotelFullComponent = ({
                       </Button>
                     </div>
                   ))}
-                />
+                </LabeledInfo>
               ) : null}
             </CardContent>
           </Card>
@@ -302,8 +302,9 @@ const HotelFullComponent = ({
           close={closeRoomDetailed}
           width="md"
           title="Room details"
-          contentComponent={<RoomDetailed roomId={selectedRoomId} />}
-        />
+        >
+          <RoomDetailed roomId={selectedRoomId} />
+        </BaseDialog>
       ) : null}
     </div>
   );
@@ -311,20 +312,20 @@ const HotelFullComponent = ({
 
 HotelFullComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  onBackClick: PropTypes.func.isRequired,
   loggedUser: PropTypes.instanceOf(User),
+  rooms: PropTypes.arrayOf(Room),
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
+  isRoomDetailedOpen: PropTypes.bool.isRequired,
+  selectedRoomId: PropTypes.string,
   searchHotels: PropTypes.func.isRequired,
+  onBackClick: PropTypes.func.isRequired,
   onDateInChange: PropTypes.func.isRequired,
   onDateOutChange: PropTypes.func.isRequired,
-  rooms: PropTypes.arrayOf(Room),
-  selectedRoomId: PropTypes.string,
-  isRoomDetailedOpen: PropTypes.bool.isRequired,
-  selectedRoomChanged: PropTypes.func.isRequired,
+  onRequestRooms: PropTypes.func.isRequired,
   closeRoomDetailed: PropTypes.func.isRequired,
+  selectedRoomChanged: PropTypes.func.isRequired,
   openRoomDetailed: PropTypes.func.isRequired,
-  onRequestRooms: PropTypes.isRequired,
 };
 
 HotelFullComponent.defaultProps = {
