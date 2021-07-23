@@ -78,23 +78,11 @@ const RoomForm = ({
   );
   const classes = useStyles();
 
-  // const requestViewsAsync = async () => {
-  //   const response = await API.getRoomViews();
-
-  //   if (response) {
-  //     const respondedRoomViews = response.map((view) => new RoomView(view));
-  //     // eslint-disable-next-line no-debugger
-  //     debugger;
-  //     setViews(respondedRoomViews);
-  //   }
-  // };
-
   const handleFacilityAdd = () => {
     const checkArray = facilities.filter(
       (f) => f.name.toUpperCase() === facility.name.toUpperCase()
     );
-    // eslint-disable-next-line no-debugger
-    debugger;
+
     if (
       (checkArray.length === 0 && facilities.length > 0) ||
       facilities.length === 0
@@ -109,10 +97,6 @@ const RoomForm = ({
     const newFacilities = facilities.filter((f) => f.name !== delFacility.name);
     setFacilities(newFacilities);
   };
-
-  // useEffect(async () => {
-  //   await requestViewsAsync();
-  // }, []);
 
   return (
     <BaseDialog

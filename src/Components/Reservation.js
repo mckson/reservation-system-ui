@@ -7,12 +7,7 @@ import {
   makeStyles,
   CircularProgress,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
 } from '@material-ui/core';
-import { CloseOutlined } from '@material-ui/icons';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Hotel from '../Models/Hotel';
@@ -21,10 +16,15 @@ import PersonalInfo from './ReservationModule/PersonalInfo/PersonalInfo';
 import User from '../Models/User';
 import ReservationRequest from '../Models/ReservationRequest';
 import CompleteOrder from './ReservationModule/CompleteOrder/CompleteOrder';
-import API from '../Common/API';
 import SmallHotelCard from './SmallHotelCard';
 import DetailsComponent from './ReservationModule/Details/DetailsComponent';
 import Room from '../Models/Room';
+import RoomRequests from '../api/RoomRequests';
+import ReservationRequests from '../api/ReservationRequests';
+import BaseDialog from '../Common/BaseDialog';
+
+const { unlockRoom, lockRoom } = RoomRequests;
+const { createReservation } = ReservationRequests;
 
 const getSteps = () => [
   'Select room and services',
@@ -49,18 +49,6 @@ const useStyles = makeStyles((theme) => ({
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-  },
-  titleSection: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  closeButton: {
-    width: 'auto',
   },
 }));
 
@@ -147,26 +135,14 @@ const Reservation = ({
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [customerInfo, setCustomerInfo] = useState(null);
-  // const [rooms, setRooms] = useState([]);
 
-  // const requestAllRooms = async () => {
-  //   const response = await API.getRooms(1, null, hotel.Id, dateIn, dateOut);
-
-  //   if (response) {
-  //     const respondedRooms = response.content.map((item) => new Room(item));
-
-  //     setRooms(respondedRooms);
-  //   }
-  // };
   const onClose = () => {
-    selectedRooms.forEach((room) => API.unlockRoom(room.id));
+    selectedRooms.forEach((room) => unlockRoom(room.id));
     onRequestRooms();
     close();
   };
 
   const handleReservationComplete = async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const reservation = new ReservationRequest({
       hotelId: hotel.id,
       rooms: selectedRooms.map((room) => room.id),
@@ -181,8 +157,7 @@ const Reservation = ({
     });
 
     try {
-      const createdReservation = await API.createReservation(reservation);
-      console.log(createdReservation);
+      await createReservation(reservation);
     } catch (error) {
       console.log(error);
     }
@@ -208,20 +183,16 @@ const Reservation = ({
     }));
   };
 
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
-
   const handleRoomsChange = (changedRooms) => {
     const addedRoom = arrayDifference(selectedRooms, changedRooms);
 
     if (addedRoom[0]) {
-      API.lockRoom(addedRoom[0].id);
+      lockRoom(addedRoom[0].id);
     } else {
       const removedRoom = arrayDifference(changedRooms, selectedRooms);
 
       if (removedRoom[0]) {
-        API.unlockRoom(removedRoom[0].id);
+        unlockRoom(removedRoom[0].id);
       }
     }
 
@@ -251,107 +222,92 @@ const Reservation = ({
     }));
   };
 
-  // useEffect(async () => {
-  //   await requestAllRooms();
-  // }, []);
-
   return (
-    <Dialog open={open} fullWidth maxWidth="md">
-      <DialogTitle>
-        <div className={classes.titleSection}>
-          <Typography className={classes.title} variant="h6">
-            Propperty reservation
-          </Typography>
-          <IconButton
-            className={classes.closeButton}
-            onClick={() => {
-              onClose();
-              setActiveStep({ step: 0, isNextAvailable: false });
-              setSelectedRooms([]);
-              setSelectedServices([]);
-              setCustomerInfo(null);
-            }}
-          >
-            <CloseOutlined />
-          </IconButton>
-        </div>
-      </DialogTitle>
-      <DialogContent>
-        {hotel != null ? (
-          <Grid container className={classes.root} justify="center">
-            <Grid item xs={12}>
-              <Stepper activeStep={activeStep.step}>
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
+    <BaseDialog
+      open={open}
+      close={() => {
+        onClose();
+        setActiveStep({ step: 0, isNextAvailable: false });
+        setSelectedRooms([]);
+        setSelectedServices([]);
+        setCustomerInfo(null);
+      }}
+      title="Propperty reservation"
+      width="md"
+    >
+      {hotel != null ? (
+        <Grid container className={classes.root} justify="center">
+          <Grid item xs={12}>
+            <Stepper activeStep={activeStep.step}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Grid>
+          <Grid container item xs={12} spacing={1} justify="center">
+            <Grid item sm={12} xs={12} md={5}>
+              <DetailsComponent
+                dateIn={dateIn}
+                dateOut={dateOut}
+                selectedRooms={selectedRooms}
+                selectedServices={selectedServices}
+                customerInfo={customerInfo}
+                deposit={hotel.deposit}
+              />
             </Grid>
-            <Grid container item xs={12} spacing={1} justify="center">
-              <Grid item sm={12} xs={12} md={5}>
-                <DetailsComponent
-                  dateIn={dateIn}
-                  dateOut={dateOut}
-                  selectedRooms={selectedRooms}
-                  selectedServices={selectedServices}
-                  customerInfo={customerInfo}
-                  deposit={hotel.deposit}
-                />
-              </Grid>
-              <Grid container item sm={12} md={7}>
-                {activeStep.step === steps.length ? (
+
+            <Grid container item sm={12} md={7}>
+              {activeStep.step === steps.length ? (
+                <Grid item xs={12}>
+                  <Typography className={classes.instructions}>
+                    Reservation successfully completed
+                  </Typography>
+                  <Button>Back</Button>
+                </Grid>
+              ) : (
+                <Grid container item xs={12} spacing={1}>
+                  {getStepContent(
+                    activeStep.step,
+                    hotel,
+                    rooms,
+                    loggedUser,
+                    handleRoomsChange,
+                    handleServicesChange,
+                    handleCustomerChange,
+                    handleSubmitOrderChange
+                  )}
                   <Grid item xs={12}>
-                    <Typography className={classes.instructions}>
-                      Reservation successfully completed
-                    </Typography>
-                    <Button>Back</Button>
+                    <Button
+                      disabled={activeStep.step === 0}
+                      onClick={handleBack}
+                      className={classes.backButton}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={
+                        activeStep.step === steps.length - 1
+                          ? handleReservationComplete
+                          : handleNext
+                      }
+                      disabled={!activeStep.isNextAvailable}
+                    >
+                      {activeStep.step === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
                   </Grid>
-                ) : (
-                  <Grid container item xs={12} spacing={1}>
-                    {getStepContent(
-                      activeStep.step,
-                      hotel,
-                      rooms,
-                      loggedUser,
-                      handleRoomsChange,
-                      handleServicesChange,
-                      handleCustomerChange,
-                      handleSubmitOrderChange
-                    )}
-                    <Grid item xs={12}>
-                      <Button
-                        disabled={activeStep.step === 0}
-                        onClick={handleBack}
-                        className={classes.backButton}
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={
-                          activeStep.step === steps.length - 1
-                            ? handleReservationComplete
-                            : handleNext
-                        }
-                        disabled={!activeStep.isNextAvailable}
-                      >
-                        {activeStep.step === steps.length - 1
-                          ? 'Finish'
-                          : 'Next'}
-                      </Button>
-                    </Grid>
-                  </Grid>
-                )}
-              </Grid>
+                </Grid>
+              )}
             </Grid>
           </Grid>
-        ) : (
-          <CircularProgress />
-        )}
-      </DialogContent>
-    </Dialog>
+        </Grid>
+      ) : (
+        <CircularProgress />
+      )}
+    </BaseDialog>
   );
 };
 

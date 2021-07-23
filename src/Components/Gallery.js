@@ -4,7 +4,7 @@ import { GridList, GridListTile, makeStyles, Button } from '@material-ui/core';
 import HotelImage from '../Models/HotelImage';
 import BaseDialog from '../Common/BaseDialog';
 
-const useStyles = makeStyles((/* theme */) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -59,7 +59,7 @@ const Gallery = ({ images }) => {
       </GridList>
       <BaseDialog open={viewAll} close={() => setViewAll(false)} title="Album">
         <GridList cellHeight={160} cols={cols} rows={rows}>
-          {images.map((image /* , index */) => (
+          {images.map((image) => (
             <GridListTile key={image} onClick={() => setViewImage(image)}>
               <img src={image} alt={image.name} />
             </GridListTile>

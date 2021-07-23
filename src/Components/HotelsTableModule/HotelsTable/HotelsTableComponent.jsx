@@ -270,6 +270,7 @@ HotelsTableComponent.propTypes = {
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };
+
 HotelsTableComponent.defaultProps = {
   roomViews: [],
   clauses: [],

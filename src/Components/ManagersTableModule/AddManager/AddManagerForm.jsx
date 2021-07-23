@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog,
-  makeStyles,
-  DialogTitle,
-  Typography,
-  IconButton,
-  DialogContent,
-  Button,
-} from '@material-ui/core';
+import { Button, IconButton, makeStyles } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { CloseOutlined } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions, Alert } from '@material-ui/lab';
 import { Formik, Form } from 'formik';
 import User from '../../../Models/User';
 import MyTextField from '../../../Common/MyTextField';
+import BaseDialog from '../../../Common/BaseDialog';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -51,54 +43,42 @@ const AddManagerForm = ({
 
   return (
     <div>
-      <Dialog open={open}>
-        <DialogTitle>
-          <div className={classes.titleSection}>
-            <Typography className={classes.title} variant="h6">
-              {title}
-            </Typography>
-            <IconButton className={classes.closeButton} onClick={close}>
-              <CloseOutlined />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <DialogContent>
-          <Formik
-            onSubmit={() => submitHandler(selectedUser)}
-            initialValues={{ user: '' }}
-          >
-            <Form>
-              <Autocomplete
-                options={users}
-                getOptionLabel={(option) =>
-                  `${option.firstName} ${option.lastName}, ${option.email}`
-                }
-                onChange={(event, value) => setSelectedUser(value)}
-                filterOptions={filterOptions}
-                renderInput={(params) => (
-                  <MyTextField
-                    {...params}
-                    required
-                    variant="outlined"
-                    fullWidth
-                    label="User"
-                    name="user"
-                  />
-                )}
-              />
-              <Button
-                fullWidth
-                disabled={!selectedUser}
-                className={classes.submit}
-                variant="contained"
-                type="submit"
-                color="primary"
-              >
-                {submitText}
-              </Button>
-            </Form>
-          </Formik>
-        </DialogContent>
+      <BaseDialog open={open} close={close} title={title}>
+        <Formik
+          onSubmit={() => submitHandler(selectedUser)}
+          initialValues={{ user: '' }}
+        >
+          <Form>
+            <Autocomplete
+              options={users}
+              getOptionLabel={(option) =>
+                `${option.firstName} ${option.lastName}, ${option.email}`
+              }
+              onChange={(event, value) => setSelectedUser(value)}
+              filterOptions={filterOptions}
+              renderInput={(params) => (
+                <MyTextField
+                  {...params}
+                  required
+                  variant="outlined"
+                  fullWidth
+                  label="User"
+                  name="user"
+                />
+              )}
+            />
+            <Button
+              fullWidth
+              disabled={!selectedUser}
+              className={classes.submit}
+              variant="contained"
+              type="submit"
+              color="primary"
+            >
+              {submitText}
+            </Button>
+          </Form>
+        </Formik>
         {error != null ? (
           <Alert
             fullWidth
@@ -120,7 +100,7 @@ const AddManagerForm = ({
             {error}
           </Alert>
         ) : null}
-      </Dialog>
+      </BaseDialog>
     </div>
   );
 };

@@ -27,6 +27,7 @@ const Routes = ({
   const handleOpenHotelsManagement = () => {
     setOpenHotelsManagement(true);
   };
+
   const handleCloseHotelsManagement = () => {
     setOpenHotelsManagement(false);
   };

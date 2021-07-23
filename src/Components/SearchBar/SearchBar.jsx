@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-// import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import SearchBarComponent from './SearchBarComponent';
 import SideSearchBarComponent from './SideSearchBarComponent';
-import API from '../../Common/API';
 import HotelBrief from '../../Models/HotelBrief';
+import HotelRequests from '../../api/HotelRequests';
 
-// const now = new Date();
-// const year = now.getFullYear();
-// const month =
-//   now.getMonth() + 1 > 9 ? now.getMonth() + 1 : `0${now.getMonth() + 1}`;
-// const day = now.getDate();
-// const today = `${year}-${month}-${day}`;
-
-// const validationSchema = Yup.object({
-//   search: Yup.string(),
-//   dateIn: Yup.date().min(today, 'Cannot be earlier than today'),
-//   dateOut: Yup.date().when(
-//     'dateIn',
-//     (dateIn, schema) =>
-//       dateIn && schema.min(dateIn, 'Cannot be earlier than date-in')
-//   ),
-// });
+const { getAllBriefHotels } = HotelRequests;
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
@@ -37,7 +21,6 @@ const SearchBar = ({
   onDateOutChange,
 }) => {
   const [hotelsBrief, setHotelsBrief] = useState([]);
-
   const [searchClauses, setSearchClauses] = useState([null, null, []]);
   const [selectedDateIn, setDateIn] = useState(dateIn);
   const [selectedDateOut, setDateOut] = useState(dateOut);
@@ -50,7 +33,7 @@ const SearchBar = ({
     .filter(onlyUnique);
 
   const requestHotelNames = async () => {
-    const respondedHotels = await API.getAllHotelsNameAndId();
+    const respondedHotels = await getAllBriefHotels();
     const hotels = respondedHotels.map((hotel) => new HotelBrief(hotel));
 
     setHotelsBrief(hotels);

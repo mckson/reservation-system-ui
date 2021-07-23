@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Card,
   CardContent,
@@ -8,8 +10,6 @@ import {
   CardActions,
   Button,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import React from 'react';
 import Hotel from '../Models/Hotel';
 import defaultImage from '../images/default.png';
 

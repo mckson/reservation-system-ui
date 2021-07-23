@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles, TableCell } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { makeStyles, TableCell } from '@material-ui/core';
 import Hotel from '../../../Models/Hotel';
 import defaultImage from '../../../images/default.png';
 

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import ArrowBackIcon from '@material-ui/icons/ArrowBackOutlined';
-import LocationIcon from '@material-ui/icons/LocationOnOutlined';
-import ServicesIcon from '@material-ui/icons/ShoppingCartOutlined';
+import PropTypes from 'prop-types';
 import {
   Card,
   CardActions,
@@ -14,10 +12,12 @@ import {
   CardMedia,
   Grid,
 } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBackOutlined';
+import LocationIcon from '@material-ui/icons/LocationOnOutlined';
+import ServicesIcon from '@material-ui/icons/ShoppingCartOutlined';
 import TicketIcon from '@material-ui/icons/ConfirmationNumberOutlined';
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import RoomIcon from '@material-ui/icons/AirlineSeatIndividualSuiteOutlined';
-import PropTypes from 'prop-types';
 import {
   PhotoCameraOutlined,
   DescriptionOutlined,

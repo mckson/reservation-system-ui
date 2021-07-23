@@ -71,7 +71,6 @@ const ServicesTableComponent = ({
             <col width="auto" />
             <col width="2.5%" />
           </colgroup>
-
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>

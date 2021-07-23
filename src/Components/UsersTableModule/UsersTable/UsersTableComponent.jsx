@@ -203,6 +203,7 @@ UsersTableComponent.propTypes = {
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };
+
 UsersTableComponent.defaultProps = {
   users: [],
   hotels: [],

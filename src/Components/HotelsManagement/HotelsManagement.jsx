@@ -4,19 +4,24 @@ import PropTypes from 'prop-types';
 import HotelsManagementComponent from './HotelsManagementComponent';
 import Hotel from '../../Models/Hotel';
 import User from '../../Models/User';
-import API from '../../Common/API';
 import ManagementService from '../../Common/ManagementService';
 import Constants from '../../Common/Constants';
 import RoomView from '../../Models/RoomView';
-import HotelBrief from '../../Models/HotelBrief';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../Common/BaseSearch/SearchRange';
+import UserRequests from '../../api/UserRequests';
+import HotelRequests from '../../api/HotelRequests';
+import RoomViewRequests from '../../api/RoomViewRequests';
+
+const { getAllUsers } = UserRequests;
+const { getAllHotelNames, getAllHotelCities, getHotels } = HotelRequests;
+const { getRoomViews } = RoomViewRequests;
 
 const HotelsManagement = ({ isOpen, close }) => {
   const [users, setUsers] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const [hotelsBrief, setHotelsBrief] = useState([]);
-  const [, setHotelNames] = useState([]);
+  const [hotelNames, setHotelNames] = useState([]);
+  const [hotelCities, setHotelCities] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [roomViews, setRoomViews] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
@@ -55,7 +60,7 @@ const HotelsManagement = ({ isOpen, close }) => {
   };
 
   const requestUsers = async () => {
-    const response = await API.getAllUsers();
+    const response = await getAllUsers();
 
     if (response) {
       const respondedUsers = response.map((item) => new User(item));
@@ -63,26 +68,20 @@ const HotelsManagement = ({ isOpen, close }) => {
     }
   };
 
-  const requestHotelsBrief = async () => {
-    const respondedHotels = await API.getAllHotelsNameAndId();
-    const respondedHotelsBrief = respondedHotels.map(
-      (hotel) => new HotelBrief(hotel)
-    );
-
-    setHotelsBrief(respondedHotelsBrief);
-  };
-
   const requestHotelNames = async () => {
-    const respondedHotelNames = await API.getAllHotelNames();
+    const respondedHotelNames = await getAllHotelNames();
 
     setHotelNames(respondedHotelNames);
-    const newClauses = [...searchClauses];
-    newClauses[0] = new SearchClause('Hotel name', null, respondedHotelNames);
-    setSearchClauses(newClauses);
+  };
+
+  const requestHotelCities = async () => {
+    const respondedHotelCities = await getAllHotelCities();
+
+    setHotelCities(respondedHotelCities);
   };
 
   const requestHotels = async () => {
-    const response = await API.getHotels({
+    const response = await getHotels({
       pageNumber,
       pageSize,
       dateIn: '',
@@ -114,7 +113,7 @@ const HotelsManagement = ({ isOpen, close }) => {
   };
 
   const requestRoomViews = async () => {
-    const response = await API.getRoomViews();
+    const response = await getRoomViews();
 
     if (response != null) {
       const respondedRoomViews = response.map((item) => new RoomView(item));
@@ -151,7 +150,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -165,7 +163,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -179,7 +176,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -193,7 +189,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -207,7 +202,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -221,7 +215,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -235,7 +228,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -249,7 +241,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -263,7 +254,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
     }
 
     return [response, error];
@@ -277,8 +267,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
-      // await refreshUsers();
     }
 
     return [response, error];
@@ -289,8 +277,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
-      // await refreshUsers();
     }
 
     return error;
@@ -303,8 +289,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
-      // await refreshUsers();
     }
 
     return error;
@@ -313,12 +297,8 @@ const HotelsManagement = ({ isOpen, close }) => {
   const handleCreateRoomImage = async (createdImage) => {
     const error = await ManagementService.handleCreateRoomImage(createdImage);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
-      // await refreshUsers();
     }
 
     return error;
@@ -329,8 +309,6 @@ const HotelsManagement = ({ isOpen, close }) => {
 
     if (!error) {
       await requestHotels();
-      // await refreshHotels();
-      // await refreshUsers();
     }
 
     return error;
@@ -381,13 +359,25 @@ const HotelsManagement = ({ isOpen, close }) => {
 
   useEffect(async () => {
     await requestRoomViews();
-    await requestHotelsBrief();
     await requestHotelNames();
+    await requestHotelCities();
 
     if (getRole(loggedUser) === Constants.adminRole) {
       await requestUsers();
     }
   }, []);
+
+  useEffect(() => {
+    const newClauses = [...searchClauses];
+    newClauses[0] = new SearchClause('Hotel name', null, hotelNames);
+    setSearchClauses(newClauses);
+  }, [hotelNames]);
+
+  useEffect(() => {
+    const newClauses = [...searchClauses];
+    newClauses[1] = new SearchClause('City', null, hotelCities);
+    setSearchClauses(newClauses);
+  }, [hotelCities]);
 
   return (
     <HotelsManagementComponent
@@ -397,7 +387,6 @@ const HotelsManagement = ({ isOpen, close }) => {
       isOpen={isOpen}
       close={close}
       hotels={hotels}
-      hotelsBrief={hotelsBrief}
       onSearch={handleSearch}
       clauses={searchClauses}
       ranges={searchRanges}

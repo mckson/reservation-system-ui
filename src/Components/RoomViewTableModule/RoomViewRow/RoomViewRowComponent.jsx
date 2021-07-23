@@ -1,33 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TableRow, TableCell, IconButton } from '@material-ui/core';
-import {
-  DeleteOutlined,
-  // EditOutlined
-} from '@material-ui/icons';
+import { DeleteOutlined } from '@material-ui/icons';
 import RoomView from '../../../Models/RoomView';
 import useRowStyles from '../../../Common/Styles/TableRowStyles';
 import RoomViewRowMapComponent from '../RoomRowMap/RoomViewRowMapComponent';
 import Constants from '../../../Common/Constants';
-// import EditRoomView from '../EditRoomView';
 
 const RoomViewRowComponent = ({
   roomView,
   role,
-  //   updateRoomView,
   deleteRoomView,
   onError,
   onSuccess,
 }) => {
-  //   const [isEdit, setIsEdit] = useState(false);
-
   const RoomViewDeletionSuccessMessage = (name) =>
     `Room view ${name} successfully deleted`;
   const classes = useRowStyles();
-
-  //   const handleEditClose = () => {
-  //     setIsEdit(!isEdit);
-  //   };
 
   return (
     <>
@@ -36,12 +25,6 @@ const RoomViewRowComponent = ({
         <TableCell className={classes.actions}>
           {role === Constants.adminRole ? (
             <>
-              {/* <IconButton
-                className={classes.button}
-                onClick={() => setIsEdit(!isEdit)}
-              >
-                <EditOutlined />
-              </IconButton> */}
               <IconButton
                 className={classes.button}
                 onClick={async () => {
@@ -49,8 +32,6 @@ const RoomViewRowComponent = ({
                     roomView.id
                   );
 
-                  // eslint-disable-next-line no-debugger
-                  debugger;
                   if (errorResponse) {
                     onError(errorResponse);
                   } else {
@@ -64,13 +45,6 @@ const RoomViewRowComponent = ({
           ) : null}
         </TableCell>
       </TableRow>
-      {/* <EditRoomView
-        roomView={roomView}
-        open={isEdit}
-        close={handleEditClose}
-        updateRoomView={updateRoomView}
-        onSuccess={onSuccess}
-      /> */}
     </>
   );
 };
@@ -78,7 +52,6 @@ const RoomViewRowComponent = ({
 RoomViewRowComponent.propTypes = {
   role: PropTypes.string.isRequired,
   roomView: PropTypes.instanceOf(RoomView).isRequired,
-  //   updateRoomView: PropTypes.func.isRequired,
   deleteRoomView: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,

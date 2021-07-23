@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, makeStyles, Typography } from '@material-ui/core';
@@ -145,7 +144,7 @@ const DetailsComponent = ({
           : null}
         {selectedServices && selectedServices.length !== 0
           ? selectedServices.map((service) => (
-              <div className={classes.content} t key={service.id}>
+              <div className={classes.content} key={service.id}>
                 <Typography component="div">{service.name}</Typography>
                 <Typography component="div">${service.price}</Typography>
               </div>

@@ -32,13 +32,14 @@ import Room from '../../Models/Room';
 import CreateRoomComponent from './CreateRoomComponent';
 import EditRoomComponent from './EditRoomComponent';
 import ImagesTable from '../ImagesTableModule/ImagesTable/ImagesTable';
-
-import API from '../../Common/API';
 import RoomView from '../../Models/RoomView';
 import BaseSearch from '../../Common/BaseSearch/BaseSearch';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../Common/BaseSearch/SearchRange';
 import SearchOption from '../../Common/BaseSearch/SearchOption';
+import RoomRequests from '../../api/RoomRequests';
+
+const { getRooms, getRoomNames, getRoomNumbers } = RoomRequests;
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -182,7 +183,7 @@ const RoomsTableComponent = ({
   };
 
   useEffect(async () => {
-    const response = await API.getRooms({
+    const response = await getRooms({
       pageNumber: page + 1,
       pageSize: rowsPerPage,
       hotelId: hotel.id,
@@ -198,22 +199,21 @@ const RoomsTableComponent = ({
       maxPrice: searchRanges[3].value[1],
       smoking: searchOptions[0].value,
       parking: searchOptions[1].value,
-      facilities: searchClauses[2].value.map((value) => value.value),
-      roomViews: searchClauses[3].value.map((value) => value.value),
+      facilities: searchClauses[2].value.map((value) => value),
+      roomViews: searchClauses[3].value.map((value) => value),
     });
 
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
 
-      console.log(respondedRooms);
       setRooms(respondedRooms);
       setTotalCount(response.totalResults);
     }
   }, [page, rowsPerPage, refresh]);
 
   useEffect(async () => {
-    const responseNames = await API.getRoomNames(hotel.id);
-    const responseNumbers = await API.getRoomNumbers(hotel.id);
+    const responseNames = await getRoomNames(hotel.id);
+    const responseNumbers = await getRoomNumbers(hotel.id);
 
     const newSearchClauses = [...searchClauses];
     newSearchClauses[0] = new SearchClause('Room name', '', responseNames);
@@ -335,10 +335,7 @@ const RoomsTableComponent = ({
 };
 
 RoomsTableComponent.propTypes = {
-  // rooms: PropTypes.arrayOf(Room).isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  // totalCount: PropTypes.number.isRequired,
-  // pageSize: PropTypes.number.isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   deleteRoom: PropTypes.func.isRequired,
   updateRoom: PropTypes.func.isRequired,

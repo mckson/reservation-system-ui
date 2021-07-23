@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Formik, Form /* , Field */ } from 'formik';
 import { Autocomplete } from '@material-ui/lab';
 import { Grid, TextField, Typography } from '@material-ui/core';
-
 import Hotel from '../../../Models/Hotel';
 import Room from '../../../Models/Room';
-// import MyTextField from '../../../Common/MyTextField';
-// import SmallHotelCard from '../../SmallHotelCard';
 
 const RoomSelectionComponent = ({
   hotel,
@@ -15,17 +11,6 @@ const RoomSelectionComponent = ({
   onRoomChange,
   onServicesChange,
 }) => {
-  // const [selectedRoom, setSelectedRoom] = useState({});
-  // const [selectedServices, setSelectedServices] = useState([]);
-
-  // const onRoomChange = (event, room) => {
-  //   setSelectedRoom(room);
-  // };
-
-  // const onServicesChange = (event, services) => {
-  //   setSelectedServices(services);
-  // };
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

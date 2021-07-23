@@ -1,11 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   Redirect,
 } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
 import Hotel from '../../Models/Hotel';
 import Navbar from '../../Common/Navbar';
@@ -35,9 +35,6 @@ const RoutesComponent = ({
   isUsersManagementOpen,
   closeUsersManagement,
   openUsersManagement,
-  // isProfileOpen,
-  // closeProfile,
-  // openProfile,
   dateIn,
   dateOut,
   onDateInChange,

@@ -9,7 +9,6 @@ import User from '../../Models/User';
 import FullScreenDialog from '../../Common/FullScreenDialog';
 import RoomView from '../../Models/RoomView';
 import Constants from '../../Common/Constants';
-import HotelBrief from '../../Models/HotelBrief';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../Common/BaseSearch/SearchRange';
 import SearchOption from '../../Common/BaseSearch/SearchOption';
@@ -29,7 +28,6 @@ const HotelsManagementComponent = ({
   close,
   role,
   hotels,
-  hotelsBrief,
   roomViews,
   totalCount,
   onSearch,
@@ -96,7 +94,6 @@ const HotelsManagementComponent = ({
             role={role}
             users={users}
             hotels={hotels}
-            hotelsBrief={hotelsBrief}
             roomViews={roomViews}
             totalCount={totalCount}
             onSearch={onSearch}
@@ -175,7 +172,6 @@ HotelsManagementComponent.propTypes = {
   role: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
-  hotelsBrief: PropTypes.arrayOf(HotelBrief).isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   onSearch: PropTypes.func.isRequired,

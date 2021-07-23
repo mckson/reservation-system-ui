@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { IconButton, TableCell, TableRow, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { IconButton, TableCell, TableRow, makeStyles } from '@material-ui/core';
 import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
 import Service from '../../../Models/Service';
 import ServiceRowMap from '../ServiceRowMap/ServiceRowMap';

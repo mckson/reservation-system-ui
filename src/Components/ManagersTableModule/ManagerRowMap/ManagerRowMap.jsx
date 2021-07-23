@@ -1,6 +1,6 @@
-import { TableCell } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { TableCell } from '@material-ui/core';
 import User from '../../../Models/User';
 
 const ManagerRowMap = ({ manager }) => {

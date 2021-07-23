@@ -1,3 +1,5 @@
+import React, { forwardRef } from 'react';
+import PropTypes from 'prop-types';
 import {
   Dialog,
   IconButton,
@@ -6,9 +8,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import React, { forwardRef } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   dialogbar: {

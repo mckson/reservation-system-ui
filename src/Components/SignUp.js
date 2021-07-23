@@ -15,7 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import MyTextField from '../Common/MyTextField';
-import API from '../Common/API';
+import API from '../api/API';
 import useStyles from '../Common/Styles';
 
 const validationSchema = Yup.object({

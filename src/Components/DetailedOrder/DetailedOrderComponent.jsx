@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, makeStyles, Box, Link } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import ReservationDetailedResponse from '../../Models/ReservationDetailedResponse';
-import Constants from '../../Common/Constants';
+import { Grid, Typography, makeStyles, Box, Link } from '@material-ui/core';
 import BaseDialog from '../../Common/BaseDialog';
+import Constants from '../../Common/Constants';
+import ReservationDetailedResponse from '../../Models/ReservationDetailedResponse';
 import RoomDetailed from '../RoomDetailed/RoomDetailed';
 
 const useStyles = makeStyles((theme) => ({

@@ -164,6 +164,7 @@ const SideSearchBarComponent = ({
           className={classes.textfield}
         />
       </Grid>
+
       <Grid item xs={12}>
         <div className={classes.button}>
           <Button

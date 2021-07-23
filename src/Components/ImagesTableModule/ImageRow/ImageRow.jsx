@@ -33,6 +33,7 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
       onSuccess('Image successfully deleted');
     }
   };
+
   return (
     <>
       <TableRow>

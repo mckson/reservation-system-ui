@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   ListItemIcon,
@@ -15,7 +16,6 @@ import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import { HistoryOutlined } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
 import LoggedUser from '../../Models/LoggedUser';
 import Constants from '../../Common/Constants';
 

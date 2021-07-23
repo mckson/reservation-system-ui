@@ -4,10 +4,14 @@ import User from '../../Models/User';
 import HotelBrief from '../../Models/HotelBrief';
 import UsersManagementComponent from './UsersManagementComponent';
 import ManagementService from '../../Common/ManagementService';
-import API from '../../Common/API';
 import UserBrief from '../../Models/UserBrief';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import Constants from '../../Common/Constants';
+import UserRequests from '../../api/UserRequests';
+import HotelRequests from '../../api/HotelRequests';
+
+const { getUsers, getAllUsers } = UserRequests;
+const { getAllBriefHotels } = HotelRequests;
 
 const UsersManagement = ({ isOpen, close }) => {
   const [users, setUsers] = useState([]);
@@ -39,16 +43,18 @@ const UsersManagement = ({ isOpen, close }) => {
   const handleChangeSearchRanges = (newRanges) => {
     setSearchRanges(newRanges);
   };
+
   const handleChangeSearchOptions = (newOptions) => {
     setSearchOptions(newOptions);
   };
+
   const handleSearch = () => {
     setPageNumber(0);
     setRefresh(!refresh);
   };
 
   const requestUsers = async () => {
-    const response = await API.getUsers({
+    const response = await getUsers({
       pageNumber,
       pageSize,
       email: searchClauses[0].value,
@@ -70,7 +76,7 @@ const UsersManagement = ({ isOpen, close }) => {
       }
     }
 
-    const respondedUsersBrief = await API.getAllUsers();
+    const respondedUsersBrief = await getAllUsers();
     const usersBriefBuffer = respondedUsersBrief.map(
       (user) => new UserBrief(user)
     );
@@ -78,7 +84,7 @@ const UsersManagement = ({ isOpen, close }) => {
   };
 
   const requestHotels = async () => {
-    const response = await API.getAllHotelsNameAndId();
+    const response = await getAllBriefHotels();
 
     if (response) {
       const respondedHotels = response.map((hotel) => new HotelBrief(hotel));
@@ -141,10 +147,6 @@ const UsersManagement = ({ isOpen, close }) => {
   useEffect(async () => {
     await requestHotels();
   }, []);
-
-  useEffect(() => {
-    console.log('rerender');
-  }, [searchClauses]);
 
   return (
     <UsersManagementComponent

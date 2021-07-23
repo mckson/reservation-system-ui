@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   InputBase,
@@ -5,8 +7,6 @@ import {
   makeStyles,
   IconButton,
 } from '@material-ui/core';
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Autocomplete } from '@material-ui/lab';
 import { AddOutlined } from '@material-ui/icons';
 import HotelBrief from '../../Models/HotelBrief';

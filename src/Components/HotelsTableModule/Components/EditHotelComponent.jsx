@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Hotel from '../../../Models/Hotel';
 import HotelForm from './HotelForm';
-import API from '../../../Common/API';
+import ImageRequests from '../../../api/ImageRequests';
 
 const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
   const [error, setError] = useState(null);
+
+  const { createHotelImage, deleteHotelImage } = ImageRequests;
 
   const onUpdateHotel = async (values) => {
     const updatedHotel = {
@@ -23,8 +25,6 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
       },
     };
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (values.newMainImage) {
       const image = {
         image: values.newMainImage.image,
@@ -34,12 +34,12 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
         isMain: true,
       };
 
-      await API.createHotelImage(image);
+      await createHotelImage(image);
     } else if (values.isDeleteMainImage && hotel?.mainImage) {
       const splited = hotel.mainImage.split('/');
       const imageId = splited[splited.length - 1];
 
-      await API.deleteHotelImage(imageId);
+      await deleteHotelImage(imageId);
     }
 
     const [hotelResponse, errorResponse] = await updateHotel(updatedHotel);

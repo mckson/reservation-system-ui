@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Grid, Box, Typography, makeStyles } from '@material-ui/core';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import Room from '../../Models/Room';
-// import Gallery from '../Gallery';
 import Carousell from '../../Common/Carousell/Carousell';
 import defaultImage from '../../images/default.png';
 
@@ -11,12 +10,7 @@ const useStyles = makeStyles((theme) => ({
   contentGroup: {
     display: 'flex',
     flexDirection: 'column',
-    // padding: theme.spacing(1),
     margin: theme.spacing(0, 0, 1, 0),
-    // borderWidth: 1,
-    // borderStyle: 'solid',
-    // borderColor: theme.palette.grey[300],
-    // borderRadius: theme.shape.borderRadius,
   },
   content: {
     display: 'flex',

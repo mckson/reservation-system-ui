@@ -15,7 +15,6 @@ const AddRoomImage = ({ open, close, roomId, createImage, onSuccess }) => {
     };
 
     setProcessing(true);
-    // eslint-disable-next-line no-unused-vars
     const errorResponse = await createImage(createdImage);
     setProcessing(false);
 

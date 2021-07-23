@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import HotelForm from './HotelForm';
-import API from '../../../Common/API';
+import ImageRequests from '../../../api/ImageRequests';
 
 const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
   const [error, setError] = useState(null);
+
+  const { createHotelImage } = ImageRequests;
 
   const onCreateHotel = async (values) => {
     const createdHotel = {
@@ -23,8 +25,6 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
 
     const [hotel, errorResponse] = await createHotel(createdHotel);
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (values.newMainImage && hotel) {
       const image = {
         image: values.newMainImage.image,
@@ -34,7 +34,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
         isMain: true,
       };
 
-      await API.createHotelImage(image);
+      await createHotelImage(image);
     }
 
     if (errorResponse) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 import { CloseOutlined } from '@material-ui/icons';
 import {
   Button,

@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Alert } from '@material-ui/lab';
 import { Snackbar } from '@material-ui/core';
 import { setUser } from './features/loggedUser/loggedUserSlice';
-import API from './Common/API';
 import Hotel from './Models/Hotel';
 import ManagementService from './Common/ManagementService';
 import Routes from './Components/RoutesComponent/Routes';
 import LoggedUser from './Models/LoggedUser';
+import API from './api/API';
 
 function App() {
   const [hotels, setHotels] = useState([]);

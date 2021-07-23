@@ -4,7 +4,6 @@ import HotelsTableComponent from './HotelsTableComponent';
 import Hotel from '../../../Models/Hotel';
 import User from '../../../Models/User';
 import RoomView from '../../../Models/RoomView';
-import HotelBrief from '../../../Models/HotelBrief';
 import SearchClause from '../../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../../Common/BaseSearch/SearchRange';
 import SearchOption from '../../../Common/BaseSearch/SearchOption';
@@ -13,7 +12,6 @@ const HotelsTable = ({
   role,
   users,
   hotels,
-  hotelsBrief,
   roomViews,
   totalCount,
   onSearch,
@@ -48,7 +46,6 @@ const HotelsTable = ({
       role={role}
       users={users}
       hotels={hotels}
-      hotelsBrief={hotelsBrief}
       roomViews={roomViews}
       totalCount={totalCount}
       onSearch={onSearch}
@@ -92,7 +89,6 @@ HotelsTable.propTypes = {
   role: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(User).isRequired,
   hotels: PropTypes.arrayOf(Hotel).isRequired,
-  hotelsBrief: PropTypes.arrayOf(HotelBrief).isRequired,
   roomViews: PropTypes.arrayOf(RoomView),
   totalCount: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
