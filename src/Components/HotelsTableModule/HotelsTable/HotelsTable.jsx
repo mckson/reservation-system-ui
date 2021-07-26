@@ -13,7 +13,6 @@ const HotelsTable = ({
   users,
   hotels,
   roomViews,
-  totalCount,
   onSearch,
   clauses,
   ranges,
@@ -22,8 +21,9 @@ const HotelsTable = ({
   onChangeRanges,
   onChangeOptions,
   pageChanged,
-  pageSize,
   pageSizeChanged,
+  totalCount,
+  pageSize,
   deleteHotel,
   updateHotel,
   createHotel,
@@ -40,6 +40,7 @@ const HotelsTable = ({
   deleteRoomImage,
   onError,
   onSuccess,
+  prompts,
 }) => {
   return (
     <HotelsTableComponent
@@ -49,6 +50,7 @@ const HotelsTable = ({
       roomViews={roomViews}
       totalCount={totalCount}
       onSearch={onSearch}
+      prompts={prompts}
       clauses={clauses}
       options={options}
       ranges={ranges}
@@ -110,6 +112,8 @@ HotelsTable.propTypes = {
   deleteRoomImage: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  prompts: PropTypes.array,
 };
 
 HotelsTable.defaultProps = {
@@ -117,6 +121,7 @@ HotelsTable.defaultProps = {
   clauses: [],
   ranges: [],
   options: [],
+  prompts: [],
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,

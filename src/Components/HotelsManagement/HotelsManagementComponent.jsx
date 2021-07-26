@@ -1,7 +1,7 @@
-import { makeStyles, Snackbar } from '@material-ui/core';
+import { makeStyles, Snackbar, Tab } from '@material-ui/core';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Alert } from '@material-ui/lab';
+import { Alert, TabContext, TabPanel, TabList } from '@material-ui/lab';
 import HotelsTable from '../HotelsTableModule/HotelsTable/HotelsTable';
 import RoomViewTable from '../RoomViewTableModule/RoomViewTable/RoomViewTable';
 import Hotel from '../../Models/Hotel';
@@ -20,11 +20,16 @@ const useStyles = makeStyles((theme) => ({
   contentItem: {
     margin: theme.spacing(0, 0, 3, 0),
   },
+  tabList: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 const HotelsManagementComponent = ({
   users,
   isOpen,
+  prompts,
   close,
   role,
   hotels,
@@ -59,6 +64,7 @@ const HotelsManagementComponent = ({
   deleteRoomView,
 }) => {
   const classes = useStyles();
+  const [tab, setTab] = useState('0');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -86,57 +92,80 @@ const HotelsManagementComponent = ({
     setSuccess(successMessage);
   };
 
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+  };
+
   return (
     <FullScreenDialog isOpen={isOpen} close={close} title="Hotels management">
       <div className={classes.content}>
-        <div className={classes.contentItem}>
-          <HotelsTable
-            role={role}
-            users={users}
-            hotels={hotels}
-            roomViews={roomViews}
-            totalCount={totalCount}
-            onSearch={onSearch}
-            clauses={clauses}
-            options={options}
-            ranges={ranges}
-            onChangeClauses={onChangeClauses}
-            onChangeRanges={onChangeRanges}
-            onChangeOptions={onChangeOptions}
-            pageChanged={pageChanged}
-            pageSize={pageSize}
-            pageSizeChanged={pageSizeChanged}
-            deleteHotel={deleteHotel}
-            updateHotel={updateHotel}
-            createHotel={createHotel}
-            createRoom={createRoom}
-            updateRoom={updateRoom}
-            deleteRoom={deleteRoom}
-            createService={createService}
-            updateService={updateService}
-            deleteService={deleteService}
-            updateUser={updateUser}
-            createImage={createImage}
-            deleteImage={deleteImage}
-            createRoomImage={createRoomImage}
-            deleteRoomImage={deleteRoomImage}
-            onError={handleError}
-            onSuccess={handleSuccess}
-          />
-        </div>
-        {role && role === Constants.adminRole ? (
-          <div className={classes.contentItem}>
-            <RoomViewTable
-              role={role}
-              roomViews={roomViews}
-              createRoomView={createRoomView}
-              updateRoomView={updateRoomView}
-              deleteRoomView={deleteRoomView}
-              onError={handleError}
-              onSuccess={handleSuccess}
-            />
+        <TabContext value={tab}>
+          <div className={classes.tabList}>
+            <TabList
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleTabChange}
+            >
+              <Tab label="Hotels management" value="0" />
+              {role === Constants.adminRole ? (
+                <Tab label="Room views management" value="1" />
+              ) : (
+                <></>
+              )}
+            </TabList>
           </div>
-        ) : null}
+          <TabPanel value="0">
+            <div className={classes.contentItem}>
+              <HotelsTable
+                prompts={prompts}
+                role={role}
+                users={users}
+                hotels={hotels}
+                roomViews={roomViews}
+                totalCount={totalCount}
+                onSearch={onSearch}
+                clauses={clauses}
+                options={options}
+                ranges={ranges}
+                onChangeClauses={onChangeClauses}
+                onChangeRanges={onChangeRanges}
+                onChangeOptions={onChangeOptions}
+                pageChanged={pageChanged}
+                pageSize={pageSize}
+                pageSizeChanged={pageSizeChanged}
+                deleteHotel={deleteHotel}
+                updateHotel={updateHotel}
+                createHotel={createHotel}
+                createRoom={createRoom}
+                updateRoom={updateRoom}
+                deleteRoom={deleteRoom}
+                createService={createService}
+                updateService={updateService}
+                deleteService={deleteService}
+                updateUser={updateUser}
+                createImage={createImage}
+                deleteImage={deleteImage}
+                createRoomImage={createRoomImage}
+                deleteRoomImage={deleteRoomImage}
+                onError={handleError}
+                onSuccess={handleSuccess}
+              />
+            </div>
+          </TabPanel>
+          {role && role === Constants.adminRole ? (
+            <TabPanel value="1">
+              <div className={classes.contentItem}>
+                <RoomViewTable
+                  createRoomView={createRoomView}
+                  updateRoomView={updateRoomView}
+                  deleteRoomView={deleteRoomView}
+                  onError={handleError}
+                  onSuccess={handleSuccess}
+                />
+              </div>
+            </TabPanel>
+          ) : null}
+        </TabContext>
       </div>
       <Snackbar
         open={!!error}
@@ -195,6 +224,8 @@ HotelsManagementComponent.propTypes = {
   createRoomView: PropTypes.func.isRequired,
   updateRoomView: PropTypes.func.isRequired,
   deleteRoomView: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  prompts: PropTypes.array,
 };
 
 HotelsManagementComponent.defaultProps = {
@@ -202,6 +233,7 @@ HotelsManagementComponent.defaultProps = {
   clauses: [],
   ranges: [],
   options: [],
+  prompts: [],
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,

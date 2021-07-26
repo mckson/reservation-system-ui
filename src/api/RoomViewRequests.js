@@ -1,11 +1,21 @@
 import API from './API';
 
 const roomViewUrl = (id) => `/RoomViews${id ? `/${id}` : ''}`;
+const roomViewSearchUrl = '/RoomViews/Search';
 
 const getRoomViews = ({ pageNumber, pageSize, name }) => {
   return new Promise((resolve, reject) => {
     API.axios
       .get(roomViewUrl(), { params: { pageNumber, pageSize, name } })
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const getRoomViewSearchPrompts = ({ name }) => {
+  return new Promise((resolve, reject) => {
+    API.axios
+      .get(roomViewSearchUrl, { params: { name } })
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
@@ -38,4 +48,10 @@ const deleteRoomView = (id) => {
   });
 };
 
-export default { getRoomViews, createRoomView, updateRoomView, deleteRoomView };
+export default {
+  getRoomViews,
+  getRoomViewSearchPrompts,
+  createRoomView,
+  updateRoomView,
+  deleteRoomView,
+};

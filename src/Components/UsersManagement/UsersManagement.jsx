@@ -21,15 +21,15 @@ const UsersManagement = ({ isOpen, close }) => {
   const [pageSize, setPageSize] = useState(10);
   const [hotelsBrief, setHotelsBrief] = useState([]);
   const [searchClauses, setSearchClauses] = useState([
-    new SearchClause('Email', '', []),
-    new SearchClause('Surname', '', []),
-    new SearchClause('Name', '', []),
-    new SearchClause(
-      'Roles',
-      [],
-      [Constants.adminRole, Constants.managerRole, Constants.userRole],
-      true
-    ),
+    new SearchClause({ name: 'Email', value: '' }),
+    new SearchClause({ name: 'Surname', value: '' }),
+    new SearchClause({ name: 'Name', value: '' }),
+    new SearchClause({
+      name: 'Roles',
+      value: [],
+      options: [Constants.adminRole, Constants.managerRole, Constants.userRole],
+      multiple: true,
+    }),
   ]);
   const [searchRanges, setSearchRanges] = useState([]);
   const [searchOptions, setSearchOptions] = useState([]);

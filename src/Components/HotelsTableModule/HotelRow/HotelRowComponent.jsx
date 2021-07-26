@@ -22,7 +22,6 @@ import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
 import Constants from '../../../Common/Constants';
 import useRowStyles from '../../../Common/Styles/TableRowStyles';
 import RoomView from '../../../Models/RoomView';
-import Service from '../../../Models/Service';
 
 const HotelRowComponent = ({
   role,
@@ -149,9 +148,10 @@ const HotelRowComponent = ({
                 </div>
                 <Collapse in={openServices}>
                   <ServicesTable
-                    services={hotel.services.map(
-                      (service) => new Service(service)
-                    )}
+                    // services={hotel.services.map(
+                    //   (service) => new Service(service)
+                    // )}
+                    services={[]}
                     createService={createService}
                     updateService={updateService}
                     deleteService={deleteService}

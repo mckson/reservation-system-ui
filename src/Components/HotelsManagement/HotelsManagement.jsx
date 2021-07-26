@@ -14,24 +14,44 @@ import HotelRequests from '../../api/HotelRequests';
 import RoomViewRequests from '../../api/RoomViewRequests';
 
 const { getAllUsers } = UserRequests;
-const { getAllHotelNames, getAllHotelCities, getHotels } = HotelRequests;
+const { getHotels, getHotelSearchPrompts } = HotelRequests;
 const { getRoomViews } = RoomViewRequests;
 
 const HotelsManagement = ({ isOpen, close }) => {
   const [users, setUsers] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const [hotelNames, setHotelNames] = useState([]);
-  const [hotelCities, setHotelCities] = useState([]);
   const [hotels, setHotels] = useState([]);
+  const [searchVariants, setSearchVariants] = useState([]);
   const [roomViews, setRoomViews] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [viewsTotalResults, setViewsTotalResults] = useState(0);
+  const [viewsPageNumber, setViewsPageNumber] = useState(1);
+  const [viewsPageSize, setViewsPageSize] = useState(10);
   const [searchClauses, setSearchClauses] = useState([
-    new SearchClause('Hotel name', null, []),
-    new SearchClause('City', null, []),
-    new SearchClause('Services', [], [], true),
+    new SearchClause({
+      name: 'Hotel name',
+      value: '',
+      getOptionValue: (option) => option.name,
+      getOptionLabel: (option) =>
+        `${option.name} (${option.country}, ${option.city})`,
+    }),
+    new SearchClause({
+      name: 'City',
+      value: '',
+      getOptionValue: (option) => option.city,
+      getOptionLabel: (option) =>
+        `${option.city} ("${option.name}", ${option.country})`,
+    }),
+    new SearchClause({
+      name: 'Services',
+      value: [],
+      multiple: true,
+      noOptions: true,
+    }),
   ]);
+
   const [searchRanges, setSearchRanges] = useState([
     new SearchRange(
       'Deposit in USD',
@@ -68,18 +88,6 @@ const HotelsManagement = ({ isOpen, close }) => {
     }
   };
 
-  const requestHotelNames = async () => {
-    const respondedHotelNames = await getAllHotelNames();
-
-    setHotelNames(respondedHotelNames);
-  };
-
-  const requestHotelCities = async () => {
-    const respondedHotelCities = await getAllHotelCities();
-
-    setHotelCities(respondedHotelCities);
-  };
-
   const requestHotels = async () => {
     const response = await getHotels({
       pageNumber,
@@ -112,13 +120,44 @@ const HotelsManagement = ({ isOpen, close }) => {
     }
   };
 
+  const requestSearchVariants = async () => {
+    const response = await getHotelSearchPrompts({
+      dateIn: '',
+      dateOut: '',
+      manager: loggedUser.roles.includes(Constants.adminRole)
+        ? ''
+        : loggedUser.id,
+      name: searchClauses[0].value,
+      city: searchClauses[1].value,
+      services: searchClauses[2].value,
+      minDeposit: searchRanges[0].value[0],
+      maxDeposit: searchRanges[0].value[1],
+      minFloors: searchRanges[1].value[0],
+      maxFloors: searchRanges[1].value[1],
+    });
+
+    setSearchVariants(response);
+  };
+
   const requestRoomViews = async () => {
-    const response = await getRoomViews();
+    const response = await getRoomViews({
+      pageNumber: viewsPageNumber,
+      pageSize: viewsPageSize,
+    });
 
     if (response != null) {
-      const respondedRoomViews = response.map((item) => new RoomView(item));
+      const respondedRoomViews = response.content.map(
+        (item) => new RoomView(item)
+      );
 
       setRoomViews(respondedRoomViews);
+      setViewsTotalResults(response.totalResults);
+      if (viewsPageNumber !== response.pageNumber) {
+        setViewsPageNumber(response.pageNumber);
+      }
+      if (viewsPageSize !== response.pageSize) {
+        setViewsPageSize(response.pageSize);
+      }
     }
   };
 
@@ -140,6 +179,14 @@ const HotelsManagement = ({ isOpen, close }) => {
 
   const handlePageSizeChanged = (newSize) => {
     setPageSize(newSize);
+  };
+
+  const handleViewsPageChanged = (value) => {
+    setViewsPageNumber(value);
+  };
+
+  const handleViewsPageSizeChanged = (newSize) => {
+    setViewsPageSize(newSize);
   };
 
   const handleCreateHotel = async (createdHotel) => {
@@ -359,31 +406,30 @@ const HotelsManagement = ({ isOpen, close }) => {
 
   useEffect(async () => {
     await requestRoomViews();
-    await requestHotelNames();
-    await requestHotelCities();
+  }, [viewsPageSize, viewsPageNumber]);
+
+  useEffect(async () => {
+    await requestRoomViews();
 
     if (getRole(loggedUser) === Constants.adminRole) {
       await requestUsers();
     }
   }, []);
 
-  useEffect(() => {
-    const newClauses = [...searchClauses];
-    newClauses[0] = new SearchClause('Hotel name', null, hotelNames);
-    setSearchClauses(newClauses);
-  }, [hotelNames]);
-
-  useEffect(() => {
-    const newClauses = [...searchClauses];
-    newClauses[1] = new SearchClause('City', null, hotelCities);
-    setSearchClauses(newClauses);
-  }, [hotelCities]);
+  useEffect(async () => {
+    if (searchClauses[0].value) {
+      await requestSearchVariants();
+    } else {
+      setSearchVariants([]);
+    }
+  }, [searchClauses, searchRanges]);
 
   return (
     <HotelsManagementComponent
       role={getRole(loggedUser)}
       users={users}
       roomViews={roomViews}
+      prompts={searchVariants}
       isOpen={isOpen}
       close={close}
       hotels={hotels}
@@ -396,6 +442,10 @@ const HotelsManagement = ({ isOpen, close }) => {
       pageChanged={handlePageChanged}
       pageSizeChanged={handlePageSizeChanged}
       pageSize={pageSize}
+      viewsTotalCount={viewsTotalResults}
+      viewsPageChanged={handleViewsPageChanged}
+      viewsPageSizeChanged={handleViewsPageSizeChanged}
+      viewsPageSize={viewsPageSize}
       createHotel={handleCreateHotel}
       updateHotel={handleUpdateHotel}
       deleteHotel={handleDeleteHotel}

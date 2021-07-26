@@ -11,12 +11,18 @@ import {
   Button,
   makeStyles,
   TableRow,
+  TablePagination,
+  Drawer,
 } from '@material-ui/core';
+import { SearchOutlined } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import RoomView from '../../../Models/RoomView';
 import RoomViewRowComponent from '../RoomViewRow/RoomViewRowComponent';
 import CreateRoomView from '../CreateRoomView';
-import Constants from '../../../Common/Constants';
+import BaseSearch from '../../../Common/BaseSearch/BaseSearch';
+import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../../Common/BaseSearch/SearchOption';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -32,17 +38,48 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RoomViewTableComponent = ({
-  role,
   roomViews,
   onError,
   onSuccess,
   createRoomView,
   updateRoomView,
   deleteRoomView,
+  pageChanged,
+  pageSizeChanged,
+  totalCount,
+  pageSize,
+  onSearch,
+  clauses,
+  ranges,
+  options,
+  onChangeClauses,
+  onChangeRanges,
+  onChangeOptions,
+  prompts,
 }) => {
   const [isAdd, setIsAdd] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowPerPage] = useState(pageSize);
+  const [openSearch, setOpenSearch] = useState(false);
 
   const classes = useStyles();
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    pageChanged(newPage + 1);
+  };
+
+  const handleChangePageSize = (event) => {
+    const newSize = parseInt(event.target.value, 10);
+
+    // change request parameters
+    pageSizeChanged(newSize);
+    pageChanged(1);
+
+    // change table parameters
+    setPage(0);
+    setRowPerPage(newSize);
+  };
 
   const handleAddClose = () => {
     setIsAdd(false);
@@ -50,6 +87,32 @@ const RoomViewTableComponent = ({
 
   return (
     <>
+      <Button
+        onClick={() => setOpenSearch(true)}
+        startIcon={<SearchOutlined />}
+      >
+        Setup hotel search options
+      </Button>
+      <div className={classes.searchSection}>
+        <Drawer
+          open={openSearch}
+          onClose={() => setOpenSearch(false)}
+          classes={{ paper: classes.searchSection }}
+        >
+          <div>
+            <BaseSearch
+              prompts={prompts}
+              clauses={clauses}
+              ranges={ranges}
+              options={options}
+              onChangeClauses={onChangeClauses}
+              onChangeOptions={onChangeOptions}
+              onChangeRanges={onChangeRanges}
+              onSearch={onSearch}
+            />
+          </div>
+        </Drawer>
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -64,7 +127,6 @@ const RoomViewTableComponent = ({
               roomViews.map((roomView) => (
                 <RoomViewRowComponent
                   key={roomView.id}
-                  role={role}
                   roomView={roomView}
                   updateRoomView={updateRoomView}
                   deleteRoomView={deleteRoomView}
@@ -78,18 +140,24 @@ const RoomViewTableComponent = ({
           </TableBody>
           <TableFooter>
             <TableRow>
-              {role === Constants.adminRole ? (
-                <TableCell>
-                  <Button
-                    color="primary"
-                    className={classes.addButton}
-                    startIcon={<AddIcon />}
-                    onClick={() => setIsAdd(true)}
-                  >
-                    Add new view
-                  </Button>
-                </TableCell>
-              ) : null}
+              <TableCell>
+                <Button
+                  color="primary"
+                  className={classes.addButton}
+                  startIcon={<AddIcon />}
+                  onClick={() => setIsAdd(true)}
+                >
+                  Add new view
+                </Button>
+              </TableCell>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPage={rowsPerPage}
+                count={totalCount}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangePageSize}
+              />
             </TableRow>
           </TableFooter>
         </Table>
@@ -105,13 +173,35 @@ const RoomViewTableComponent = ({
 };
 
 RoomViewTableComponent.propTypes = {
-  role: PropTypes.string.isRequired,
   roomViews: PropTypes.arrayOf(RoomView).isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   createRoomView: PropTypes.func.isRequired,
   updateRoomView: PropTypes.func.isRequired,
   deleteRoomView: PropTypes.func.isRequired,
+  pageChanged: PropTypes.func.isRequired,
+  pageSizeChanged: PropTypes.func.isRequired,
+  totalCount: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  onSearch: PropTypes.func.isRequired,
+  clauses: PropTypes.arrayOf(SearchClause),
+  ranges: PropTypes.arrayOf(SearchRange),
+  options: PropTypes.arrayOf(SearchOption),
+  onChangeClauses: PropTypes.func,
+  onChangeRanges: PropTypes.func,
+  onChangeOptions: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  prompts: PropTypes.array,
+};
+
+RoomViewTableComponent.defaultProps = {
+  clauses: [],
+  ranges: [],
+  options: [],
+  prompts: [],
+  onChangeClauses: null,
+  onChangeRanges: null,
+  onChangeOptions: null,
 };
 
 export default RoomViewTableComponent;

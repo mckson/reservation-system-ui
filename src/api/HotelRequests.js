@@ -6,6 +6,9 @@ const hotelUrl = (id) => `/Hotels${id ? `/${id}` : ''}`;
 // brief hotel responses (for example, for search)
 const allHotelsUrl = '/Hotels/All';
 
+// brief hotel responses (for example, for search)
+const hotelSearchUrl = '/Hotels/Search';
+
 const getHotels = ({
   pageNumber,
   pageSize,
@@ -49,28 +52,53 @@ const getHotels = ({
   });
 };
 
+const getHotelSearchPrompts = ({
+  pageNumber,
+  pageSize,
+  dateIn,
+  dateOut,
+  manager,
+  name,
+  city,
+  services,
+  minDeposit,
+  maxDeposit,
+  minFloors,
+  maxFloors,
+}) => {
+  return new Promise((resolve, reject) => {
+    API.axios
+      .get(hotelSearchUrl, {
+        params: {
+          pageNumber,
+          pageSize,
+          dateIn,
+          dateOut,
+          manager,
+          name,
+          city,
+          services,
+          minDeposit,
+          maxDeposit,
+          minFloors,
+          maxFloors,
+        },
+        paramsSerializer: (params) =>
+          QueryString.stringify(params, { arrayFormat: 'repeat' }),
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
 const getAllBriefHotels = () => {
   return new Promise((resolve, reject) => {
     API.axios
       .get(allHotelsUrl)
-      .then((response) => resolve(response.data))
-      .catch((error) => reject(error));
-  });
-};
-
-const getAllHotelNames = () => {
-  return new Promise((resolve, reject) => {
-    API.axios
-      .get('Hotels/Names')
-      .then((response) => resolve(response.data))
-      .catch((error) => reject(error));
-  });
-};
-
-const getAllHotelCities = () => {
-  return new Promise((resolve, reject) => {
-    API.axios
-      .get('Hotels/Cities')
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
@@ -123,9 +151,8 @@ const deleteHotel = (id) => {
 
 export default {
   getHotels,
+  getHotelSearchPrompts,
   getAllBriefHotels,
-  getAllHotelNames,
-  getAllHotelCities,
   createHotel,
   getHotel,
   updateHotel,

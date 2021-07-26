@@ -3,18 +3,22 @@
 // }
 
 class SearchClause {
-  constructor(name, value, values, multiple) {
+  constructor({
+    name,
+    value,
+    multiple,
+    options,
+    getOptionValue,
+    getOptionLabel,
+    noOptions,
+  }) {
     this.name = name;
     this.value = value;
-    this.values = values;
-    this.multiple = multiple;
-  }
-
-  onChange(newValue) {
-    this.value = newValue;
-    // this.values = this.values.filter((value) =>
-    //   value.toUpperCase().startsWith(newValue.toUpperCase())
-    // );
+    this.multiple = multiple || false;
+    this.getOptionValue = getOptionValue;
+    this.getOptionLabel = getOptionLabel;
+    this.noOptions = noOptions || false;
+    this.options = options;
   }
 }
 

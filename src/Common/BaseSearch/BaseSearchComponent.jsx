@@ -47,17 +47,13 @@ const BaseSearchComponent = ({
   onChangeSearchOptions,
   onChangeSearchRanges,
   onSearch,
+  prompts,
 }) => {
   const classes = useStyles();
 
   const onChangeSearchClause = (searchClause, value) => {
-    const newSearchClause = new SearchClause(
-      searchClause.name,
-      searchClause.value,
-      searchClause.values,
-      searchClause.multiple
-    );
-    newSearchClause.onChange(value);
+    const newSearchClause = { ...searchClause };
+    newSearchClause.value = value;
 
     const index = searchClauses.findIndex(
       (item) => item.name === newSearchClause.name
@@ -116,18 +112,38 @@ const BaseSearchComponent = ({
               <div className={classes.itemContent}>
                 <Autocomplete
                   multiple={searchClause.multiple}
-                  value={searchClause.value}
+                  value={searchClause.value || ''}
                   fullWidth
                   freeSolo
                   disableClearable
                   ChipProps={{ size: 'small' }}
                   limitTags={1}
-                  getOptionLabel={(option) => option}
-                  options={searchClause.values}
-                  autoSelect={false}
-                  renderOption={(option) => {
-                    return option;
+                  getOptionLabel={(option) => {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                    if (typeof option === 'string') {
+                      return option;
+                    }
+
+                    return searchClause.getOptionLabel
+                      ? searchClause.getOptionLabel(option)
+                      : option;
                   }}
+                  renderOption={(option) =>
+                    searchClause.getOptionLabel
+                      ? searchClause.getOptionLabel(option)
+                      : option
+                  }
+                  options={() => {
+                    if (searchClause.noOptions) {
+                      return [];
+                    }
+                    if (searchClause.options) {
+                      return searchClause.options;
+                    }
+                    return prompts;
+                  }}
+                  autoSelect={false}
                   renderInput={(params) => (
                     <div className={classes.itemContent}>
                       <TextField
@@ -162,9 +178,16 @@ const BaseSearchComponent = ({
                       onChangeSearchClause(searchClause, value);
                     }
                   }}
-                  onChange={(event, value) =>
-                    onChangeSearchClause(searchClause, value)
-                  }
+                  onChange={(event, value) => {
+                    if (searchClause.multiple) {
+                      onChangeSearchClause(searchClause, value);
+                    } else if (typeof value === 'string') {
+                      onChangeSearchClause(searchClause, value);
+                    } else {
+                      const newValue = searchClause.getOptionValue(value);
+                      onChangeSearchClause(searchClause, newValue);
+                    }
+                  }}
                 />
                 <IconButton
                   onClick={() =>
@@ -363,6 +386,8 @@ BaseSearchComponent.propTypes = {
   onChangeSearchOptions: PropTypes.func.isRequired,
   onChangeSearchRanges: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  prompts: PropTypes.array,
 };
 
 BaseSearchComponent.defaultProps = {
@@ -370,6 +395,7 @@ BaseSearchComponent.defaultProps = {
   searchClauses: [],
   searchOptions: [],
   searchRanges: [],
+  prompts: [],
 };
 
 export default BaseSearchComponent;

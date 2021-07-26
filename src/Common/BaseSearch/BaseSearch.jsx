@@ -13,6 +13,7 @@ const BaseSearch = ({
   onChangeOptions,
   onChangeClauses,
   onChangeRanges,
+  prompts,
 }) => {
   const [searchClauses, setSearchClauses] = useState(clauses);
   const [searchOptions, setSearchOptions] = useState(options);
@@ -52,6 +53,7 @@ const BaseSearch = ({
       onChangeSearchOptions={handleChangeSearchOptions}
       onChangeSearchRanges={handleChangesSearchRanges}
       onSearch={handleSearch}
+      prompts={prompts}
     />
   );
 };
@@ -64,12 +66,15 @@ BaseSearch.propTypes = {
   onChangeOptions: PropTypes.func,
   onChangeClauses: PropTypes.func,
   onChangeRanges: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
+  prompts: PropTypes.array,
 };
 
 BaseSearch.defaultProps = {
   clauses: [],
   options: [],
   ranges: [],
+  prompts: [],
   onChangeOptions: null,
   onChangeRanges: null,
   onChangeClauses: null,

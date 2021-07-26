@@ -5,11 +5,9 @@ import { DeleteOutlined } from '@material-ui/icons';
 import RoomView from '../../../Models/RoomView';
 import useRowStyles from '../../../Common/Styles/TableRowStyles';
 import RoomViewRowMapComponent from '../RoomRowMap/RoomViewRowMapComponent';
-import Constants from '../../../Common/Constants';
 
 const RoomViewRowComponent = ({
   roomView,
-  role,
   deleteRoomView,
   onError,
   onSuccess,
@@ -23,26 +21,24 @@ const RoomViewRowComponent = ({
       <TableRow className={classes.row}>
         <RoomViewRowMapComponent roomView={roomView} />
         <TableCell className={classes.actions}>
-          {role === Constants.adminRole ? (
-            <>
-              <IconButton
-                className={classes.button}
-                onClick={async () => {
-                  const [deletedView, errorResponse] = await deleteRoomView(
-                    roomView.id
-                  );
+          <>
+            <IconButton
+              className={classes.button}
+              onClick={async () => {
+                const [deletedView, errorResponse] = await deleteRoomView(
+                  roomView.id
+                );
 
-                  if (errorResponse) {
-                    onError(errorResponse);
-                  } else {
-                    onSuccess(RoomViewDeletionSuccessMessage(deletedView.name));
-                  }
-                }}
-              >
-                <DeleteOutlined />
-              </IconButton>
-            </>
-          ) : null}
+                if (errorResponse) {
+                  onError(errorResponse);
+                } else {
+                  onSuccess(RoomViewDeletionSuccessMessage(deletedView.name));
+                }
+              }}
+            >
+              <DeleteOutlined />
+            </IconButton>
+          </>
         </TableCell>
       </TableRow>
     </>
@@ -50,7 +46,6 @@ const RoomViewRowComponent = ({
 };
 
 RoomViewRowComponent.propTypes = {
-  role: PropTypes.string.isRequired,
   roomView: PropTypes.instanceOf(RoomView).isRequired,
   deleteRoomView: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
