@@ -39,7 +39,7 @@ import SearchRange from '../../Common/BaseSearch/SearchRange';
 import SearchOption from '../../Common/BaseSearch/SearchOption';
 import RoomRequests from '../../api/RoomRequests';
 
-const { getRooms, getRoomNames, getRoomNumbers } = RoomRequests;
+const { getRooms, getRoomSearchVariants } = RoomRequests;
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -111,14 +111,39 @@ const RoomsTableComponent = ({
   const [totalCount, setTotalCount] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
+  const [searchVariants, setSearchVariants] = useState([]);
 
   const classes = useStyles();
 
   const [searchClauses, setSearchClauses] = useState([
-    new SearchClause('Room name', '', []),
-    new SearchClause('Room number', '', []),
-    new SearchClause('Facilities', [], [], true),
-    new SearchClause('Room views', [], [], true),
+    new SearchClause({
+      name: 'Room name',
+      value: '',
+      getOptionValue: (option) => option.name,
+      optionsMap: (options) => [
+        ...new Set(
+          options.map((option) => option.name).filter((option) => option)
+        ),
+      ],
+    }),
+    new SearchClause({
+      name: 'Room number',
+      value: '',
+      getOptionLabel: (option) => `#${option.number}`,
+      getOptionValue: (option) => option.number,
+    }),
+    new SearchClause({
+      name: 'Facilities',
+      value: [],
+      multiple: true,
+      noOptions: true,
+    }),
+    new SearchClause({
+      name: 'Room views',
+      value: [],
+      multiple: true,
+      noOptions: true,
+    }),
   ]);
 
   const [searchRanges, setSearchRanges] = useState([
@@ -184,8 +209,6 @@ const RoomsTableComponent = ({
 
   useEffect(async () => {
     const response = await getRooms({
-      pageNumber: page + 1,
-      pageSize: rowsPerPage,
       hotelId: hotel.id,
       name: searchClauses[0].value,
       number: searchClauses[1].value,
@@ -211,19 +234,37 @@ const RoomsTableComponent = ({
     }
   }, [page, rowsPerPage, refresh]);
 
-  useEffect(async () => {
-    const responseNames = await getRoomNames(hotel.id);
-    const responseNumbers = await getRoomNumbers(hotel.id);
+  const requestSearchVariants = async () => {
+    const response = await getRoomSearchVariants({
+      pageNumber: page + 1,
+      pageSize: rowsPerPage,
+      hotelId: hotel.id,
+      name: searchClauses[0].value,
+      number: searchClauses[1].value,
+      minFloorNumber: searchRanges[0].value[0],
+      maxFloorNumber: searchRanges[0].value[1],
+      minCapacity: searchRanges[1].value[0],
+      maxCapacity: searchRanges[1].value[1],
+      minArea: searchRanges[2].value[0],
+      maxArea: searchRanges[2].value[1],
+      minPrice: searchRanges[3].value[0],
+      maxPrice: searchRanges[3].value[1],
+      smoking: searchOptions[0].value,
+      parking: searchOptions[1].value,
+      facilities: searchClauses[2].value.map((value) => value),
+      roomViews: searchClauses[3].value.map((value) => value),
+    });
 
-    const newSearchClauses = [...searchClauses];
-    newSearchClauses[0] = new SearchClause('Room name', '', responseNames);
-    newSearchClauses[1] = new SearchClause(
-      'Room number',
-      '',
-      responseNumbers.map((number) => number.toString())
-    );
-    setSearchClauses(newSearchClauses);
-  }, []);
+    setSearchVariants(response);
+  };
+
+  useEffect(async () => {
+    if (searchClauses[0].value || searchClauses[1].value) {
+      await requestSearchVariants();
+    } else {
+      setSearchVariants([]);
+    }
+  }, [searchClauses, searchRanges]);
 
   return (
     <>
@@ -242,6 +283,7 @@ const RoomsTableComponent = ({
           <div>
             <BaseSearch
               clauses={searchClauses}
+              prompts={searchVariants}
               ranges={searchRanges}
               options={searchOptions}
               onChangeClauses={handleChangeSearchClauses}

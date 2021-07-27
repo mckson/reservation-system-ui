@@ -11,6 +11,7 @@ class SearchClause {
     getOptionValue,
     getOptionLabel,
     noOptions,
+    optionsMap,
   }) {
     this.name = name;
     this.value = value;
@@ -19,6 +20,7 @@ class SearchClause {
     this.getOptionLabel = getOptionLabel;
     this.noOptions = noOptions || false;
     this.options = options;
+    this.optionsMap = optionsMap;
   }
 }
 

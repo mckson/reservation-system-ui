@@ -59,6 +59,7 @@ const UsersTableComponent = ({
   onChangeClauses,
   onChangeRanges,
   onChangeOptions,
+  searchVariants,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(pageSize);
@@ -107,6 +108,7 @@ const UsersTableComponent = ({
               clauses={clauses}
               ranges={ranges}
               options={options}
+              prompts={searchVariants}
               onChangeClauses={onChangeClauses}
               onChangeOptions={onChangeOptions}
               onChangeRanges={onChangeRanges}
@@ -202,6 +204,8 @@ UsersTableComponent.propTypes = {
   deleteUser: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  searchVariants: PropTypes.array,
 };
 
 UsersTableComponent.defaultProps = {
@@ -210,6 +214,7 @@ UsersTableComponent.defaultProps = {
   clauses: [],
   ranges: [],
   options: [],
+  searchVariants: [],
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,

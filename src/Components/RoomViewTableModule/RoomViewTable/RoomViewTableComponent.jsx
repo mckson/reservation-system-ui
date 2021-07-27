@@ -91,7 +91,7 @@ const RoomViewTableComponent = ({
         onClick={() => setOpenSearch(true)}
         startIcon={<SearchOutlined />}
       >
-        Setup hotel search options
+        Setup view search options
       </Button>
       <div className={classes.searchSection}>
         <Drawer
@@ -113,8 +113,8 @@ const RoomViewTableComponent = ({
           </div>
         </Drawer>
       </div>
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} variant="outlined">
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>

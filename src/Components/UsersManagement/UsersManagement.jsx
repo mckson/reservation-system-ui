@@ -10,20 +10,38 @@ import Constants from '../../Common/Constants';
 import UserRequests from '../../api/UserRequests';
 import HotelRequests from '../../api/HotelRequests';
 
-const { getUsers, getAllUsers } = UserRequests;
+const { getUsers, getAllUsers, getUserSearchVariants } = UserRequests;
 const { getAllBriefHotels } = HotelRequests;
 
 const UsersManagement = ({ isOpen, close }) => {
   const [users, setUsers] = useState([]);
+  const [searchVariants, setSearchVariants] = useState([]);
   const [usersBrief, setUsersBrief] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [hotelsBrief, setHotelsBrief] = useState([]);
   const [searchClauses, setSearchClauses] = useState([
-    new SearchClause({ name: 'Email', value: '' }),
-    new SearchClause({ name: 'Surname', value: '' }),
-    new SearchClause({ name: 'Name', value: '' }),
+    new SearchClause({
+      name: 'Email',
+      value: '',
+      getOptionValue: (option) => option.email,
+      getOptionLabel: (option) => option.email,
+    }),
+    new SearchClause({
+      name: 'Surname',
+      value: '',
+      getOptionValue: (option) => option.firstName,
+      getOptionLabel: (option) =>
+        `${option.firstName} ${option.lastName} (${option.email})`,
+    }),
+    new SearchClause({
+      name: 'Name',
+      value: '',
+      getOptionValue: (option) => option.lastName,
+      getOptionLabel: (option) =>
+        `${option.firstName} ${option.lastName} (${option.email})`,
+    }),
     new SearchClause({
       name: 'Roles',
       value: [],
@@ -35,6 +53,17 @@ const UsersManagement = ({ isOpen, close }) => {
   const [searchOptions, setSearchOptions] = useState([]);
 
   const [refresh, setRefresh] = useState(false);
+
+  const requestSearchVariants = async () => {
+    const response = await getUserSearchVariants({
+      email: searchClauses[0].value,
+      firstName: searchClauses[1].value,
+      lastName: searchClauses[2].value,
+      roles: searchClauses[3].value,
+    });
+
+    setSearchVariants(response);
+  };
 
   const handleChangeSearchClauses = (newClauses) => {
     setSearchClauses(newClauses);
@@ -148,11 +177,24 @@ const UsersManagement = ({ isOpen, close }) => {
     await requestHotels();
   }, []);
 
+  useEffect(async () => {
+    if (
+      searchClauses[0].value ||
+      searchClauses[1].value ||
+      searchClauses[2].value
+    ) {
+      await requestSearchVariants();
+    } else {
+      setSearchVariants([]);
+    }
+  }, [searchClauses, searchRanges]);
+
   return (
     <UsersManagementComponent
       clauses={searchClauses}
       options={searchOptions}
       ranges={searchRanges}
+      searchVariants={searchVariants}
       onChangeClauses={handleChangeSearchClauses}
       onChangeOptions={handleChangeSearchOptions}
       onChangeRanges={handleChangeSearchRanges}

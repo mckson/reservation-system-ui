@@ -1,11 +1,32 @@
 import API from './API';
 
 const serviceUrl = (id) => `/Services${id ? `/${id}` : ''}`;
+const serviceSearchVariantsUrl = '/Services/Search';
 
-const getServices = ({ pageNumber, pageSize, hotelId }) => {
+class ServiceFilter {
+  constructor({ pageNumber, pageSize, hotelId, name }) {
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
+    this.hotelId = hotelId;
+    this.name = name;
+  }
+}
+
+const getServices = (filterObject) => {
+  const filter = new ServiceFilter(filterObject);
   return new Promise((resolve, reject) => {
     API.axios
-      .get(serviceUrl(), { params: { pageNumber, pageSize, hotelId } })
+      .get(serviceUrl(), { params: filter })
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const getServiceSearchVariants = (filterObject) => {
+  const filter = new ServiceFilter(filterObject);
+  return new Promise((resolve, reject) => {
+    API.axios
+      .get(serviceSearchVariantsUrl, { params: filter })
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
@@ -45,4 +66,10 @@ const deleteService = (id) => {
   });
 };
 
-export default { getServices, createService, updateService, deleteService };
+export default {
+  getServices,
+  getServiceSearchVariants,
+  createService,
+  updateService,
+  deleteService,
+};

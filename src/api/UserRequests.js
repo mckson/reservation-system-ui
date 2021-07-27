@@ -6,6 +6,19 @@ const userUrl = (id) => `/Users${id ? `/${id}` : ''}`;
 // brief user responses (for example, for search)
 const allUsersUrl = '/Users/All';
 
+const userSearchVariantsUrl = '/Users/Search';
+
+class UserFilter {
+  constructor({ pageNumber, pageSize, email, firstName, lastName, roles }) {
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.roles = roles;
+  }
+}
+
 const getAllUsers = () => {
   return new Promise((resolve, reject) => {
     API.axios
@@ -17,25 +30,26 @@ const getAllUsers = () => {
   });
 };
 
-const getUsers = ({
-  pageNumber,
-  pageSize,
-  email,
-  firstName,
-  lastName,
-  roles,
-}) => {
+const getUsers = (filterObj) => {
+  const filter = new UserFilter(filterObj);
   return new Promise((resolve, reject) => {
     API.axios
       .get(userUrl(), {
-        params: {
-          pageNumber,
-          pageSize,
-          email,
-          firstName,
-          lastName,
-          roles,
-        },
+        params: filter,
+        paramsSerializer: (params) =>
+          QueryString.stringify(params, { arrayFormat: 'repeat' }),
+      })
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+const getUserSearchVariants = (filterObj) => {
+  const filter = new UserFilter(filterObj);
+  return new Promise((resolve, reject) => {
+    API.axios
+      .get(userSearchVariantsUrl, {
+        params: filter,
         paramsSerializer: (params) =>
           QueryString.stringify(params, { arrayFormat: 'repeat' }),
       })
@@ -92,6 +106,7 @@ const deleteUser = (userId) => {
 
 export default {
   getAllUsers,
+  getUserSearchVariants,
   getUsers,
   createUser,
   getUser,

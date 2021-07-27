@@ -110,6 +110,7 @@ const useStyles = makeStyles((theme) => ({
 const HotelFullComponent = ({
   hotel,
   rooms,
+  services,
   onBackClick,
   loggedUser,
   dateIn,
@@ -226,13 +227,12 @@ const HotelFullComponent = ({
                 icon={<MoneyIcon />}
                 labelComponent={<Typography variant="h6">Deposit</Typography>}
               >
-                {' '}
                 <Typography>
                   {hotel.deposit === 0 ? 'None' : hotel.deposit}
                 </Typography>
               </LabeledInfo>
 
-              {hotel.services.lenght !== 0 ? (
+              {services && services.lenght !== 0 ? (
                 <LabeledInfo
                   icon={<ServicesIcon />}
                   labelComponent={
@@ -240,7 +240,7 @@ const HotelFullComponent = ({
                   }
                 >
                   <div className={classes.serviceContainer}>
-                    {hotel.services.map((service) => (
+                    {services.map((service) => (
                       <ServiceItem
                         key={service.id}
                         service={new Service(service)}
@@ -314,6 +314,7 @@ HotelFullComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   loggedUser: PropTypes.instanceOf(User),
   rooms: PropTypes.arrayOf(Room),
+  services: PropTypes.arrayOf(Service),
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   isRoomDetailedOpen: PropTypes.bool.isRequired,
@@ -330,6 +331,7 @@ HotelFullComponent.propTypes = {
 
 HotelFullComponent.defaultProps = {
   rooms: [],
+  services: [],
   loggedUser: null,
   dateIn: null,
   dateOut: null,

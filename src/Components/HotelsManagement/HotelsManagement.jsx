@@ -181,14 +181,6 @@ const HotelsManagement = ({ isOpen, close }) => {
     setPageSize(newSize);
   };
 
-  const handleViewsPageChanged = (value) => {
-    setViewsPageNumber(value);
-  };
-
-  const handleViewsPageSizeChanged = (newSize) => {
-    setViewsPageSize(newSize);
-  };
-
   const handleCreateHotel = async (createdHotel) => {
     const [response, error] = await ManagementService.baseRequestHandler(
       ManagementService.handleCreateHotel,
@@ -443,8 +435,6 @@ const HotelsManagement = ({ isOpen, close }) => {
       pageSizeChanged={handlePageSizeChanged}
       pageSize={pageSize}
       viewsTotalCount={viewsTotalResults}
-      viewsPageChanged={handleViewsPageChanged}
-      viewsPageSizeChanged={handleViewsPageSizeChanged}
       viewsPageSize={viewsPageSize}
       createHotel={handleCreateHotel}
       updateHotel={handleUpdateHotel}

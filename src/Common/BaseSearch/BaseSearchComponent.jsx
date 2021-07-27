@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -119,8 +120,6 @@ const BaseSearchComponent = ({
                   ChipProps={{ size: 'small' }}
                   limitTags={1}
                   getOptionLabel={(option) => {
-                    // eslint-disable-next-line no-debugger
-                    debugger;
                     if (typeof option === 'string') {
                       return option;
                     }
@@ -134,15 +133,15 @@ const BaseSearchComponent = ({
                       ? searchClause.getOptionLabel(option)
                       : option
                   }
-                  options={() => {
-                    if (searchClause.noOptions) {
-                      return [];
-                    }
-                    if (searchClause.options) {
-                      return searchClause.options;
-                    }
-                    return prompts;
-                  }}
+                  options={
+                    searchClause.noOptions
+                      ? []
+                      : searchClause.options
+                      ? searchClause.options
+                      : searchClause.optionsMap
+                      ? searchClause.optionsMap(prompts)
+                      : prompts
+                  }
                   autoSelect={false}
                   renderInput={(params) => (
                     <div className={classes.itemContent}>
@@ -179,6 +178,7 @@ const BaseSearchComponent = ({
                     }
                   }}
                   onChange={(event, value) => {
+                    // value is array
                     if (searchClause.multiple) {
                       onChangeSearchClause(searchClause, value);
                     } else if (typeof value === 'string') {

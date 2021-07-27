@@ -8,9 +8,12 @@ import User from '../../Models/User';
 import Room from '../../Models/Room';
 import HotelRequests from '../../api/HotelRequests';
 import RoomRequests from '../../api/RoomRequests';
+import ServiceRequests from '../../api/ServiceRequests';
+import Service from '../../Models/Service';
 
 const { getHotel } = HotelRequests;
 const { getRooms } = RoomRequests;
+const { getServices } = ServiceRequests;
 
 const HotelFull = ({
   loggedUser,
@@ -22,18 +25,29 @@ const HotelFull = ({
 }) => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
+
   const [rooms, setRooms] = useState([]);
-  const [roomsTotalResults, setRoomsTotalResults] = useState(null);
+  const [roomsTotalResults, setRoomsTotalResults] = useState(0);
   const [roomsPageNumber, setRoomsPageNumber] = useState(1);
-  const [roomsPageSize, setRoomsPageSize] = useState(null);
-  const [roomsTotalPages, setRoomsTotalPages] = useState(null);
+  const [roomsPageSize, setRoomsPageSize] = useState(10);
   const [roomId, setRoomId] = useState(null);
+
+  const [services, setServices] = useState([]);
+  const [servicesTotalResults, setServicesTotalResults] = useState(0);
+  const [servicesPageNumber, setServicesPageNumber] = useState(1);
+  const [servicesPageSize, setServicesPageSize] = useState(10);
+  const [serviceId, setServiceId] = useState(null);
+
   const [openRoom, setOpenRoom] = useState(false);
 
   const history = useHistory();
 
   const handleSelectedRoomChanged = (selectedRoomId) => {
     setRoomId(selectedRoomId);
+  };
+
+  const handleSelectedServiceChanged = (selectedServiceId) => {
+    setServiceId(selectedServiceId);
   };
 
   const handleOpenRoomDetailed = () => {
@@ -48,7 +62,7 @@ const HotelFull = ({
   const onBackClick = () => history.push('/Hotels');
 
   const requestRooms = async (hotelId) => {
-    const response = getRooms({
+    const response = await getRooms({
       pageNumber: roomsPageNumber,
       pageSize: roomsPageSize,
       hotelId: hotelId || hotel?.id,
@@ -61,12 +75,34 @@ const HotelFull = ({
 
       setRooms(respondedRooms);
       setRoomsTotalResults(response.totalResults);
-      setRoomsTotalPages(response.totalPages);
       if (response.pageNumber !== roomsPageNumber) {
         setRoomsPageNumber(response.pageNumber);
       }
       if (response.pageSize !== roomsPageSize) {
         setRoomsPageSize(response.pageSize);
+      }
+    }
+  };
+
+  const requestServices = async (hotelId) => {
+    const response = await getServices({
+      pageNumber: servicesPageNumber,
+      pageSize: servicesPageSize,
+      hotelId: hotelId || hotel?.id,
+    });
+
+    if (response) {
+      const respondedServices = response.content.map(
+        (item) => new Service(item)
+      );
+
+      setServices(respondedServices);
+      setServicesTotalResults(response.totalResults);
+      if (response.pageNumber !== servicesPageNumber) {
+        setServicesPageNumber(response.pageNumber);
+      }
+      if (response.pageSize !== servicesPageSize) {
+        setServicesPageSize(response.pageSize);
       }
     }
   };
@@ -78,14 +114,27 @@ const HotelFull = ({
     await requestRooms(id);
   }, []);
 
+  useEffect(async () => {
+    if (hotel) {
+      await requestRooms(id);
+    }
+  }, [roomsPageNumber, roomsPageSize]);
+
+  useEffect(async () => {
+    if (hotel) {
+      await requestServices(id);
+    }
+  }, [servicesPageNumber, servicesPageSize]);
+
   return (
     <>
       {hotel && hotel !== {} ? (
         <HotelFullComponent
           hotel={hotel}
           rooms={rooms}
+          services={services}
           roomsTotalResults={roomsTotalResults}
-          roomsTotalPages={roomsTotalPages}
+          servicesTotalResults={servicesTotalResults}
           onBackClick={onBackClick}
           loggedUser={loggedUser}
           dateIn={dateIn}
@@ -94,8 +143,10 @@ const HotelFull = ({
           onDateInChange={onDateInChange}
           onDateOutChange={onDateOutChange}
           selectedRoomId={roomId}
+          selectedServiceId={serviceId}
           isRoomDetailedOpen={openRoom}
           selectedRoomChanged={handleSelectedRoomChanged}
+          selectedServiceChanged={handleSelectedServiceChanged}
           closeRoomDetailed={handleCloseRoomDetailed}
           openRoomDetailed={handleOpenRoomDetailed}
           onRequestRooms={requestRooms}

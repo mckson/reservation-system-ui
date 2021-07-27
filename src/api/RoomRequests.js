@@ -5,58 +5,58 @@ const roomUrl = (id) => `/Rooms${id ? `/${id}` : ''}`;
 const roomLockUrl = (id) => `${this.roomUrl(id)}/lock`;
 const roomUnlockUrl = (id) => `${this.roomUrl(id)}/unlock`;
 
-// all unique room names
-const roomNamesUrl = (hotelId) => `/Rooms/Names${hotelId ? `/${hotelId}` : ''}`;
+const roomSearchVariantsUrl = '/Rooms/Search';
 
-// all unique room numbers
-const roomNumbersUrl = (hotelId) =>
-  `/Rooms/Numbers${hotelId ? `/${hotelId}` : ''}`;
+class RoomFilter {
+  constructor({
+    pageNumber,
+    pageSize,
+    hotelId,
+    dateIn,
+    dateOut,
+    name,
+    number,
+    minFloorNumber,
+    maxFloorNumber,
+    minCapacity,
+    maxCapacity,
+    minArea,
+    maxArea,
+    minPrice,
+    maxPrice,
+    smoking,
+    parking,
+    facilities,
+    roomViews,
+  }) {
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
+    this.hotelId = hotelId;
+    this.dateIn = dateIn;
+    this.dateOut = dateOut;
+    this.name = name;
+    this.number = number;
+    this.minFloorNumber = minFloorNumber;
+    this.maxFloorNumber = maxFloorNumber;
+    this.minCapacity = minCapacity;
+    this.maxCapacity = maxCapacity;
+    this.minArea = minArea;
+    this.maxArea = maxArea;
+    this.minPrice = minPrice;
+    this.maxPrice = maxPrice;
+    this.smoking = smoking;
+    this.parking = parking;
+    this.facilities = facilities;
+    this.roomViews = roomViews;
+  }
+}
 
-const getRooms = ({
-  pageNumber,
-  pageSize,
-  hotelId,
-  dateIn,
-  dateOut,
-  name,
-  number,
-  minFloorNumber,
-  maxFloorNumber,
-  minCapacity,
-  maxCapacity,
-  minArea,
-  maxArea,
-  minPrice,
-  maxPrice,
-  smoking,
-  parking,
-  facilities,
-  roomViews,
-}) => {
+const getRooms = (filterObj) => {
+  const filter = new RoomFilter(filterObj);
   return new Promise((resolve, reject) => {
     API.axios
       .get(roomUrl(), {
-        params: {
-          pageNumber,
-          pageSize,
-          hotelId,
-          dateIn,
-          dateOut,
-          name,
-          number,
-          minFloorNumber,
-          maxFloorNumber,
-          minCapacity,
-          maxCapacity,
-          minArea,
-          maxArea,
-          minPrice,
-          maxPrice,
-          smoking,
-          parking,
-          facilities,
-          roomViews,
-        },
+        params: filter,
         paramsSerializer: (params) =>
           QueryString.stringify(params, { arrayFormat: 'repeat' }),
       })
@@ -65,19 +65,15 @@ const getRooms = ({
   });
 };
 
-const getRoomNames = (hotelId) => {
+const getRoomSearchVariants = (filterObj) => {
+  const filter = new RoomFilter(filterObj);
   return new Promise((resolve, reject) => {
     API.axios
-      .get(roomNamesUrl(hotelId))
-      .then((response) => resolve(response.data))
-      .catch((error) => reject(error));
-  });
-};
-
-const getRoomNumbers = (hotelId) => {
-  return new Promise((resolve, reject) => {
-    API.axios
-      .get(roomNumbersUrl(hotelId))
+      .get(roomSearchVariantsUrl, {
+        params: filter,
+        paramsSerializer: (params) =>
+          QueryString.stringify(params, { arrayFormat: 'repeat' }),
+      })
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));
   });
@@ -148,8 +144,7 @@ const unlockRoom = (id) => {
 
 export default {
   getRooms,
-  getRoomNames,
-  getRoomNumbers,
+  getRoomSearchVariants,
   createRoom,
   getRoom,
   updateRoom,

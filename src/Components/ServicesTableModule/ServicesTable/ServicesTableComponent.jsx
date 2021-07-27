@@ -11,13 +11,16 @@ import {
   TableFooter,
   Button,
   TablePagination,
+  Drawer,
   makeStyles,
 } from '@material-ui/core';
-import { AddOutlined } from '@material-ui/icons';
+import { AddOutlined, SearchOutlined } from '@material-ui/icons';
 import Service from '../../../Models/Service';
 import ServiceRow from '../ServiceRow/ServiceRow';
 import CreateServiceComponent from '../CreateServiceComponent';
 import Hotel from '../../../Models/Hotel';
+import BaseSearch from '../../../Common/BaseSearch/BaseSearch';
+import SearchClause from '../../../Common/BaseSearch/SearchClause';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -40,21 +43,30 @@ const ServicesTableComponent = ({
   updateService,
   onError,
   onSuccess,
+  pageNumber,
+  pageSize,
+  totalCount,
+  onPageChanged,
+  onPageSizeChanged,
+  searchVariants,
+  clauses,
+  onChangeClauses,
+  onSearch,
 }) => {
   const [isCreate, setIsCreate] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowPerPage] = useState(10);
+  const [openSearch, setOpenSearch] = useState(false);
 
   const classes = useStyles();
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    onPageChanged(newPage + 1);
   };
 
   const handleChangePageSize = (event) => {
     const newSize = parseInt(event.target.value, 10);
-    setPage(0);
-    setRowPerPage(newSize);
+
+    onPageChanged(1);
+    onPageSizeChanged(newSize);
   };
 
   const handleCreateClose = () => {
@@ -63,6 +75,28 @@ const ServicesTableComponent = ({
 
   return (
     <>
+      <Button
+        onClick={() => setOpenSearch(true)}
+        startIcon={<SearchOutlined />}
+      >
+        Setup services search options
+      </Button>
+      <div className={classes.searchSection}>
+        <Drawer
+          open={openSearch}
+          onClose={() => setOpenSearch(false)}
+          classes={{ paper: classes.searchSection }}
+        >
+          <div>
+            <BaseSearch
+              prompts={searchVariants}
+              clauses={clauses}
+              onChangeClauses={onChangeClauses}
+              onSearch={onSearch}
+            />
+          </div>
+        </Drawer>
+      </div>
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
@@ -81,19 +115,17 @@ const ServicesTableComponent = ({
           </TableHead>
           <TableBody>
             {services != null ? (
-              services
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((service) => (
-                  <ServiceRow
-                    service={service}
-                    hotel={hotel}
-                    key={service.id}
-                    deleteService={deleteService}
-                    updateService={updateService}
-                    onError={onError}
-                    onSuccess={onSuccess}
-                  />
-                ))
+              services.map((service) => (
+                <ServiceRow
+                  service={service}
+                  hotel={hotel}
+                  key={service.id}
+                  deleteService={deleteService}
+                  updateService={updateService}
+                  onError={onError}
+                  onSuccess={onSuccess}
+                />
+              ))
             ) : (
               <div>Loading</div>
             )}
@@ -111,9 +143,9 @@ const ServicesTableComponent = ({
             </Button>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
-              rowsPerPage={rowsPerPage}
-              count={services.length}
-              page={page}
+              rowsPerPage={pageSize}
+              count={totalCount}
+              page={pageNumber - 1}
               onChangePage={handleChangePage}
               onChangeRowsPerPage={handleChangePageSize}
             />
@@ -139,6 +171,21 @@ ServicesTableComponent.propTypes = {
   updateService: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
+  onPageChanged: PropTypes.func.isRequired,
+  onPageSizeChanged: PropTypes.func.isRequired,
+  pageNumber: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  totalCount: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  searchVariants: PropTypes.array,
+  clauses: PropTypes.arrayOf(SearchClause),
+  onChangeClauses: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
+};
+
+ServicesTableComponent.defaultProps = {
+  searchVariants: [],
+  clauses: [],
 };
 
 export default ServicesTableComponent;

@@ -18,12 +18,22 @@ const BaseSearch = ({
   const [searchClauses, setSearchClauses] = useState(clauses);
   const [searchOptions, setSearchOptions] = useState(options);
   const [searchRanges, setSearchRanges] = useState(ranges);
+  const [timerId, setTimerId] = useState(null);
 
   const handleChangeSearchClauses = (newSearchClauses) => {
-    if (onChangeClauses) {
-      onChangeClauses(newSearchClauses);
+    if (timerId) {
+      clearTimeout(timerId);
     }
+
+    let timer;
+    if (onChangeClauses) {
+      timer = setTimeout(() => onChangeClauses(newSearchClauses), 500);
+    }
+
     setSearchClauses(newSearchClauses);
+    if (timer) {
+      setTimerId(timer);
+    }
   };
 
   const handleChangeSearchOptions = (newSearchOptions) => {

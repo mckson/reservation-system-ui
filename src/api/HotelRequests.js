@@ -9,37 +9,42 @@ const allHotelsUrl = '/Hotels/All';
 // brief hotel responses (for example, for search)
 const hotelSearchUrl = '/Hotels/Search';
 
-const getHotels = ({
-  pageNumber,
-  pageSize,
-  dateIn,
-  dateOut,
-  manager,
-  name,
-  city,
-  services,
-  minDeposit,
-  maxDeposit,
-  minFloors,
-  maxFloors,
-}) => {
+class HotelFilter {
+  constructor({
+    pageNumber,
+    pageSize,
+    dateIn,
+    dateOut,
+    manager,
+    name,
+    city,
+    services,
+    minDeposit,
+    maxDeposit,
+    minFloors,
+    maxFloors,
+  }) {
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
+    this.dateIn = dateIn;
+    this.dateOut = dateOut;
+    this.manager = manager;
+    this.name = name;
+    this.city = city;
+    this.services = services;
+    this.minDeposit = minDeposit;
+    this.maxDeposit = maxDeposit;
+    this.minFloors = minFloors;
+    this.maxFloors = maxFloors;
+  }
+}
+
+const getHotels = (filterObj) => {
+  const filter = new HotelFilter(filterObj);
   return new Promise((resolve, reject) => {
     API.axios
       .get(hotelUrl(), {
-        params: {
-          pageNumber,
-          pageSize,
-          dateIn,
-          dateOut,
-          manager,
-          name,
-          city,
-          services,
-          minDeposit,
-          maxDeposit,
-          minFloors,
-          maxFloors,
-        },
+        params: filter,
         paramsSerializer: (params) =>
           QueryString.stringify(params, { arrayFormat: 'repeat' }),
       })
@@ -52,37 +57,12 @@ const getHotels = ({
   });
 };
 
-const getHotelSearchPrompts = ({
-  pageNumber,
-  pageSize,
-  dateIn,
-  dateOut,
-  manager,
-  name,
-  city,
-  services,
-  minDeposit,
-  maxDeposit,
-  minFloors,
-  maxFloors,
-}) => {
+const getHotelSearchPrompts = (filterObj) => {
+  const filter = new HotelFilter(filterObj);
   return new Promise((resolve, reject) => {
     API.axios
       .get(hotelSearchUrl, {
-        params: {
-          pageNumber,
-          pageSize,
-          dateIn,
-          dateOut,
-          manager,
-          name,
-          city,
-          services,
-          minDeposit,
-          maxDeposit,
-          minFloors,
-          maxFloors,
-        },
+        params: filter,
         paramsSerializer: (params) =>
           QueryString.stringify(params, { arrayFormat: 'repeat' }),
       })

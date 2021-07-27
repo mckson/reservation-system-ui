@@ -40,6 +40,7 @@ const UsersManagementComponent = ({
   pageChanged,
   pageSizeChanged,
   pageSize,
+  searchVariants,
 }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -99,6 +100,7 @@ const UsersManagementComponent = ({
             pageChanged={pageChanged}
             pageSizeChanged={pageSizeChanged}
             pageSize={pageSize}
+            searchVariants={searchVariants}
           />
           <Snackbar
             open={!!error}
@@ -148,6 +150,8 @@ UsersManagementComponent.propTypes = {
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  searchVariants: PropTypes.array,
 };
 
 UsersManagementComponent.defaultProps = {
@@ -156,6 +160,7 @@ UsersManagementComponent.defaultProps = {
   clauses: [],
   ranges: [],
   options: [],
+  searchVariants: [],
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,

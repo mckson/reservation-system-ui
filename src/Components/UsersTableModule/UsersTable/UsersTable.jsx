@@ -26,6 +26,7 @@ const UsersTable = ({
   pageChanged,
   pageSizeChanged,
   pageSize,
+  searchVariants,
 }) => {
   return (
     <UsersTableComponent
@@ -47,6 +48,7 @@ const UsersTable = ({
       pageChanged={pageChanged}
       pageSizeChanged={pageSizeChanged}
       pageSize={pageSize}
+      searchVariants={searchVariants}
     />
   );
 };
@@ -70,6 +72,8 @@ UsersTable.propTypes = {
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  searchVariants: PropTypes.array,
 };
 
 UsersTable.defaultProps = {
@@ -78,6 +82,7 @@ UsersTable.defaultProps = {
   clauses: [],
   ranges: [],
   options: [],
+  searchVariants: [],
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,
