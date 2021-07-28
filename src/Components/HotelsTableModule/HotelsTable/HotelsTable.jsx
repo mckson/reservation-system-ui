@@ -41,6 +41,9 @@ const HotelsTable = ({
   onError,
   onSuccess,
   prompts,
+  onOrderChanged,
+  orderBy,
+  order,
 }) => {
   return (
     <HotelsTableComponent
@@ -76,6 +79,9 @@ const HotelsTable = ({
       deleteRoomImage={deleteRoomImage}
       onError={onError}
       onSuccess={onSuccess}
+      onOrderChanged={onOrderChanged}
+      orderBy={orderBy}
+      order={order}
     />
   );
 };
@@ -114,6 +120,9 @@ HotelsTable.propTypes = {
   onSuccess: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   prompts: PropTypes.array,
+  onOrderChanged: PropTypes.func.isRequired,
+  orderBy: PropTypes.string,
+  order: PropTypes.string.isRequired,
 };
 
 HotelsTable.defaultProps = {
@@ -125,6 +134,7 @@ HotelsTable.defaultProps = {
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,
+  orderBy: null,
 };
 
 export default HotelsTable;

@@ -62,6 +62,9 @@ const HotelsManagementComponent = ({
   createRoomView,
   updateRoomView,
   deleteRoomView,
+  onOrderChanged,
+  orderBy,
+  order,
 }) => {
   const classes = useStyles();
   const [tab, setTab] = useState('0');
@@ -149,6 +152,9 @@ const HotelsManagementComponent = ({
                 deleteRoomImage={deleteRoomImage}
                 onError={handleError}
                 onSuccess={handleSuccess}
+                onOrderChanged={onOrderChanged}
+                orderBy={orderBy}
+                order={order}
               />
             </div>
           </TabPanel>
@@ -226,6 +232,9 @@ HotelsManagementComponent.propTypes = {
   deleteRoomView: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   prompts: PropTypes.array,
+  onOrderChanged: PropTypes.func.isRequired,
+  orderBy: PropTypes.string,
+  order: PropTypes.string.isRequired,
 };
 
 HotelsManagementComponent.defaultProps = {
@@ -237,6 +246,7 @@ HotelsManagementComponent.defaultProps = {
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,
+  orderBy: null,
 };
 
 export default HotelsManagementComponent;

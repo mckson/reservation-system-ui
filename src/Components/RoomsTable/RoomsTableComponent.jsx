@@ -6,6 +6,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  TableSortLabel,
   TableFooter,
   TablePagination,
   TableContainer,
@@ -16,15 +17,10 @@ import {
   makeStyles,
   Collapse,
   Box,
-  Drawer,
   Checkbox,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import {
-  DeleteOutlined,
-  EditOutlined,
-  SearchOutlined,
-} from '@material-ui/icons';
+import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Hotel from '../../Models/Hotel';
@@ -33,11 +29,11 @@ import CreateRoomComponent from './CreateRoomComponent';
 import EditRoomComponent from './EditRoomComponent';
 import ImagesTable from '../ImagesTableModule/ImagesTable/ImagesTable';
 import RoomView from '../../Models/RoomView';
-import BaseSearch from '../../Common/BaseSearch/BaseSearch';
 import SearchClause from '../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../Common/BaseSearch/SearchRange';
 import SearchOption from '../../Common/BaseSearch/SearchOption';
 import RoomRequests from '../../api/RoomRequests';
+import SearchPanel from '../../Common/SearchPanel';
 
 const { getRooms, getRoomSearchVariants } = RoomRequests;
 
@@ -78,19 +74,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     width: 'auto',
   },
-  searchSection: {
-    width: `calc('100%'-${theme.spacing(2)})`,
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      width: '40%',
-    },
-    [theme.breakpoints.up('md')]: {
-      width: '30%',
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: '20%',
-    },
-  },
 }));
 
 const RoomsTableComponent = ({
@@ -105,6 +88,8 @@ const RoomsTableComponent = ({
   onError,
 }) => {
   const [isAdd, setIsAdd] = useState(false);
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState(null);
   const [rooms, setRooms] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(10);
@@ -172,6 +157,18 @@ const RoomsTableComponent = ({
     new SearchOption('Parking', false),
   ]);
 
+  const headCells = [
+    { id: 'id', numeric: false, label: 'Id' },
+    { id: 'name', numeric: false, label: 'Name' },
+    { id: 'roomNumber', numeric: true, label: 'Number' },
+    { id: 'floorNumber', numeric: true, label: 'Floor' },
+    { id: 'capacity', numeric: true, label: 'Beds' },
+    { id: 'price', numeric: false, label: 'Price' },
+    { id: 'area', numeric: true, label: 'Area' },
+    { id: 'smoking', numeric: false, label: 'Smoking' },
+    { id: 'parking', numeric: false, label: 'Parking' },
+  ];
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -224,6 +221,8 @@ const RoomsTableComponent = ({
       parking: searchOptions[1].value,
       facilities: searchClauses[2].value.map((value) => value),
       roomViews: searchClauses[3].value.map((value) => value),
+      propertyName: orderBy,
+      isDescending: order === 'desc',
     });
 
     if (response) {
@@ -258,6 +257,19 @@ const RoomsTableComponent = ({
     setSearchVariants(response);
   };
 
+  const handleOrderChanged = (newOrder) => {
+    setOrderBy(newOrder.orderBy);
+    setOrder(newOrder.order);
+    setPage(1);
+    setRefresh(!refresh);
+  };
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+
+    handleOrderChanged({ orderBy: property, order: isAsc ? 'desc' : 'asc' });
+  };
+
   useEffect(async () => {
     if (searchClauses[0].value || searchClauses[1].value) {
       await requestSearchVariants();
@@ -268,32 +280,20 @@ const RoomsTableComponent = ({
 
   return (
     <>
-      <Button
-        onClick={() => setOpenSearch(true)}
-        startIcon={<SearchOutlined />}
-      >
-        Setup room search options
-      </Button>
-      <div className={classes.searchSection}>
-        <Drawer
-          open={openSearch}
-          onClose={() => setOpenSearch(false)}
-          classes={{ paper: classes.searchSection }}
-        >
-          <div>
-            <BaseSearch
-              clauses={searchClauses}
-              prompts={searchVariants}
-              ranges={searchRanges}
-              options={searchOptions}
-              onChangeClauses={handleChangeSearchClauses}
-              onChangeOptions={handleChangeSearchOptions}
-              onChangeRanges={handleChangeSearchRanges}
-              onSearch={handleSearch}
-            />
-          </div>
-        </Drawer>
-      </div>
+      <SearchPanel
+        open={openSearch}
+        onOpen={() => setOpenSearch(true)}
+        onClose={() => setOpenSearch(false)}
+        title="Setup room search options"
+        prompts={searchVariants}
+        clauses={searchClauses}
+        ranges={searchRanges}
+        options={searchOptions}
+        onChangeClauses={handleChangeSearchClauses}
+        onChangeOptions={handleChangeSearchOptions}
+        onChangeRanges={handleChangeSearchRanges}
+        onSearch={handleSearch}
+      />
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
@@ -310,15 +310,27 @@ const RoomsTableComponent = ({
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Id</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Number</TableCell>
-              <TableCell>Floor</TableCell>
-              <TableCell>Beds</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Area</TableCell>
-              <TableCell>Smoking</TableCell>
-              <TableCell>Parking</TableCell>
+              {headCells.map((headCell) => (
+                <TableCell
+                  key={headCell.id}
+                  align={headCell.numeric ? 'right' : 'left'}
+                  sortDirection={orderBy === headCell.id ? order : 'asc'}
+                >
+                  {headCell.noOrderBy ? (
+                    headCell.label
+                  ) : (
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : 'asc'}
+                      onClick={() => {
+                        handleRequestSort(headCell.id);
+                      }}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
+                  )}
+                </TableCell>
+              ))}
               <TableCell />
             </TableRow>
           </TableHead>
@@ -525,11 +537,11 @@ const RoomRowMap = ({ room }) => {
     <>
       <TableCell>{room.id}</TableCell>
       <TableCell>{room.name}</TableCell>
-      <TableCell>{room.roomNumber}</TableCell>
-      <TableCell>{room.floorNumber}</TableCell>
-      <TableCell>{room.capacity}</TableCell>
-      <TableCell>${room.price}</TableCell>
-      <TableCell>
+      <TableCell align="right">{room.roomNumber}</TableCell>
+      <TableCell align="right">{room.floorNumber}</TableCell>
+      <TableCell align="right">{room.capacity}</TableCell>
+      <TableCell align="right">${room.price}</TableCell>
+      <TableCell align="right">
         {room.area} m<sup>2</sup>
       </TableCell>
       <TableCell>

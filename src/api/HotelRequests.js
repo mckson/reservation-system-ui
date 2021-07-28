@@ -23,6 +23,8 @@ class HotelFilter {
     maxDeposit,
     minFloors,
     maxFloors,
+    propertyName,
+    isDescending,
   }) {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize;
@@ -36,6 +38,8 @@ class HotelFilter {
     this.maxDeposit = maxDeposit;
     this.minFloors = minFloors;
     this.maxFloors = maxFloors;
+    this.propertyName = propertyName;
+    this.isDescending = isDescending;
   }
 }
 

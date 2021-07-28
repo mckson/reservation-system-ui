@@ -14,6 +14,8 @@ const RoomViewTable = ({
   updateRoomView,
   deleteRoomView,
 }) => {
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState(null);
   const [roomViews, setRoomViews] = useState([]);
   const [searchVariants, setSearchVariants] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
@@ -45,6 +47,13 @@ const RoomViewTable = ({
     setSearchRanges(newRanges);
   };
 
+  const handleOrderChanged = (newOrder) => {
+    setOrderBy(newOrder.orderBy);
+    setOrder(newOrder.order);
+    setPageNumber(1);
+    setRefresh(!refresh);
+  };
+
   const handleChangeSearchOptions = (newOptions) => {
     setSearchOptions(newOptions);
   };
@@ -62,6 +71,8 @@ const RoomViewTable = ({
       pageNumber,
       pageSize,
       name: searchClauses[0].value,
+      propertyName: orderBy,
+      isDescending: order === 'desc',
     });
 
     if (response != null) {
@@ -90,7 +101,7 @@ const RoomViewTable = ({
 
   useEffect(async () => {
     await requestRoomViews();
-  }, [pageSize, pageNumber]);
+  }, [pageSize, pageNumber, refresh]);
 
   useEffect(async () => {
     if (searchClauses[0].value) {
@@ -120,6 +131,9 @@ const RoomViewTable = ({
       onChangeRanges={handleChangeSearchRanges}
       onChangeOptions={handleChangeSearchOptions}
       prompts={searchVariants}
+      onOrderChanged={handleOrderChanged}
+      orderBy={orderBy}
+      order={order}
     />
   );
 };

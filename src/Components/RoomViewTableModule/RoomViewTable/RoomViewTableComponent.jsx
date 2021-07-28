@@ -7,22 +7,21 @@ import {
   TableBody,
   TableFooter,
   TableCell,
+  TableSortLabel,
   Paper,
   Button,
   makeStyles,
   TableRow,
   TablePagination,
-  Drawer,
 } from '@material-ui/core';
-import { SearchOutlined } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import RoomView from '../../../Models/RoomView';
 import RoomViewRowComponent from '../RoomViewRow/RoomViewRowComponent';
 import CreateRoomView from '../CreateRoomView';
-import BaseSearch from '../../../Common/BaseSearch/BaseSearch';
 import SearchClause from '../../../Common/BaseSearch/SearchClause';
 import SearchRange from '../../../Common/BaseSearch/SearchRange';
 import SearchOption from '../../../Common/BaseSearch/SearchOption';
+import SearchPanel from '../../../Common/SearchPanel';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -56,6 +55,9 @@ const RoomViewTableComponent = ({
   onChangeRanges,
   onChangeOptions,
   prompts,
+  onOrderChanged,
+  orderBy,
+  order,
 }) => {
   const [isAdd, setIsAdd] = useState(false);
   const [page, setPage] = useState(0);
@@ -85,40 +87,64 @@ const RoomViewTableComponent = ({
     setIsAdd(false);
   };
 
+  const headCells = [
+    { id: 'id', numeric: false, label: 'Id' },
+    { id: 'name', numeric: false, label: 'Name' },
+  ];
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+
+    onOrderChanged({ orderBy: property, order: isAsc ? 'desc' : 'asc' });
+  };
+
   return (
     <>
-      <Button
-        onClick={() => setOpenSearch(true)}
-        startIcon={<SearchOutlined />}
-      >
-        Setup view search options
-      </Button>
-      <div className={classes.searchSection}>
-        <Drawer
-          open={openSearch}
-          onClose={() => setOpenSearch(false)}
-          classes={{ paper: classes.searchSection }}
-        >
-          <div>
-            <BaseSearch
-              prompts={prompts}
-              clauses={clauses}
-              ranges={ranges}
-              options={options}
-              onChangeClauses={onChangeClauses}
-              onChangeOptions={onChangeOptions}
-              onChangeRanges={onChangeRanges}
-              onSearch={onSearch}
-            />
-          </div>
-        </Drawer>
-      </div>
+      <SearchPanel
+        open={openSearch}
+        onOpen={() => setOpenSearch(true)}
+        onClose={() => setOpenSearch(false)}
+        title="Setup view search options"
+        prompts={prompts}
+        clauses={clauses}
+        ranges={ranges}
+        options={options}
+        onChangeClauses={onChangeClauses}
+        onChangeOptions={onChangeOptions}
+        onChangeRanges={onChangeRanges}
+        onSearch={onSearch}
+      />
+
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
+          <colgroup>
+            <col width="20%" />
+            <col width="auto" />
+            <col width="2.5%" />
+          </colgroup>
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>Name</TableCell>
+              {headCells.map((headCell) => (
+                <TableCell
+                  key={headCell.id}
+                  align={headCell.numeric ? 'right' : 'left'}
+                  sortDirection={orderBy === headCell.id ? order : 'asc'}
+                >
+                  {headCell.noOrderBy ? (
+                    headCell.label
+                  ) : (
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : 'asc'}
+                      onClick={() => {
+                        handleRequestSort(headCell.id);
+                      }}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
+                  )}
+                </TableCell>
+              ))}
               <TableCell />
             </TableRow>
           </TableHead>
@@ -192,6 +218,9 @@ RoomViewTableComponent.propTypes = {
   onChangeOptions: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   prompts: PropTypes.array,
+  onOrderChanged: PropTypes.func.isRequired,
+  orderBy: PropTypes.string,
+  order: PropTypes.string.isRequired,
 };
 
 RoomViewTableComponent.defaultProps = {
@@ -202,6 +231,7 @@ RoomViewTableComponent.defaultProps = {
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,
+  orderBy: null,
 };
 
 export default RoomViewTableComponent;

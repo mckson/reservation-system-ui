@@ -11,16 +11,16 @@ import {
   TableFooter,
   Button,
   TablePagination,
-  Drawer,
+  TableSortLabel,
   makeStyles,
 } from '@material-ui/core';
-import { AddOutlined, SearchOutlined } from '@material-ui/icons';
+import { AddOutlined } from '@material-ui/icons';
 import Service from '../../../Models/Service';
 import ServiceRow from '../ServiceRow/ServiceRow';
 import CreateServiceComponent from '../CreateServiceComponent';
 import Hotel from '../../../Models/Hotel';
-import BaseSearch from '../../../Common/BaseSearch/BaseSearch';
 import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import SearchPanel from '../../../Common/SearchPanel';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -52,6 +52,9 @@ const ServicesTableComponent = ({
   clauses,
   onChangeClauses,
   onSearch,
+  onOrderChanged,
+  orderBy,
+  order,
 }) => {
   const [isCreate, setIsCreate] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
@@ -73,43 +76,61 @@ const ServicesTableComponent = ({
     setIsCreate(!isCreate);
   };
 
+  const headCells = [
+    { id: 'id', numeric: false, label: 'Id' },
+    { id: 'name', numeric: false, label: 'Name' },
+    { id: 'price', numeric: true, label: 'Price' },
+  ];
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+
+    onOrderChanged({ orderBy: property, order: isAsc ? 'desc' : 'asc' });
+  };
+
   return (
     <>
-      <Button
-        onClick={() => setOpenSearch(true)}
-        startIcon={<SearchOutlined />}
-      >
-        Setup services search options
-      </Button>
-      <div className={classes.searchSection}>
-        <Drawer
-          open={openSearch}
-          onClose={() => setOpenSearch(false)}
-          classes={{ paper: classes.searchSection }}
-        >
-          <div>
-            <BaseSearch
-              prompts={searchVariants}
-              clauses={clauses}
-              onChangeClauses={onChangeClauses}
-              onSearch={onSearch}
-            />
-          </div>
-        </Drawer>
-      </div>
+      <SearchPanel
+        open={openSearch}
+        onOpen={() => setOpenSearch(true)}
+        onClose={() => setOpenSearch(false)}
+        title="Setup service search options"
+        prompts={searchVariants}
+        clauses={clauses}
+        onChangeClauses={onChangeClauses}
+        onSearch={onSearch}
+      />
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">
           <colgroup>
-            <col width="2.5%" />
+            <col width="20%" />
             <col width="auto" />
             <col width="auto" />
             <col width="2.5%" />
           </colgroup>
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Price</TableCell>
+              {headCells.map((headCell) => (
+                <TableCell
+                  key={headCell.id}
+                  align={headCell.numeric ? 'right' : 'left'}
+                  sortDirection={orderBy === headCell.id ? order : 'asc'}
+                >
+                  {headCell.noOrderBy ? (
+                    headCell.label
+                  ) : (
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : 'asc'}
+                      onClick={() => {
+                        handleRequestSort(headCell.id);
+                      }}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
+                  )}
+                </TableCell>
+              ))}
               <TableCell />
             </TableRow>
           </TableHead>
@@ -181,11 +202,15 @@ ServicesTableComponent.propTypes = {
   clauses: PropTypes.arrayOf(SearchClause),
   onChangeClauses: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
+  onOrderChanged: PropTypes.func.isRequired,
+  orderBy: PropTypes.string,
+  order: PropTypes.string.isRequired,
 };
 
 ServicesTableComponent.defaultProps = {
   searchVariants: [],
   clauses: [],
+  orderBy: null,
 };
 
 export default ServicesTableComponent;

@@ -9,13 +9,24 @@ const allUsersUrl = '/Users/All';
 const userSearchVariantsUrl = '/Users/Search';
 
 class UserFilter {
-  constructor({ pageNumber, pageSize, email, firstName, lastName, roles }) {
+  constructor({
+    pageNumber,
+    pageSize,
+    email,
+    firstName,
+    lastName,
+    roles,
+    propertyName,
+    isDescending,
+  }) {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize;
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
     this.roles = roles;
+    this.propertyName = propertyName;
+    this.isDescending = isDescending;
   }
 }
 

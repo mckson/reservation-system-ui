@@ -28,6 +28,8 @@ class RoomFilter {
     parking,
     facilities,
     roomViews,
+    propertyName,
+    isDescending,
   }) {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize;
@@ -48,6 +50,8 @@ class RoomFilter {
     this.parking = parking;
     this.facilities = facilities;
     this.roomViews = roomViews;
+    this.propertyName = propertyName;
+    this.isDescending = isDescending;
   }
 }
 

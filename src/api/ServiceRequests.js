@@ -4,11 +4,20 @@ const serviceUrl = (id) => `/Services${id ? `/${id}` : ''}`;
 const serviceSearchVariantsUrl = '/Services/Search';
 
 class ServiceFilter {
-  constructor({ pageNumber, pageSize, hotelId, name }) {
+  constructor({
+    pageNumber,
+    pageSize,
+    hotelId,
+    name,
+    propertyName,
+    isDescending,
+  }) {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize;
     this.hotelId = hotelId;
     this.name = name;
+    this.propertyName = propertyName;
+    this.isDescending = isDescending;
   }
 }
 

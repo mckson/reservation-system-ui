@@ -16,6 +16,8 @@ const ServicesTable = ({
   onError,
   onSuccess,
 }) => {
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState(null);
   const [services, setServices] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -31,6 +33,13 @@ const ServicesTable = ({
   ]);
 
   const [refresh, setRefresh] = useState(false);
+
+  const handleOrderChanged = (newOrder) => {
+    setOrderBy(newOrder.orderBy);
+    setOrder(newOrder.order);
+    setPageNumber(1);
+    setRefresh(!refresh);
+  };
 
   const handleChangeSearchClauses = (newClauses) => {
     setSearchClauses(newClauses);
@@ -55,6 +64,8 @@ const ServicesTable = ({
       pageSize,
       hotelId: hotel.id,
       name: searchClauses[0].value,
+      propertyName: orderBy,
+      isDescending: order === 'desc',
     });
 
     if (response) {
@@ -112,6 +123,9 @@ const ServicesTable = ({
       clauses={searchClauses}
       onChangeClauses={handleChangeSearchClauses}
       onSearch={handleSearch}
+      onOrderChanged={handleOrderChanged}
+      orderBy={orderBy}
+      order={order}
     />
   );
 };

@@ -18,6 +18,8 @@ const { getHotels, getHotelSearchPrompts } = HotelRequests;
 const { getRoomViews } = RoomViewRequests;
 
 const HotelsManagement = ({ isOpen, close }) => {
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState(null);
   const [users, setUsers] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [hotels, setHotels] = useState([]);
@@ -66,6 +68,13 @@ const HotelsManagement = ({ isOpen, close }) => {
 
   const loggedUser = useSelector((state) => state.loggedUser.loggedUser);
 
+  const handleOrderChanged = (newOrder) => {
+    setOrderBy(newOrder.orderBy);
+    setOrder(newOrder.order);
+    setPageNumber(1);
+    setRefresh(!refresh);
+  };
+
   const handleChangeSearchClauses = (newClauses) => {
     setSearchClauses(newClauses);
   };
@@ -104,6 +113,8 @@ const HotelsManagement = ({ isOpen, close }) => {
       maxDeposit: searchRanges[0].value[1],
       minFloors: searchRanges[1].value[0],
       maxFloors: searchRanges[1].value[1],
+      propertyName: orderBy,
+      isDescending: order === 'desc',
     });
 
     if (response != null) {
@@ -394,7 +405,7 @@ const HotelsManagement = ({ isOpen, close }) => {
 
   useEffect(async () => {
     await requestHotels();
-  }, [pageSize, pageNumber, refresh]);
+  }, [pageSize, pageNumber, orderBy, order, refresh]);
 
   useEffect(async () => {
     await requestRoomViews();
@@ -453,6 +464,9 @@ const HotelsManagement = ({ isOpen, close }) => {
       createRoomView={handleCreateRoomView}
       updateRoomView={handleUpdateRoomView}
       deleteRoomView={handleDeleteRoomView}
+      onOrderChanged={handleOrderChanged}
+      orderBy={orderBy}
+      order={order}
     />
   );
 };

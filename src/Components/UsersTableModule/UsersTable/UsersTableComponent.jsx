@@ -11,6 +11,7 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
+  TableSortLabel,
   TableRow,
   makeStyles,
 } from '@material-ui/core';
@@ -60,6 +61,9 @@ const UsersTableComponent = ({
   onChangeRanges,
   onChangeOptions,
   searchVariants,
+  onOrderChanged,
+  orderBy,
+  order,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowPerPage] = useState(pageSize);
@@ -67,6 +71,23 @@ const UsersTableComponent = ({
   const [openSearch, setOpenSearch] = useState(false);
 
   const classes = useStyles();
+
+  const headCells = [
+    { id: 'id', numeric: false, label: 'Id' },
+    { id: 'firstName', numeric: false, label: 'Surname' },
+    { id: 'lastName', numeric: false, label: 'Name' },
+    { id: 'userName', numeric: false, label: 'Nickname' },
+    { id: 'email', numeric: false, label: 'Email' },
+    { id: 'dateOfBirth', numeric: false, label: 'Date of birth' },
+    { id: 'phoneNumber', numeric: false, label: 'Phone' },
+    { id: 'roles', numeric: false, label: 'Roles', noOrderBy: true },
+  ];
+
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+
+    onOrderChanged({ orderBy: property, order: isAsc ? 'desc' : 'asc' });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -121,14 +142,27 @@ const UsersTableComponent = ({
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>Surname</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Nickname</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Date of birth</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Roles</TableCell>
+              {headCells.map((headCell) => (
+                <TableCell
+                  key={headCell.id}
+                  align={headCell.numeric ? 'right' : 'left'}
+                  sortDirection={orderBy === headCell.id ? order : 'asc'}
+                >
+                  {headCell.noOrderBy ? (
+                    headCell.label
+                  ) : (
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : 'asc'}
+                      onClick={() => {
+                        handleRequestSort(headCell.id);
+                      }}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
+                  )}
+                </TableCell>
+              ))}
               <TableCell />
             </TableRow>
           </TableHead>
@@ -206,6 +240,9 @@ UsersTableComponent.propTypes = {
   onSuccess: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   searchVariants: PropTypes.array,
+  onOrderChanged: PropTypes.func.isRequired,
+  orderBy: PropTypes.string,
+  order: PropTypes.string.isRequired,
 };
 
 UsersTableComponent.defaultProps = {
@@ -218,6 +255,7 @@ UsersTableComponent.defaultProps = {
   onChangeClauses: null,
   onChangeRanges: null,
   onChangeOptions: null,
+  orderBy: null,
 };
 
 export default UsersTableComponent;

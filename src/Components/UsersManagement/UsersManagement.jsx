@@ -14,6 +14,8 @@ const { getUsers, getAllUsers, getUserSearchVariants } = UserRequests;
 const { getAllBriefHotels } = HotelRequests;
 
 const UsersManagement = ({ isOpen, close }) => {
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState(null);
   const [users, setUsers] = useState([]);
   const [searchVariants, setSearchVariants] = useState([]);
   const [usersBrief, setUsersBrief] = useState([]);
@@ -54,6 +56,13 @@ const UsersManagement = ({ isOpen, close }) => {
 
   const [refresh, setRefresh] = useState(false);
 
+  const handleOrderChanged = (newOrder) => {
+    setOrderBy(newOrder.orderBy);
+    setOrder(newOrder.order);
+    setPageNumber(1);
+    setRefresh(!refresh);
+  };
+
   const requestSearchVariants = async () => {
     const response = await getUserSearchVariants({
       email: searchClauses[0].value,
@@ -90,6 +99,8 @@ const UsersManagement = ({ isOpen, close }) => {
       firstName: searchClauses[1].value,
       lastName: searchClauses[2].value,
       roles: searchClauses[3].value,
+      propertyName: orderBy,
+      isDescending: order === 'desc',
     });
 
     if (response) {
@@ -211,6 +222,9 @@ const UsersManagement = ({ isOpen, close }) => {
       pageChanged={handlePageChanged}
       pageSizeChanged={handlePageSizeChanged}
       pageSize={pageSize}
+      onOrderChanged={handleOrderChanged}
+      orderBy={orderBy}
+      order={order}
     />
   );
 };
