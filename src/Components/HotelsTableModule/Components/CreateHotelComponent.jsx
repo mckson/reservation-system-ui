@@ -26,6 +26,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
     } else {
       onSuccess('Hotel added successfully');
       setCreatingHotel(null);
+      setMainImage(null);
       close();
     }
   };

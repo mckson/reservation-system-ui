@@ -306,7 +306,13 @@ const HotelForm = ({
             title={warningTitle}
             open={openWarning}
             close={handleCloseWarning}
-            onAccept={onAccept}
+            onAccept={() => {
+              setIsDeleteMainImage(false);
+              setMainImagePreview(null);
+              setNewMainImage(null);
+              close();
+              onAccept();
+            }}
             onCancel={onCancel}
             cancelText={cancelText}
             acceptText={acceptText}

@@ -29,6 +29,7 @@ const ServiceRow = ({
   updateService,
   onError,
   onSuccess,
+  onRefresh,
 }) => {
   const classes = useStyles();
 
@@ -62,6 +63,7 @@ const ServiceRow = ({
                 onSuccess(
                   `Service ${serviceResponse.name} successfully deleted`
                 );
+                onRefresh();
               }
             }}
           >
@@ -76,6 +78,7 @@ const ServiceRow = ({
         close={handleEditClose}
         updateService={updateService}
         onSuccess={onSuccess}
+        onRefresh={onRefresh}
       />
     </>
   );
@@ -88,6 +91,7 @@ ServiceRow.propTypes = {
   updateService: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
 
 export default ServiceRow;

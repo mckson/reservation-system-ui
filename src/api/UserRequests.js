@@ -15,7 +15,7 @@ class UserFilter {
     email,
     firstName,
     lastName,
-    roles,
+    role,
     propertyName,
     isDescending,
   }) {
@@ -24,7 +24,7 @@ class UserFilter {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.roles = roles;
+    this.role = role;
     this.propertyName = propertyName;
     this.isDescending = isDescending;
   }

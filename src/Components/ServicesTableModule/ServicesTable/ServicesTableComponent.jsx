@@ -55,6 +55,7 @@ const ServicesTableComponent = ({
   onOrderChanged,
   orderBy,
   order,
+  onRefresh,
 }) => {
   const [isCreate, setIsCreate] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
@@ -145,6 +146,7 @@ const ServicesTableComponent = ({
                   updateService={updateService}
                   onError={onError}
                   onSuccess={onSuccess}
+                  onRefresh={onRefresh}
                 />
               ))
             ) : (
@@ -179,6 +181,7 @@ const ServicesTableComponent = ({
         createService={createService}
         hotel={hotel}
         onSuccess={onSuccess}
+        onRefresh={onRefresh}
       />
     </>
   );
@@ -205,6 +208,7 @@ ServicesTableComponent.propTypes = {
   onOrderChanged: PropTypes.func.isRequired,
   orderBy: PropTypes.string,
   order: PropTypes.string.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
 
 ServicesTableComponent.defaultProps = {

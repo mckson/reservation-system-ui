@@ -58,6 +58,10 @@ const ServicesTable = ({
     setPageSize(newPageSize);
   };
 
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+  };
+
   const requestServicesAsync = async () => {
     const response = await getServices({
       pageNumber,
@@ -126,6 +130,7 @@ const ServicesTable = ({
       onOrderChanged={handleOrderChanged}
       orderBy={orderBy}
       order={order}
+      onRefresh={handleRefresh}
     />
   );
 };

@@ -11,6 +11,7 @@ const EditServiceComponent = ({
   service,
   updateService,
   onSuccess,
+  onRefresh,
 }) => {
   const formTitle = `Service wih id ${service.id} update`;
   const formSubmitText = 'Apply changes';
@@ -33,6 +34,7 @@ const EditServiceComponent = ({
     } else {
       onSuccess(`Service ${serviceResponse.name} successfully updated`);
       close();
+      onRefresh();
     }
   };
 
@@ -61,6 +63,7 @@ EditServiceComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   service: PropTypes.instanceOf(Service).isRequired,
   onSuccess: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
 
 export default EditServiceComponent;

@@ -165,8 +165,9 @@ const DetailedOrderComponent = ({
           close={closeRoomDetailed}
           width="md"
           title="Room details"
-          contentComponent={<RoomDetailed roomId={selectedRoomId} />}
-        />
+        >
+          <RoomDetailed roomId={selectedRoomId} />
+        </BaseDialog>
       ) : null}
     </>
   );

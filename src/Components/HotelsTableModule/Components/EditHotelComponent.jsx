@@ -29,7 +29,7 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
       setError(errorResponse);
     } else {
       onSuccess(`Hotel ${hotelResponse.name} updated successfully`);
-      setUpdatingHotel(null);
+      setUpdatingHotel({ ...hotelResponse });
       close('Hotel updated successfully');
     }
   };
@@ -98,7 +98,7 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
     <HotelForm
       open={open}
       close={close}
-      hotel={hotel}
+      hotel={updatingHotel}
       submitHandler={handleSubmit}
       title={`Edit hotel with id ${hotel.id}`}
       error={error}

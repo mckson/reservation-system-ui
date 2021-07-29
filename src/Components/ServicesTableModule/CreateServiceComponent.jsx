@@ -9,6 +9,7 @@ const CreateServiceComponent = ({
   hotel,
   createService,
   onSuccess,
+  onRefresh,
 }) => {
   const formTitle = 'Service creation';
   const formSubmitText = 'Create service';
@@ -30,6 +31,7 @@ const CreateServiceComponent = ({
     } else {
       onSuccess(`Service ${serviceResponse.name} sucessfully added`);
       close();
+      onRefresh();
     }
   };
 
@@ -59,6 +61,7 @@ CreateServiceComponent.propTypes = {
   createService: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
   onSuccess: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
 
 export default CreateServiceComponent;

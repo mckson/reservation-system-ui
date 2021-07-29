@@ -45,10 +45,9 @@ const UsersManagement = ({ isOpen, close }) => {
         `${option.firstName} ${option.lastName} (${option.email})`,
     }),
     new SearchClause({
-      name: 'Roles',
-      value: [],
+      name: 'Role',
+      value: '',
       options: [Constants.adminRole, Constants.managerRole, Constants.userRole],
-      multiple: true,
     }),
   ]);
   const [searchRanges, setSearchRanges] = useState([]);
@@ -68,7 +67,7 @@ const UsersManagement = ({ isOpen, close }) => {
       email: searchClauses[0].value,
       firstName: searchClauses[1].value,
       lastName: searchClauses[2].value,
-      roles: searchClauses[3].value,
+      role: searchClauses[3].value,
     });
 
     setSearchVariants(response);
@@ -98,7 +97,7 @@ const UsersManagement = ({ isOpen, close }) => {
       email: searchClauses[0].value,
       firstName: searchClauses[1].value,
       lastName: searchClauses[2].value,
-      roles: searchClauses[3].value,
+      role: searchClauses[3].value,
       propertyName: orderBy,
       isDescending: order === 'desc',
     });

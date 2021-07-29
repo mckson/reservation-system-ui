@@ -11,6 +11,7 @@ const ServiceRow = ({
   updateService,
   onError,
   onSuccess,
+  onRefresh,
 }) => {
   return (
     <ServiceRowComponent
@@ -20,6 +21,7 @@ const ServiceRow = ({
       updateService={updateService}
       onError={onError}
       onSuccess={onSuccess}
+      onRefresh={onRefresh}
     />
   );
 };
@@ -31,6 +33,7 @@ ServiceRow.propTypes = {
   updateService: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
+  onRefresh: PropTypes.func.isRequired,
 };
 
 export default ServiceRow;
