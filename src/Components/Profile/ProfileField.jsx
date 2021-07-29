@@ -118,14 +118,15 @@ const ProfileField = ({ fieldTitle, fieldValue, update, isDate }) => {
 };
 
 ProfileField.propTypes = {
-  fieldValue: PropTypes.string.isRequired,
+  fieldValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date),
+  ]),
   fieldTitle: PropTypes.string.isRequired,
   update: PropTypes.func.isRequired,
   isDate: PropTypes.bool,
 };
 
-ProfileField.defaultProps = {
-  isDate: false,
-};
+ProfileField.defaultProps = { fieldValue: null, isDate: false };
 
 export default ProfileField;

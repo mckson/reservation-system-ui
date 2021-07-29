@@ -47,6 +47,7 @@ const OrdersTableComponent = ({ reservations }) => {
             {reservations || reservations.lenght > 0
               ? reservations.map((reservation) => (
                   <OrdersTableRow
+                    key={reservation.id}
                     reservation={reservation}
                     selectedReservationChanged={
                       handleSelectedReservationChanged
@@ -57,16 +58,15 @@ const OrdersTableComponent = ({ reservations }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <BaseDialog
-        open={openDetailed}
-        close={() => setOpenDetailed(false)}
-        title="Details of reservation"
-        contentComponent={
-          selectedReservationId ? (
-            <DetailedOrder reservationId={selectedReservationId} />
-          ) : null
-        }
-      />
+      {selectedReservationId ? (
+        <BaseDialog
+          open={openDetailed}
+          close={() => setOpenDetailed(false)}
+          title="Details of reservation"
+        >
+          <DetailedOrder reservationId={selectedReservationId} />
+        </BaseDialog>
+      ) : null}
     </>
   );
 };

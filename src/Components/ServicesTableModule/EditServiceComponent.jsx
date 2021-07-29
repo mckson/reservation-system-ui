@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import ServiceForm from './ServiceForm/ServiceForm';
 import Hotel from '../../Models/Hotel';
 import Service from '../../Models/Service';

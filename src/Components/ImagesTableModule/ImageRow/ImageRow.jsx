@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, TableRow, TableCell, makeStyles } from '@material-ui/core';
 import { DeleteOutlined } from '@material-ui/icons';
-import Image from '../../../Models/HotelImage';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -23,12 +22,9 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
   const classes = useStyles();
 
   const onDeleteImage = async () => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const splited = image.split('/');
     const imageId = splited[splited.length - 1];
 
-    // eslint-disable-next-line no-unused-vars
     const errorResponse = await deleteImage(imageId);
 
     if (errorResponse) {
@@ -37,10 +33,10 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
       onSuccess('Image successfully deleted');
     }
   };
+
   return (
     <>
       <TableRow>
-        {/* <TableCell>{image.id}</TableCell> */}
         <TableCell align="center">
           <img className={classes.image} src={image} alt="Hotel" />
         </TableCell>
@@ -55,7 +51,7 @@ const ImageRow = ({ image, deleteImage, onSuccess, onError }) => {
 };
 
 ImageRow.propTypes = {
-  image: PropTypes.instanceOf(Image).isRequired,
+  image: PropTypes.instanceOf(PropTypes.string).isRequired,
   deleteImage: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,

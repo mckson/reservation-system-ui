@@ -1,12 +1,14 @@
 import './App.css';
 import { React, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Alert } from '@material-ui/lab';
 import { Snackbar } from '@material-ui/core';
+import { setUser } from './features/loggedUser/loggedUserSlice';
 import Hotel from './Models/Hotel';
-import User from './Models/User';
-import API from './Common/API';
-import Routes from './Components/RoutesComponent/Routes';
 import ManagementService from './Common/ManagementService';
+import Routes from './Components/RoutesComponent/Routes';
+import LoggedUser from './Models/LoggedUser';
+import API from './api/API';
 
 function App() {
   const [hotels, setHotels] = useState([]);
@@ -15,10 +17,12 @@ function App() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(null);
-  const [user, setUser] = useState(null);
   const [dateIn, setDateIn] = useState(null);
   const [dateOut, setDateOut] = useState(null);
   const [error, setError] = useState(null);
+
+  const user = useSelector((state) => state.loggedUser.loggedUser);
+  const dispatch = useDispatch();
 
   const handleResetError = (event, reason) => {
     if (reason === 'clickaway') {
@@ -29,8 +33,6 @@ function App() {
   };
 
   const requestHotels = async (searchRequest) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const hotelname = searchRequest?.[0] ? searchRequest[0] : '';
     const city = searchRequest?.[1] ? searchRequest[1] : '';
     const services = searchRequest?.[2] ? searchRequest[2] : [];
@@ -84,7 +86,7 @@ function App() {
     if (jwt && user == null) {
       const userDecoded = parseJwt(jwt);
 
-      setUser(new User(userDecoded));
+      dispatch(setUser(new LoggedUser(userDecoded)));
     }
 
     await requestHotels(searchParameters);
@@ -92,14 +94,14 @@ function App() {
 
   const onSubmit = (response) => {
     const userDecoded = parseJwt(response.data.jwtToken);
-    setUser(new User(userDecoded));
+    dispatch(setUser(new LoggedUser(userDecoded)));
 
     localStorage.setItem('access_token', response.data.jwtToken);
     localStorage.setItem('refresh_token', response.data.refreshToken);
   };
 
   const onLogout = async () => {
-    setUser(null);
+    dispatch(setUser(null));
 
     await API.axios.post('/Account/SignOut', {
       token: localStorage.getItem('refresh_token'),
@@ -124,7 +126,6 @@ function App() {
   return (
     <>
       <Routes
-        loggedUser={user}
         hotels={hotels}
         totalPages={totalPages}
         totalResults={totalResults}

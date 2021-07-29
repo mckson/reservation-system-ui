@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   InputBase,
@@ -5,8 +7,6 @@ import {
   makeStyles,
   IconButton,
 } from '@material-ui/core';
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Autocomplete } from '@material-ui/lab';
 import { AddOutlined } from '@material-ui/icons';
 import HotelBrief from '../../Models/HotelBrief';
@@ -197,15 +197,15 @@ const SearchBarComponent = ({
 SearchBarComponent.propTypes = {
   hotels: PropTypes.arrayOf(HotelBrief).isRequired,
   cities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedServices: PropTypes.arrayOf(PropTypes.string).isRequired,
   searchName: PropTypes.string,
   searchCity: PropTypes.string,
-  selectedServices: PropTypes.arrayOf(PropTypes.string).isRequired,
   creatingService: PropTypes.string,
   onAddNewService: PropTypes.func.isRequired,
-  onChangeNewService: PropTypes.isRequired,
-  onChangeServices: PropTypes.isRequired,
-  onChangeDateIn: PropTypes.isRequired,
-  onChangeDateOut: PropTypes.isRequired,
+  onChangeNewService: PropTypes.func.isRequired,
+  onChangeServices: PropTypes.func.isRequired,
+  onChangeDateIn: PropTypes.func.isRequired,
+  onChangeDateOut: PropTypes.func.isRequired,
   onChangeName: PropTypes.func.isRequired,
   onChangeCity: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

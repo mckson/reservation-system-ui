@@ -1,20 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  GridList,
-  GridListTile,
-  makeStyles,
-  Button,
-  IconButton,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-} from '@material-ui/core';
-import { CloseOutlined } from '@material-ui/icons';
+import { GridList, GridListTile, makeStyles, Button } from '@material-ui/core';
 import HotelImage from '../Models/HotelImage';
+import BaseDialog from '../Common/BaseDialog';
 
-const useStyles = makeStyles((/* theme */) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -41,35 +31,18 @@ const useStyles = makeStyles((/* theme */) => ({
   },
 }));
 
-// function getColWidth(index) {
-//   return index % 2 === 0 ? 1 : 2;
-// }
-
-// function getRowHeight(index) {
-//   return index % 5 === 2 ? 2 : 1;
-// }
-
-// function getRandomInt(max) {
-//   return Math.floor(Math.random() * max);
-// }
-
 const Gallery = ({ images }) => {
   const classes = useStyles();
   const [viewAll, setViewAll] = useState(false);
-  const [viewImage, setViewImage] = useState(null);
+  const [viewImage, setViewImage] = useState(false);
 
   const cols = 4;
   const rows = 2;
   return (
     <div className={classes.root}>
       <GridList cellHeight={160} cols={cols} rows={rows}>
-        {images.slice(0, cols * rows - 1).map((image /* , index */) => (
-          <GridListTile
-            key={image.id}
-            onClick={() => setViewImage(image)}
-            // cols={getColWidth(index)}
-            // rows={getRowHeight(index)}
-          >
+        {images.slice(0, cols * rows - 1).map((image) => (
+          <GridListTile key={image} onClick={() => setViewImage(image)}>
             <img src={image} alt={image} />
           </GridListTile>
         ))}
@@ -84,48 +57,24 @@ const Gallery = ({ images }) => {
           </GridListTile>
         ) : null}
       </GridList>
-      <Dialog open={viewAll}>
-        <DialogTitle>
-          <div className={classes.titleSection}>
-            <Typography className={classes.title} variant="h6">
-              Album
-            </Typography>
-            <IconButton
-              className={classes.closeButton}
-              onClick={() => setViewAll(false)}
-            >
-              <CloseOutlined />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <DialogContent>
-          <GridList cellHeight={160} cols={cols} rows={rows}>
-            {images.map((image /* , index */) => (
-              <GridListTile key={image.id} onClick={() => setViewImage(image)}>
-                <img src={image} alt={image.name} />
-              </GridListTile>
-            ))}
-          </GridList>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={viewImage} maxWidth="lg">
-        <DialogTitle>
-          <div className={classes.titleSection}>
-            <Typography className={classes.title} variant="h6">
-              Image
-            </Typography>
-            <IconButton
-              className={classes.closeButton}
-              onClick={() => setViewImage(null)}
-            >
-              <CloseOutlined />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <DialogContent className={classes.content}>
-          <img src={viewImage} alt={viewImage?.name} />
-        </DialogContent>
-      </Dialog>
+      <BaseDialog open={viewAll} close={() => setViewAll(false)} title="Album">
+        <GridList cellHeight={160} cols={cols} rows={rows}>
+          {images.map((image) => (
+            <GridListTile key={image} onClick={() => setViewImage(image)}>
+              <img src={image} alt={image.name} />
+            </GridListTile>
+          ))}
+        </GridList>
+      </BaseDialog>
+      <BaseDialog
+        open={viewImage}
+        title="Image"
+        close={() => setViewImage(null)}
+        width="lg"
+        notFullWidth
+      >
+        <img src={viewImage} alt={viewImage?.name} />
+      </BaseDialog>
     </div>
   );
 };

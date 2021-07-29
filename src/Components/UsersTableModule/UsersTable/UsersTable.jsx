@@ -3,12 +3,19 @@ import PropTypes from 'prop-types';
 import User from '../../../Models/User';
 import UsersTableComponent from './UsersTableComponent';
 import HotelBrief from '../../../Models/HotelBrief';
-import UserBrief from '../../../Models/UserBrief';
+import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import SearchRange from '../../../Common/BaseSearch/SearchRange';
+import SearchOption from '../../../Common/BaseSearch/SearchOption';
 
 const UsersTable = ({
+  onSearch,
+  clauses,
+  ranges,
+  options,
+  onChangeClauses,
+  onChangeRanges,
+  onChangeOptions,
   users,
-  usersBrief,
-  onChangeSearchClauses,
   hotels,
   onError,
   onSuccess,
@@ -19,12 +26,21 @@ const UsersTable = ({
   pageChanged,
   pageSizeChanged,
   pageSize,
+  searchVariants,
+  onOrderChanged,
+  orderBy,
+  order,
 }) => {
   return (
     <UsersTableComponent
+      onSearch={onSearch}
+      clauses={clauses}
+      options={options}
+      ranges={ranges}
+      onChangeClauses={onChangeClauses}
+      onChangeRanges={onChangeRanges}
+      onChangeOptions={onChangeOptions}
       users={users}
-      usersBrief={usersBrief}
-      onChangeSearchClauses={onChangeSearchClauses}
       hotels={hotels}
       onError={onError}
       onSuccess={onSuccess}
@@ -35,14 +51,23 @@ const UsersTable = ({
       pageChanged={pageChanged}
       pageSizeChanged={pageSizeChanged}
       pageSize={pageSize}
+      searchVariants={searchVariants}
+      onOrderChanged={onOrderChanged}
+      orderBy={orderBy}
+      order={order}
     />
   );
 };
 
 UsersTable.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+  clauses: PropTypes.arrayOf(SearchClause),
+  ranges: PropTypes.arrayOf(SearchRange),
+  options: PropTypes.arrayOf(SearchOption),
+  onChangeClauses: PropTypes.func,
+  onChangeRanges: PropTypes.func,
+  onChangeOptions: PropTypes.func,
   users: PropTypes.arrayOf(User),
-  usersBrief: PropTypes.arrayOf(UserBrief).isRequired,
-  onChangeSearchClauses: PropTypes.func.isRequired,
   hotels: PropTypes.arrayOf(HotelBrief),
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
@@ -53,11 +78,24 @@ UsersTable.propTypes = {
   pageSize: PropTypes.number.isRequired,
   pageChanged: PropTypes.func.isRequired,
   pageSizeChanged: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  searchVariants: PropTypes.array,
+  onOrderChanged: PropTypes.func.isRequired,
+  orderBy: PropTypes.string,
+  order: PropTypes.string.isRequired,
 };
 
 UsersTable.defaultProps = {
   users: [],
   hotels: [],
+  clauses: [],
+  ranges: [],
+  options: [],
+  searchVariants: [],
+  onChangeClauses: null,
+  onChangeRanges: null,
+  onChangeOptions: null,
+  orderBy: null,
 };
 
 export default UsersTable;

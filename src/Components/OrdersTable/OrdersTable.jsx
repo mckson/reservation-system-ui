@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import API from '../../Common/API';
 import OrdersTableComponent from './OrdersTableComponent';
-import User from '../../Models/User';
 import ReservationBriefResponse from '../../Models/ReservationBriefResponse';
+import LoggedUser from '../../Models/LoggedUser';
+import ReservationRequests from '../../api/ReservationRequests';
+
+const { getReservations } = ReservationRequests;
 
 const OrdersTable = ({ user }) => {
   const [reservations, setReservatoins] = useState([]);
@@ -13,11 +15,11 @@ const OrdersTable = ({ user }) => {
   const [totalResults, setTotalResults] = useState(null);
 
   const requestReservationsAsync = async () => {
-    const response = await API.getReservations(
+    const response = await getReservations({
       pageNumber,
       pageSize,
-      user.email
-    );
+      email: user.email,
+    });
 
     if (response) {
       const respondedReservations = response.content.map(
@@ -52,7 +54,7 @@ const OrdersTable = ({ user }) => {
 };
 
 OrdersTable.propTypes = {
-  user: PropTypes.instanceOf(User).isRequired,
+  user: PropTypes.instanceOf(LoggedUser).isRequired,
 };
 
 export default OrdersTable;

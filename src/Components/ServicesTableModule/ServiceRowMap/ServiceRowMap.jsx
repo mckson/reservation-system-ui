@@ -8,7 +8,7 @@ const ServiceRowMap = ({ service }) => {
     <>
       <TableCell>{service.id}</TableCell>
       <TableCell>{service.name}</TableCell>
-      <TableCell>{service.price}</TableCell>
+      <TableCell align="right">${service.price}</TableCell>
     </>
   );
 };

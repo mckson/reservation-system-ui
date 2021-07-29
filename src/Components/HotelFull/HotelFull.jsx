@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useParams, useHistory } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
-import API from '../../Common/API';
 import User from '../../Models/User';
 import Room from '../../Models/Room';
+import HotelRequests from '../../api/HotelRequests';
+import RoomRequests from '../../api/RoomRequests';
+import ServiceRequests from '../../api/ServiceRequests';
+import Service from '../../Models/Service';
 
-// import Default from '../../images/default.png';
+const { getHotel } = HotelRequests;
+const { getRooms } = RoomRequests;
+const { getServices } = ServiceRequests;
 
 const HotelFull = ({
   loggedUser,
@@ -20,18 +25,29 @@ const HotelFull = ({
 }) => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
+
   const [rooms, setRooms] = useState([]);
-  const [roomsTotalResults, setRoomsTotalResults] = useState(null);
+  const [roomsTotalResults, setRoomsTotalResults] = useState(0);
   const [roomsPageNumber, setRoomsPageNumber] = useState(1);
-  const [roomsPageSize, setRoomsPageSize] = useState(null);
-  const [roomsTotalPages, setRoomsTotalPages] = useState(null);
+  const [roomsPageSize, setRoomsPageSize] = useState(10);
   const [roomId, setRoomId] = useState(null);
+
+  const [services, setServices] = useState([]);
+  const [servicesTotalResults, setServicesTotalResults] = useState(0);
+  const [servicesPageNumber, setServicesPageNumber] = useState(1);
+  const [servicesPageSize, setServicesPageSize] = useState(10);
+  const [serviceId, setServiceId] = useState(null);
+
   const [openRoom, setOpenRoom] = useState(false);
 
   const history = useHistory();
 
   const handleSelectedRoomChanged = (selectedRoomId) => {
     setRoomId(selectedRoomId);
+  };
+
+  const handleSelectedServiceChanged = (selectedServiceId) => {
+    setServiceId(selectedServiceId);
   };
 
   const handleOpenRoomDetailed = () => {
@@ -46,23 +62,19 @@ const HotelFull = ({
   const onBackClick = () => history.push('/Hotels');
 
   const requestRooms = async (hotelId) => {
-    const response = await API.getRooms(
-      roomsPageNumber,
-      roomsPageSize,
-      hotelId || hotel?.id,
+    const response = await getRooms({
+      pageNumber: roomsPageNumber,
+      pageSize: roomsPageSize,
+      hotelId: hotelId || hotel?.id,
       dateIn,
-      dateOut
-    );
+      dateOut,
+    });
 
     if (response) {
       const respondedRooms = response.content.map((item) => new Room(item));
 
-      // eslint-disable-next-line no-debugger
-      debugger;
-
       setRooms(respondedRooms);
       setRoomsTotalResults(response.totalResults);
-      setRoomsTotalPages(response.totalPages);
       if (response.pageNumber !== roomsPageNumber) {
         setRoomsPageNumber(response.pageNumber);
       }
@@ -72,35 +84,47 @@ const HotelFull = ({
     }
   };
 
-  useEffect(async () => {
-    await API.axios
-      .get(`/Hotels/${id}`)
-      .then(async (response) => {
-        // if (response.data.mainImage == null) {
-        //   response.data.mainImage = { id: 0, image: Default };
-        // }
-        setHotel(new Hotel(response.data));
+  const requestServices = async (hotelId) => {
+    const response = await getServices({
+      pageNumber: servicesPageNumber,
+      pageSize: servicesPageSize,
+      hotelId: hotelId || hotel?.id,
+    });
 
-        await requestRooms(response.data.id);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else if (err.request) {
-          console.log(err.request);
-        } else {
-          console.log('Error', err.message);
-        }
-        console.log(err.config);
-      });
+    if (response) {
+      const respondedServices = response.content.map(
+        (item) => new Service(item)
+      );
+
+      setServices(respondedServices);
+      setServicesTotalResults(response.totalResults);
+      if (response.pageNumber !== servicesPageNumber) {
+        setServicesPageNumber(response.pageNumber);
+      }
+      if (response.pageSize !== servicesPageSize) {
+        setServicesPageSize(response.pageSize);
+      }
+    }
+  };
+
+  useEffect(async () => {
+    const respondedHotel = await getHotel(id);
+    setHotel(new Hotel(respondedHotel));
+
+    await requestRooms(id);
   }, []);
 
-  // useEffect(async () => {
-  //   if (hotel) {
-  //   }
-  // }, [hotel /* , roomsPageSize, roomsPageNumber, dateIn, dateOut */]);
+  useEffect(async () => {
+    if (hotel) {
+      await requestRooms(id);
+    }
+  }, [roomsPageNumber, roomsPageSize]);
+
+  useEffect(async () => {
+    if (hotel) {
+      await requestServices(id);
+    }
+  }, [servicesPageNumber, servicesPageSize]);
 
   return (
     <>
@@ -108,8 +132,9 @@ const HotelFull = ({
         <HotelFullComponent
           hotel={hotel}
           rooms={rooms}
+          services={services}
           roomsTotalResults={roomsTotalResults}
-          roomsTotalPages={roomsTotalPages}
+          servicesTotalResults={servicesTotalResults}
           onBackClick={onBackClick}
           loggedUser={loggedUser}
           dateIn={dateIn}
@@ -118,8 +143,10 @@ const HotelFull = ({
           onDateInChange={onDateInChange}
           onDateOutChange={onDateOutChange}
           selectedRoomId={roomId}
+          selectedServiceId={serviceId}
           isRoomDetailedOpen={openRoom}
           selectedRoomChanged={handleSelectedRoomChanged}
+          selectedServiceChanged={handleSelectedServiceChanged}
           closeRoomDetailed={handleCloseRoomDetailed}
           openRoomDetailed={handleOpenRoomDetailed}
           onRequestRooms={requestRooms}

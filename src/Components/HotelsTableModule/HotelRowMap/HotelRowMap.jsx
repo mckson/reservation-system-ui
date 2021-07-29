@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles, TableCell } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { makeStyles, TableCell } from '@material-ui/core';
 import Hotel from '../../../Models/Hotel';
 import defaultImage from '../../../images/default.png';
 
@@ -20,8 +20,8 @@ const HotelRowMap = ({ hotel }) => {
     <>
       <TableCell>{hotel.id}</TableCell>
       <TableCell>{hotel.name}</TableCell>
-      <TableCell>{hotel.numberFloors}</TableCell>
-      <TableCell>{hotel.deposit}</TableCell>
+      <TableCell align="right">{hotel.numberFloors}</TableCell>
+      <TableCell align="right">${hotel.deposit}</TableCell>
       <TableCell>{hotel.location.country}</TableCell>
       <TableCell>{hotel.location.region}</TableCell>
       <TableCell>{hotel.location.city}</TableCell>

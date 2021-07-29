@@ -1,9 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link, Toolbar, AppBar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import User from '../Models/User';
 import AccountSection from '../Components/AccountSection/AccountSection';
+import User from '../Models/User';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -164,6 +164,7 @@ const SideSearchBarComponent = ({
           className={classes.textfield}
         />
       </Grid>
+
       <Grid item xs={12}>
         <div className={classes.button}>
           <Button
@@ -184,15 +185,15 @@ const SideSearchBarComponent = ({
 SideSearchBarComponent.propTypes = {
   hotels: PropTypes.arrayOf(HotelBrief).isRequired,
   cities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedServices: PropTypes.arrayOf(PropTypes.string).isRequired,
   searchName: PropTypes.string,
   searchCity: PropTypes.string,
-  selectedServices: PropTypes.arrayOf(PropTypes.string).isRequired,
   creatingService: PropTypes.string,
   onAddNewService: PropTypes.func.isRequired,
-  onChangeNewService: PropTypes.isRequired,
-  onChangeServices: PropTypes.isRequired,
-  onChangeDateIn: PropTypes.isRequired,
-  onChangeDateOut: PropTypes.isRequired,
+  onChangeNewService: PropTypes.func.isRequired,
+  onChangeServices: PropTypes.func.isRequired,
+  onChangeDateIn: PropTypes.func.isRequired,
+  onChangeDateOut: PropTypes.func.isRequired,
   onChangeName: PropTypes.func.isRequired,
   onChangeCity: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

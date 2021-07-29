@@ -1,6 +1,6 @@
 import React from 'react';
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 import ServiceFormComponent from './ServiceFormComponent';
 import Service from '../../../Models/Service';
 

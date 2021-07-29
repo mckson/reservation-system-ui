@@ -78,23 +78,11 @@ const RoomForm = ({
   );
   const classes = useStyles();
 
-  // const requestViewsAsync = async () => {
-  //   const response = await API.getRoomViews();
-
-  //   if (response) {
-  //     const respondedRoomViews = response.map((view) => new RoomView(view));
-  //     // eslint-disable-next-line no-debugger
-  //     debugger;
-  //     setViews(respondedRoomViews);
-  //   }
-  // };
-
   const handleFacilityAdd = () => {
     const checkArray = facilities.filter(
       (f) => f.name.toUpperCase() === facility.name.toUpperCase()
     );
-    // eslint-disable-next-line no-debugger
-    debugger;
+
     if (
       (checkArray.length === 0 && facilities.length > 0) ||
       facilities.length === 0
@@ -110,258 +98,249 @@ const RoomForm = ({
     setFacilities(newFacilities);
   };
 
-  // useEffect(async () => {
-  //   await requestViewsAsync();
-  // }, []);
-
   return (
-    <BaseDialog
-      open={open}
-      close={close}
-      title={title}
-      contentComponent={
-        <>
-          <Formik
-            initialValues={{
-              name: room?.name ? room.name : '',
-              number: room != null ? room.roomNumber : '',
-              floor: room != null ? room.floorNumber : '',
-              price: room != null ? room.price : '',
-              capacity: room != null ? room.capacity : '',
-              description: room?.description ? room.description : '',
-              area: room?.area ? room.area : 0,
-              smoking: room?.smoking ? room.smoking : false,
-              parking: room?.parking ? room.parking : false,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values) => {
-              // eslint-disable-next-line no-param-reassign
-              values.facilities = facilities.map((f) => f.name);
-              // eslint-disable-next-line no-param-reassign
-              values.views = selectedViews.map((view) => view.id);
-              submitHandler(values);
-            }}
-          >
-            {({ errors, touched }) => (
-              <Form autoComplete="on">
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Name"
-                  name="name"
-                  type="text"
-                />
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Number"
-                  name="number"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      step: 1,
-                      min: 1,
-                      max: 10000,
-                    },
-                  }}
-                />
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Floor number"
-                  name="floor"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      step: 1,
-                      min: 1,
-                      max: 500,
-                    },
-                  }}
-                />
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Price per night"
-                  name="price"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      step: 1,
-                      min: 0,
-                    },
-                  }}
-                  prefix="$"
-                />
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Beds"
-                  name="capacity"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      step: 1,
-                      min: 1,
-                    },
-                  }}
-                />
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Area"
-                  name="area"
-                  type="number"
-                  InputProps={{
-                    inputProps: {
-                      step: 0.1,
-                      min: 1.0,
-                    },
-                  }}
-                />
-                <MyTextField
-                  required
-                  fullWidth
-                  label="Description"
-                  name="description"
-                  type="text"
-                  placeholder="Provide some room brief description"
-                />
+    <BaseDialog open={open} close={close} title={title}>
+      <>
+        <Formik
+          initialValues={{
+            name: room?.name ? room.name : '',
+            number: room != null ? room.roomNumber : '',
+            floor: room != null ? room.floorNumber : '',
+            price: room != null ? room.price : '',
+            capacity: room != null ? room.capacity : '',
+            description: room?.description ? room.description : '',
+            area: room?.area ? room.area : 0,
+            smoking: room?.smoking ? room.smoking : false,
+            parking: room?.parking ? room.parking : false,
+          }}
+          validationSchema={validationSchema}
+          onSubmit={(values) => {
+            // eslint-disable-next-line no-param-reassign
+            values.facilities = facilities.map((f) => f.name);
+            // eslint-disable-next-line no-param-reassign
+            values.views = selectedViews.map((view) => view.id);
+            submitHandler(values);
+          }}
+        >
+          {({ errors, touched }) => (
+            <Form autoComplete="on">
+              <MyTextField
+                required
+                fullWidth
+                label="Name"
+                name="name"
+                type="text"
+              />
+              <MyTextField
+                required
+                fullWidth
+                label="Number"
+                name="number"
+                type="number"
+                InputProps={{
+                  inputProps: {
+                    step: 1,
+                    min: 1,
+                    max: 10000,
+                  },
+                }}
+              />
+              <MyTextField
+                required
+                fullWidth
+                label="Floor number"
+                name="floor"
+                type="number"
+                InputProps={{
+                  inputProps: {
+                    step: 1,
+                    min: 1,
+                    max: 500,
+                  },
+                }}
+              />
+              <MyTextField
+                required
+                fullWidth
+                label="Price per night"
+                name="price"
+                type="number"
+                InputProps={{
+                  inputProps: {
+                    step: 0.01,
+                    min: 0,
+                  },
+                }}
+                prefix="$"
+              />
+              <MyTextField
+                required
+                fullWidth
+                label="Beds"
+                name="capacity"
+                type="number"
+                InputProps={{
+                  inputProps: {
+                    step: 1,
+                    min: 1,
+                  },
+                }}
+              />
+              <MyTextField
+                required
+                fullWidth
+                label="Area"
+                name="area"
+                type="number"
+                InputProps={{
+                  inputProps: {
+                    step: 0.1,
+                    min: 1.0,
+                  },
+                }}
+              />
+              <MyTextField
+                required
+                fullWidth
+                label="Description"
+                name="description"
+                type="text"
+                placeholder="Provide some room brief description"
+              />
 
-                <Field name="smoking">
-                  {({ field }) => (
-                    <FormControl
-                      required
-                      fullWidth
-                      error={
-                        errors.smoking && touched.smoking
-                          ? `${errors.smoking}`
-                          : ''
+              <Field name="smoking">
+                {({ field }) => (
+                  <FormControl
+                    required
+                    fullWidth
+                    error={
+                      errors.smoking && touched.smoking
+                        ? `${errors.smoking}`
+                        : ''
+                    }
+                    component="fieldset"
+                  >
+                    {/* <FormLabel component="legend">Allow smoking</FormLabel> */}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          {...field}
+                          checked={field.value}
+                          color="primary"
+                        />
                       }
-                      component="fieldset"
-                    >
-                      {/* <FormLabel component="legend">Allow smoking</FormLabel> */}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            {...field}
-                            checked={field.value}
-                            color="primary"
-                          />
-                        }
-                        label="Allow smoking"
-                      />
-                    </FormControl>
-                  )}
-                </Field>
-
-                <Field name="parking">
-                  {({ field }) => (
-                    <FormControl
-                      required
-                      fullWidth
-                      error={
-                        errors.parking && touched.parking
-                          ? `${errors.parking}`
-                          : ''
-                      }
-                      component="fieldset"
-                    >
-                      {/* <FormLabel component="legend">Allow smoking</FormLabel> */}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            {...field}
-                            checked={field.value}
-                            color="primary"
-                          />
-                        }
-                        label="Parking provided"
-                      />
-                    </FormControl>
-                  )}
-                </Field>
-
-                <FacilitiesTable
-                  facilities={facilities}
-                  deleteFacility={handleFacilityDelete}
-                />
-
-                <TextField
-                  size="small"
-                  value={facility?.name ? facility.name : ''}
-                  onChange={(event) => {
-                    console.log(event);
-                    setFacility({ name: event.target.value });
-                  }}
-                />
-
-                <Button
-                  startIcon={<AddOutlinedIcon />}
-                  disabled={!facility}
-                  onClick={() => {
-                    handleFacilityAdd();
-                  }}
-                >
-                  Add facility
-                </Button>
-
-                <Autocomplete
-                  multiple
-                  limitTags={3}
-                  value={selectedViews}
-                  size="small"
-                  options={roomViews}
-                  getOptionLabel={(view) => `${view.name}`}
-                  onChange={(event, newValues) => {
-                    setSelectedViews(newValues);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      autoComplete={false}
-                      helperText={null}
-                      variant="outlined"
+                      label="Allow smoking"
                     />
-                  )}
-                />
+                  </FormControl>
+                )}
+              </Field>
 
-                <Button
-                  fullWidth
-                  className={classes.submit}
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                >
-                  {submitText}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-          {error != null ? (
-            <Alert
-              fullWidth
-              variant="outlined"
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    resetError();
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {error}
-            </Alert>
-          ) : null}
-        </>
-      }
-    />
+              <Field name="parking">
+                {({ field }) => (
+                  <FormControl
+                    required
+                    fullWidth
+                    error={
+                      errors.parking && touched.parking
+                        ? `${errors.parking}`
+                        : ''
+                    }
+                    component="fieldset"
+                  >
+                    {/* <FormLabel component="legend">Allow smoking</FormLabel> */}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          {...field}
+                          checked={field.value}
+                          color="primary"
+                        />
+                      }
+                      label="Parking provided"
+                    />
+                  </FormControl>
+                )}
+              </Field>
+
+              <FacilitiesTable
+                facilities={facilities}
+                deleteFacility={handleFacilityDelete}
+              />
+
+              <TextField
+                size="small"
+                value={facility?.name ? facility.name : ''}
+                onChange={(event) => {
+                  console.log(event);
+                  setFacility({ name: event.target.value });
+                }}
+              />
+
+              <Button
+                startIcon={<AddOutlinedIcon />}
+                disabled={!facility}
+                onClick={() => {
+                  handleFacilityAdd();
+                }}
+              >
+                Add facility
+              </Button>
+
+              <Autocomplete
+                multiple
+                limitTags={3}
+                value={selectedViews}
+                size="small"
+                options={roomViews}
+                getOptionLabel={(view) => `${view.name}`}
+                onChange={(event, newValues) => {
+                  setSelectedViews(newValues);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    autoComplete={false}
+                    helperText={null}
+                    variant="outlined"
+                  />
+                )}
+              />
+
+              <Button
+                fullWidth
+                className={classes.submit}
+                variant="contained"
+                type="submit"
+                color="primary"
+              >
+                {submitText}
+              </Button>
+            </Form>
+          )}
+        </Formik>
+        {error != null ? (
+          <Alert
+            fullWidth
+            variant="outlined"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  resetError();
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
+      </>
+    </BaseDialog>
   );
 };
 

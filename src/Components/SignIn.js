@@ -8,8 +8,8 @@ import { Alert } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import MyTextField from '../Common/MyTextField';
-import API from '../Common/API';
 import useStyles from '../Common/Styles';
+import API from '../api/API';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email adress').required('Required'),

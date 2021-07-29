@@ -83,16 +83,6 @@ const Carousell = ({ imagesUrls, altText }) => {
     setSelectedImage(imagesUrls[index]);
   };
 
-  //   const arrayToShow = (index) => {
-  //     if (index < 3) {
-  //       return imagesUrls.slice(0, 6);
-  //     }
-  //     if (index > imagesUrls.length - 4) {
-  //       return imagesUrls.slice(imagesUrls.length - 7, imagesUrls - 1);
-  //     }
-  //     return imagesUrls.slice(index, index + 6);
-  //   };
-
   return (
     <div className={classes.root}>
       <SelectedImage url={selectedImage} onClick={() => handleNextClick()} />

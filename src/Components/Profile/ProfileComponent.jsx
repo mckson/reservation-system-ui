@@ -44,9 +44,6 @@ const ProfileComponent = ({ loggedUser, updateUser }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {/* {Object.entries(loggedUser).map(([key, value]) =>
-            value ? <ProfileField fieldTitle={key} /> : null
-          )} */}
           <ProfileField
             fieldTitle="Email"
             fieldValue={loggedUser.email}

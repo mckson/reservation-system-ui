@@ -30,19 +30,14 @@ const CreateRoomView = ({ open, close, createRoomView, onSuccess }) => {
   const formTitle = 'Room view creation';
   const formSubmitText = 'Create view';
   return (
-    <BaseDialog
-      open={open}
-      close={close}
-      title={formTitle}
-      contentComponent={
-        <RoomViewForm
-          submitText={formSubmitText}
-          submitHandler={onCreateRoomViewAsync}
-          error={error}
-          resetError={handleResetError}
-        />
-      }
-    />
+    <BaseDialog open={open} close={close} title={formTitle}>
+      <RoomViewForm
+        submitText={formSubmitText}
+        submitHandler={onCreateRoomViewAsync}
+        error={error}
+        resetError={handleResetError}
+      />
+    </BaseDialog>
   );
 };
 

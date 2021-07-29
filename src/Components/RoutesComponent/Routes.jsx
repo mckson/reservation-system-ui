@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import RoutesComponent from './RoutesComponent';
-import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
+import LoggedUser from '../../Models/LoggedUser';
 
 const Routes = ({
-  loggedUser,
   hotels,
   totalPages,
   totalResults,
@@ -21,11 +21,13 @@ const Routes = ({
   const [openHotelsManagement, setOpenHotelsManagement] = useState(false);
   const [openUsersManagement, setOpenUsersManagement] = useState(false);
   const [openReservations, setOpenReservations] = useState(false);
-  // const [openProfile, setOpenProfile] = useState(false);
+
+  const user = useSelector((state) => state.loggedUser.loggedUser);
 
   const handleOpenHotelsManagement = () => {
     setOpenHotelsManagement(true);
   };
+
   const handleCloseHotelsManagement = () => {
     setOpenHotelsManagement(false);
   };
@@ -46,17 +48,9 @@ const Routes = ({
     setOpenUsersManagement(false);
   };
 
-  // const handleOpenProfile = () => {
-  //   setOpenProfile(true);
-  // };
-
-  // const handleCloseProfile = () => {
-  //   setOpenProfile(false);
-  // };
-
   return (
     <RoutesComponent
-      loggedUser={loggedUser}
+      loggedUser={user ? new LoggedUser(user) : null}
       hotels={hotels}
       totalPages={totalPages}
       totalResults={totalResults}
@@ -85,7 +79,6 @@ const Routes = ({
 };
 
 Routes.propTypes = {
-  loggedUser: PropTypes.instanceOf(User),
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
   totalResults: PropTypes.number,
@@ -100,7 +93,6 @@ Routes.propTypes = {
 };
 
 Routes.defaultProps = {
-  loggedUser: null,
   hotels: null,
   totalPages: 0,
   totalResults: 0,

@@ -1,35 +1,12 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CloseOutlined } from '@material-ui/icons';
 import { Form, Formik } from 'formik';
 import { Alert } from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
 import MyTextField from '../../../Common/MyTextField';
 import Service from '../../../Models/Service';
-
-const useStyles = makeStyles(() => ({
-  titleSection: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  closeButton: {
-    width: 'auto',
-  },
-}));
+import BaseDialog from '../../../Common/BaseDialog';
 
 const ServiceFormComponent = ({
   open,
@@ -42,56 +19,37 @@ const ServiceFormComponent = ({
   error,
   resetError,
 }) => {
-  const classes = useStyles();
-
   return (
     <div>
-      <Dialog open={open}>
-        <DialogTitle>
-          <div className={classes.titleSection}>
-            <Typography className={classes.title} variant="h6">
-              {title}
-            </Typography>
-            <IconButton className={classes.closeButton} onClick={close}>
-              <CloseOutlined />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <DialogContent>
-          <Formik
-            initialValues={{
-              name: service != null ? service.name : '',
-              price: service != null ? service.price : '',
-            }}
-            validationSchema={validationSchema}
-            onSubmit={submitHandler}
-          >
-            <Form autoComplete="on">
-              <MyTextField
-                required
-                fullWidth
-                label="Name"
-                name="name"
-                type="text"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Price"
-                name="price"
-                type="text"
-              />
-              <Button
-                fullWidth
-                variant="contained"
-                type="submit"
-                color="primary"
-              >
-                {submitText}
-              </Button>
-            </Form>
-          </Formik>
-        </DialogContent>
+      <BaseDialog open={open} close={close} title={title}>
+        <Formik
+          initialValues={{
+            name: service != null ? service.name : '',
+            price: service != null ? service.price : '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={submitHandler}
+        >
+          <Form autoComplete="on">
+            <MyTextField
+              required
+              fullWidth
+              label="Name"
+              name="name"
+              type="text"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Price"
+              name="price"
+              type="text"
+            />
+            <Button fullWidth variant="contained" type="submit" color="primary">
+              {submitText}
+            </Button>
+          </Form>
+        </Formik>
         {error != null ? (
           <Alert
             fullWidth
@@ -113,7 +71,7 @@ const ServiceFormComponent = ({
             {error}
           </Alert>
         ) : null}
-      </Dialog>
+      </BaseDialog>
     </div>
   );
 };

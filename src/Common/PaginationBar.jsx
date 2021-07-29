@@ -1,6 +1,6 @@
-import { Pagination } from '@material-ui/lab';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Pagination } from '@material-ui/lab';
 
 const PaginationBar = ({ totalPages, onPageChanged }) => {
   return (

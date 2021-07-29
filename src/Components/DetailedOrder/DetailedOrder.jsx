@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import DetailedOrderComponent from './DetailedOrderComponent';
-import API from '../../Common/API';
 import ReservationDetailedResponse from '../../Models/ReservationDetailedResponse';
+import ReservationRequests from '../../api/ReservationRequests';
+
+const { getReservation } = ReservationRequests;
 
 const DetailedOrder = ({ reservationId }) => {
   const [reservation, setReservation] = useState(null);
@@ -10,7 +12,7 @@ const DetailedOrder = ({ reservationId }) => {
   const [openRoom, setOpenRoom] = useState(false);
 
   const requestReservationAsync = async () => {
-    const response = await API.getReservation(reservationId);
+    const response = await getReservation(reservationId);
 
     if (response) {
       setReservation(new ReservationDetailedResponse(response));

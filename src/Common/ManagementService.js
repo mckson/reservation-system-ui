@@ -1,7 +1,25 @@
-import API from './API';
+import HotelRequests from '../api/HotelRequests';
+import ImageRequests from '../api/ImageRequests';
+import RoomRequests from '../api/RoomRequests';
+import RoomViewRequests from '../api/RoomViewRequests';
+import ServiceRequests from '../api/ServiceRequests';
+import UserRequests from '../api/UserRequests';
 
 const ManagementService = (function Management() {
+  const { createHotel, deleteHotel, getHotels, updateHotel } = HotelRequests;
+  const {
+    createHotelImage,
+    createRoomImage,
+    deleteHotelImage,
+    deleteRoomImage,
+  } = ImageRequests;
+  const { createRoom, deleteRoom, updateRoom } = RoomRequests;
+  const { createRoomView, deleteRoomView, updateRoomView } = RoomViewRequests;
+  const { createService, deleteService, updateService } = ServiceRequests;
+  const { createUser, deleteUser, updateUser } = UserRequests;
+
   let service;
+
   function getService() {
     if (!service) {
       service = this;
@@ -35,8 +53,12 @@ const ManagementService = (function Management() {
     name,
     city,
     services,
+    minDeposit,
+    maxDeposit,
+    minFloors,
+    maxFloors,
   }) => {
-    const returnedHotels = await API.getHotels(
+    const returnedHotels = await getHotels({
       pageNumber,
       pageSize,
       dateIn,
@@ -44,74 +66,78 @@ const ManagementService = (function Management() {
       manager,
       name,
       city,
-      services
-    );
+      services,
+      minDeposit,
+      maxDeposit,
+      minFloors,
+      maxFloors,
+    });
     return returnedHotels;
   };
 
   const handleCreateHotel = async (createdHotel) => {
-    const returnedHotel = await API.createHotel(createdHotel);
+    const returnedHotel = await createHotel(createdHotel);
     return returnedHotel;
   };
 
   const handleUpdateHotel = async (updatedHotel) => {
-    const returnedHotel = await API.updateHotel(updatedHotel);
+    const returnedHotel = await updateHotel(updatedHotel);
     return returnedHotel;
   };
 
   const handleDeleteHotel = async (id) => {
-    const deletedHotel = await API.deleteHotel(id);
+    const deletedHotel = await deleteHotel(id);
     return deletedHotel;
   };
 
   const handleCreateRoom = async (createdRoom) => {
-    const returnedRoom = await API.createRoom(createdRoom);
+    const returnedRoom = await createRoom(createdRoom);
     return returnedRoom;
   };
 
   const handleUpdateRoom = async (updatedRoom) => {
-    const returnedRoom = await API.updateRoom(updatedRoom);
+    const returnedRoom = await updateRoom(updatedRoom);
     return returnedRoom;
   };
 
   const handleDeleteRoom = async (id) => {
-    const returnedRoom = await API.deleteRoom(id);
+    const returnedRoom = await deleteRoom(id);
     return returnedRoom;
   };
 
   const handleCreateService = async (createdService) => {
-    const returnedService = await API.createService(createdService);
+    const returnedService = await createService(createdService);
     return returnedService;
   };
 
   const handleUpdateService = async (updatedService) => {
-    const returnedService = await API.updateService(updatedService);
+    const returnedService = await updateService(updatedService);
     return returnedService;
   };
 
   const handleDeleteService = async (id) => {
-    const returnedService = await API.deleteService(id);
+    const returnedService = await deleteService(id);
     return returnedService;
   };
 
   const handleCreateUser = async (createdUser) => {
-    const returnedUser = await API.createUser(createdUser);
+    const returnedUser = await createUser(createdUser);
     return returnedUser;
   };
 
   const handleUpdateUser = async (updatedUser) => {
-    const returnedUser = await API.updateUser(updatedUser);
+    const returnedUser = await updateUser(updatedUser);
     return returnedUser;
   };
 
   const handleDeleteUser = async (id) => {
-    const returnedUser = await API.deleteUser(id);
+    const returnedUser = await deleteUser(id);
     return returnedUser;
   };
 
   const handleCreateHotelImage = async (image) => {
     try {
-      await API.createHotelImage(image);
+      await createHotelImage(image);
       return null;
     } catch (error) {
       if (error.response.data.message) {
@@ -126,7 +152,7 @@ const ManagementService = (function Management() {
 
   const handleDeleteHotelImage = async (imageId) => {
     try {
-      await API.deleteHotelImage(imageId);
+      await deleteHotelImage(imageId);
       return null;
     } catch (error) {
       if (error.response.data.message) {
@@ -141,7 +167,7 @@ const ManagementService = (function Management() {
 
   const handleCreateRoomImage = async (image) => {
     try {
-      await API.createRoomImage(image);
+      await createRoomImage(image);
       return null;
     } catch (error) {
       if (error.response.data.message) {
@@ -156,7 +182,7 @@ const ManagementService = (function Management() {
 
   const handleDeleteRoomImage = async (imageId) => {
     try {
-      await API.deleteRoomImage(imageId);
+      await deleteRoomImage(imageId);
       return null;
     } catch (error) {
       if (error.response.data.message) {
@@ -170,17 +196,17 @@ const ManagementService = (function Management() {
   };
 
   const handleCreateRoomView = async (createdRoomView) => {
-    const returnedRoomView = await API.createRoomView(createdRoomView);
+    const returnedRoomView = await createRoomView(createdRoomView);
     return returnedRoomView;
   };
 
   const handleUpdateRoomView = async (updatedRoomView) => {
-    const returnedRoomView = await API.updateRoomView(updatedRoomView);
+    const returnedRoomView = await updateRoomView(updatedRoomView);
     return returnedRoomView;
   };
 
   const handleDeleteRoomView = async (id) => {
-    const returnedRoomView = await API.deleteRoomView(id);
+    const returnedRoomView = await deleteRoomView(id);
     return returnedRoomView;
   };
 

@@ -1,13 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   Redirect,
 } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
-import User from '../../Models/User';
 import Hotel from '../../Models/Hotel';
 import Navbar from '../../Common/Navbar';
 import HotelsPage from '../HotelsPage';
@@ -19,6 +18,7 @@ import UsersManagement from '../UsersManagement/UsersManagement';
 import OrdersSection from '../OrdersSection/OrdersSection';
 import Constants from '../../Common/Constants';
 import Profile from '../Profile/Profile';
+import LoggedUser from '../../Models/LoggedUser';
 
 const RoutesComponent = ({
   loggedUser,
@@ -35,9 +35,6 @@ const RoutesComponent = ({
   isUsersManagementOpen,
   closeUsersManagement,
   openUsersManagement,
-  // isProfileOpen,
-  // closeProfile,
-  // openProfile,
   dateIn,
   dateOut,
   onDateInChange,
@@ -49,39 +46,35 @@ const RoutesComponent = ({
   return (
     <Router>
       <Navbar
-        loggedUser={loggedUser}
         onLogoutClick={loguot}
         openHotelsManagement={openHotelsManagement}
         openUsersManagement={openUsersManagement}
         openReservations={openReservations}
       />
+
       {loggedUser &&
-      (loggedUser?.roles.includes(Constants.adminRole) ||
-        loggedUser?.roles.includes(Constants.managerRole)) ? (
+      (loggedUser?.roles?.includes(Constants.adminRole) ||
+        loggedUser?.roles?.includes(Constants.managerRole)) ? (
         <HotelsManagement
           isOpen={isHotelsManagementOpen}
           close={closeHotelsManagement}
-          loggedUser={loggedUser}
         />
       ) : null}
-      {loggedUser && loggedUser.roles.includes(Constants.adminRole) ? (
+
+      {loggedUser && loggedUser?.roles?.includes(Constants.adminRole) ? (
         <UsersManagement
           isOpen={isUsersManagementOpen}
           close={closeUsersManagement}
-          loggedUser={loggedUser}
         />
       ) : null}
+
       {loggedUser ? (
-        <OrdersSection
-          isOpen={isReservationsOpen}
-          close={closeReservations}
-          user={loggedUser}
-        />
+        <OrdersSection isOpen={isReservationsOpen} close={closeReservations} />
       ) : null}
+
       <Switch>
         <Route path="/Hotels/:id">
           <HotelFull
-            loggedUser={loggedUser}
             dateIn={dateIn}
             dateOut={dateOut}
             searchHotels={searchHotels}
@@ -89,6 +82,7 @@ const RoutesComponent = ({
             onDateOutChange={onDateOutChange}
           />
         </Route>
+
         <Route path="/Hotels">
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             {hotels ? (
@@ -108,15 +102,19 @@ const RoutesComponent = ({
             )}
           </div>
         </Route>
+
         <Route path="/Profile">
           <Profile loggedUserId={loggedUser?.id} />
         </Route>
+
         <Route path="/SignIn">
           <SignIn onSignIn={submit} />
         </Route>
+
         <Route path="/SignUp">
           <SignUp onSignUp={submit} />
         </Route>
+
         <Redirect to="/Hotels" />
       </Switch>
     </Router>
@@ -124,7 +122,7 @@ const RoutesComponent = ({
 };
 
 RoutesComponent.propTypes = {
-  loggedUser: PropTypes.instanceOf(User),
+  loggedUser: PropTypes.instanceOf(LoggedUser),
   hotels: PropTypes.arrayOf(Hotel),
   totalPages: PropTypes.number,
   totalResults: PropTypes.number,

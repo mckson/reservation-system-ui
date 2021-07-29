@@ -33,20 +33,15 @@ const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
   };
 
   return (
-    <BaseDialog
-      open={open}
-      close={close}
-      title={formTitle}
-      contentComponent={
-        <RoomViewForm
-          roomView={roomView}
-          submitText={formSubmitText}
-          submitHandler={onUpdateRoomViewAsync}
-          error={error}
-          resetError={handleResetError}
-        />
-      }
-    />
+    <BaseDialog open={open} close={close} title={formTitle}>
+      <RoomViewForm
+        roomView={roomView}
+        submitText={formSubmitText}
+        submitHandler={onUpdateRoomViewAsync}
+        error={error}
+        resetError={handleResetError}
+      />
+    </BaseDialog>
   );
 };
 

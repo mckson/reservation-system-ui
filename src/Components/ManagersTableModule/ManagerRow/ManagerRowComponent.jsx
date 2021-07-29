@@ -1,7 +1,7 @@
-import { IconButton, TableRow, TableCell, makeStyles } from '@material-ui/core';
-import { DeleteOutlined } from '@material-ui/icons';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { IconButton, TableRow, TableCell, makeStyles } from '@material-ui/core';
+import { DeleteOutlined } from '@material-ui/icons';
 import User from '../../../Models/User';
 import ManagerRowMap from '../ManagerRowMap/ManagerRowMap';
 import Hotel from '../../../Models/Hotel';

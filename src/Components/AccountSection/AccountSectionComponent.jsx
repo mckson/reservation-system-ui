@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import {
   Button,
   ListItemIcon,
@@ -15,8 +16,7 @@ import PersonIcon from '@material-ui/icons/PersonOutlined';
 import AdminPanelIcon from '@material-ui/icons/SettingsOutlined';
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import { HistoryOutlined } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
-import User from '../../Models/User';
+import LoggedUser from '../../Models/LoggedUser';
 import Constants from '../../Common/Constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +61,7 @@ const AccountSectionComponent = ({
 
   return (
     <div>
-      {loggedUser != null ? (
+      {loggedUser ? (
         <>
           <Button
             className={classes.button}
@@ -104,8 +104,8 @@ const AccountSectionComponent = ({
               <ListItemText primary="View reservations" />
             </MenuItem>
 
-            {loggedUser?.roles.includes(Constants.adminRole) ||
-            loggedUser?.roles.includes(Constants.managerRole) ? (
+            {loggedUser?.roles?.includes(Constants.adminRole) ||
+            loggedUser?.roles?.includes(Constants.managerRole) ? (
               <MenuItem
                 onClick={() => {
                   openHotelsManagement();
@@ -119,7 +119,7 @@ const AccountSectionComponent = ({
               </MenuItem>
             ) : null}
 
-            {loggedUser?.roles.includes(Constants.adminRole) ? (
+            {loggedUser?.roles?.includes(Constants.adminRole) ? (
               <MenuItem
                 onClick={() => {
                   openUsersManagement();
@@ -156,7 +156,7 @@ const AccountSectionComponent = ({
 };
 
 AccountSectionComponent.propTypes = {
-  loggedUser: PropTypes.instanceOf(User),
+  loggedUser: PropTypes.instanceOf(LoggedUser),
   logout: PropTypes.func.isRequired,
   openHotelsManagement: PropTypes.func.isRequired,
   openUsersManagement: PropTypes.func.isRequired,

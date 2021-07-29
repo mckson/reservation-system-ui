@@ -4,15 +4,7 @@ import {
   DeleteOutlined,
   PhotoCameraOutlined,
 } from '@material-ui/icons';
-import {
-  IconButton,
-  Dialog,
-  DialogTitle,
-  Typography,
-  makeStyles,
-  DialogContent,
-  Button,
-} from '@material-ui/core';
+import { IconButton, Typography, makeStyles, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Form, Formik } from 'formik';
 import { Alert } from '@material-ui/lab';
@@ -20,6 +12,7 @@ import * as Yup from 'yup';
 import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
 import ImageModelConverter from '../../../Common/ImageModelConverter';
+import BaseDialog from '../../../Common/BaseDialog';
 
 // import API from '../../../Common/API';
 
@@ -106,187 +99,173 @@ const HotelForm = ({
 
   return (
     <div>
-      <Dialog open={open}>
-        <DialogTitle>
-          <div className={classes.titleSection}>
-            <Typography className={classes.title} variant="h6">
-              {title}
-            </Typography>
-            <IconButton
-              className={classes.closeButton}
-              onClick={() => {
-                setIsDeleteMainImage(false);
-                setNewMainImage(null);
-                close();
+      <BaseDialog
+        open={open}
+        close={() => {
+          setIsDeleteMainImage(false);
+          setNewMainImage(null);
+          close();
+        }}
+        title={title}
+      >
+        <Formik
+          initialValues={{
+            name: hotel ? hotel.name : '',
+            floors: hotel ? hotel.numberFloors : '',
+            deposit: hotel ? hotel.deposit : '',
+            description: hotel ? hotel.description : '',
+            country: hotel ? hotel.location.country : '',
+            region: hotel ? hotel.location.region : '',
+            city: hotel ? hotel.location.city : '',
+            street: hotel ? hotel.location.street : '',
+            buildingNumber: hotel ? hotel.location.buildingNumber : '',
+            newMainImage: null,
+            isDeleteMainImage: false,
+          }}
+          validationSchema={validationSchema}
+          onSubmit={(values) => {
+            // eslint-disable-next-line no-param-reassign
+            values.newMainImage = newMainImage;
+            // eslint-disable-next-line no-param-reassign
+            values.isDeleteMainImage = isDeleteMainImage;
+            submitHandler(values);
+            setNewMainImage(null);
+            setMainImagePreview(null);
+          }}
+        >
+          <Form autoComplete="on">
+            <MyTextField
+              required
+              fullWidth
+              label="Name"
+              name="name"
+              type="text"
+              placeholder="Hotelname"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Number floors"
+              name="floors"
+              type="text"
+              placeholder="4"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Deposit"
+              name="deposit"
+              type="text"
+              placeholder="100"
+            />
+            <MyTextField
+              required
+              fullWidth
+              multiline
+              rows={3}
+              label="Description"
+              name="description"
+              type="text"
+              placeholder="Some description"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Country"
+              name="country"
+              type="text"
+              placeholder="Country"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Region"
+              name="region"
+              type="text"
+              placeholder="Region"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="City"
+              name="city"
+              type="text"
+              placeholder="City"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Street"
+              name="street"
+              type="text"
+              placeholder="Street"
+            />
+            <MyTextField
+              required
+              fullWidth
+              label="Building number"
+              name="buildingNumber"
+              type="text"
+              placeholder="14"
+            />
+            <label
+              htmlFor="icon-button-file"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <CloseOutlined />
-            </IconButton>
-          </div>
-        </DialogTitle>
-        <DialogContent>
-          <Formik
-            initialValues={{
-              name: hotel != null ? hotel.name : '',
-              floors: hotel != null ? hotel.numberFloors : '',
-              deposit: hotel != null ? hotel.deposit : '',
-              description: hotel != null ? hotel.description : '',
-              country: hotel != null ? hotel.location.country : '',
-              region: hotel != null ? hotel.location.region : '',
-              city: hotel != null ? hotel.location.city : '',
-              street: hotel != null ? hotel.location.street : '',
-              buildingNumber:
-                hotel != null ? hotel.location.buildingNumber : '',
-              newMainImage: null,
-              isDeleteMainImage: false,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values) => {
-              // eslint-disable-next-line no-debugger
-              debugger;
-              // eslint-disable-next-line no-param-reassign
-              values.newMainImage = newMainImage;
-              // eslint-disable-next-line no-param-reassign
-              values.isDeleteMainImage = isDeleteMainImage;
-              submitHandler(values);
-              setNewMainImage(null);
-              setMainImagePreview(null);
-            }}
-          >
-            <Form autoComplete="on">
-              <MyTextField
-                required
-                fullWidth
-                label="Name"
-                name="name"
-                type="text"
-                placeholder="Hotelname"
+              <Typography>
+                {mainImagePreview
+                  ? 'Select new one to change'
+                  : 'Upload main picture'}
+              </Typography>
+              {mainImagePreview ? (
+                <img
+                  className={classes.image}
+                  src={mainImagePreview}
+                  alt="Hotel"
+                />
+              ) : null}
+              <input
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={(e) => uploadImage(e)}
+                id="icon-button-file"
+                type="file"
               />
-              <MyTextField
-                required
-                fullWidth
-                label="Number floors"
-                name="floors"
-                type="text"
-                placeholder="4"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Deposit"
-                name="deposit"
-                type="text"
-                placeholder="100"
-              />
-              <MyTextField
-                required
-                fullWidth
-                multiline
-                rows={3}
-                label="Description"
-                name="description"
-                type="text"
-                placeholder="Some description"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Country"
-                name="country"
-                type="text"
-                placeholder="Country"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Region"
-                name="region"
-                type="text"
-                placeholder="Region"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="City"
-                name="city"
-                type="text"
-                placeholder="City"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Street"
-                name="street"
-                type="text"
-                placeholder="Street"
-              />
-              <MyTextField
-                required
-                fullWidth
-                label="Building number"
-                name="buildingNumber"
-                type="text"
-                placeholder="14"
-              />
-              <label
-                htmlFor="icon-button-file"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+              >
+                <PhotoCameraOutlined />
+              </IconButton>
+              <IconButton
+                color="primary"
+                disabled={!mainImagePreview}
+                onClick={() => {
+                  setNewMainImage(null);
+                  setMainImagePreview(null);
+                  setIsDeleteMainImage(true);
                 }}
               >
-                <Typography>
-                  {mainImagePreview
-                    ? 'Select new one to change'
-                    : 'Upload main picture'}
-                </Typography>
-                {mainImagePreview ? (
-                  <img
-                    className={classes.image}
-                    src={mainImagePreview}
-                    alt="Hotel"
-                  />
-                ) : null}
-                <input
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  onChange={(e) => uploadImage(e)}
-                  id="icon-button-file"
-                  type="file"
-                />
-                <IconButton
-                  color="primary"
-                  aria-label="upload picture"
-                  component="span"
-                >
-                  <PhotoCameraOutlined />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  disabled={!mainImagePreview}
-                  onClick={() => {
-                    setNewMainImage(null);
-                    setMainImagePreview(null);
-                    setIsDeleteMainImage(true);
-                  }}
-                >
-                  <DeleteOutlined />
-                </IconButton>
-              </label>
-              <Button
-                fullWidth
-                className={classes.submit}
-                variant="contained"
-                type="submit"
-                color="primary"
-              >
-                Apply changes
-              </Button>
-            </Form>
-          </Formik>
-        </DialogContent>
+                <DeleteOutlined />
+              </IconButton>
+            </label>
+            <Button
+              fullWidth
+              className={classes.submit}
+              variant="contained"
+              type="submit"
+              color="primary"
+            >
+              Apply changes
+            </Button>
+          </Form>
+        </Formik>
         {error != null ? (
           <Alert
             fullWidth
@@ -308,7 +287,7 @@ const HotelForm = ({
             {error}
           </Alert>
         ) : null}
-      </Dialog>
+      </BaseDialog>
     </div>
   );
 };
@@ -316,7 +295,7 @@ const HotelForm = ({
 HotelForm.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  hotel: PropTypes.instanceOf(Hotel).isRequired,
+  hotel: PropTypes.instanceOf(Hotel),
   submitHandler: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   error: PropTypes.string,
@@ -325,6 +304,7 @@ HotelForm.propTypes = {
 
 HotelForm.defaultProps = {
   error: null,
+  hotel: null,
 };
 
 export default HotelForm;

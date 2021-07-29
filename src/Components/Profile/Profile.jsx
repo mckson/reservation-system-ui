@@ -4,8 +4,10 @@ import { CircularProgress, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import ProfileComponent from './ProfileComponent';
 import User from '../../Models/User';
-import API from '../../Common/API';
 import ManagementService from '../../Common/ManagementService';
+import UserRequests from '../../api/UserRequests';
+
+const { getUser } = UserRequests;
 
 const parseJwt = (token) => {
   try {
@@ -17,8 +19,6 @@ const parseJwt = (token) => {
 
 const getUserIdFromStorage = () => {
   const jwt = localStorage.getItem('access_token');
-  // eslint-disable-next-line no-debugger
-  debugger;
   if (jwt) {
     const userDecoded = parseJwt(jwt);
     const userId = userDecoded.id;
@@ -29,7 +29,7 @@ const getUserIdFromStorage = () => {
 };
 
 const requestUserAsync = async (userId) => {
-  const userResponded = await API.getUser(userId);
+  const userResponded = await getUser(userId);
   const user = new User(userResponded);
 
   return user;
