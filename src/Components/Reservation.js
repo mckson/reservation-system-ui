@@ -19,6 +19,7 @@ import CompleteOrder from './ReservationModule/CompleteOrder/CompleteOrder';
 import SmallHotelCard from './SmallHotelCard';
 import DetailsComponent from './ReservationModule/Details/DetailsComponent';
 import Room from '../Models/Room';
+import Service from '../Models/Service';
 import RoomRequests from '../api/RoomRequests';
 import ReservationRequests from '../api/ReservationRequests';
 import BaseDialog from '../Common/BaseDialog';
@@ -55,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const getStepContent = (
   stepIndex,
   hotel,
+  services,
   rooms,
   loggedUser,
   onRoomChange,
@@ -76,6 +78,7 @@ const getStepContent = (
             <RoomSelectionComponent
               hotel={hotel}
               rooms={rooms}
+              services={services}
               onRoomChange={onRoomChange}
               onServicesChange={onServicesChange}
             />
@@ -118,6 +121,7 @@ const getStepContent = (
 
 const Reservation = ({
   loggedUser,
+  services,
   rooms,
   open,
   close,
@@ -203,8 +207,8 @@ const Reservation = ({
     }));
   };
 
-  const handleServicesChange = (event, services) => {
-    setSelectedServices(services);
+  const handleServicesChange = (event, newServices) => {
+    setSelectedServices(newServices);
   };
 
   const handleCustomerChange = (customer) => {
@@ -271,6 +275,7 @@ const Reservation = ({
                   {getStepContent(
                     activeStep.step,
                     hotel,
+                    services,
                     rooms,
                     loggedUser,
                     handleRoomsChange,
@@ -316,7 +321,8 @@ Reservation.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  rooms: PropTypes.arrayOf(Room).isRequired,
+  rooms: PropTypes.arrayOf(Room),
+  services: PropTypes.arrayOf(Service),
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   onRequestRooms: PropTypes.func.isRequired,
@@ -326,6 +332,8 @@ Reservation.defaultProps = {
   loggedUser: null,
   dateIn: null,
   dateOut: null,
+  services: [],
+  rooms: [],
 };
 
 export default Reservation;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import RoomViewFormComponent from './RoomViewFormComponent';
@@ -17,7 +17,19 @@ const RoomViewForm = ({
   submitText,
   error,
   resetError,
+  onCancel,
+  onAccept,
 }) => {
+  const [openWarning, setOpenWarning] = useState(false);
+
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
+
+  const handleCloseWarning = () => {
+    setOpenWarning(false);
+  };
+
   return (
     <RoomViewFormComponent
       roomView={roomView}
@@ -26,6 +38,11 @@ const RoomViewForm = ({
       submitText={submitText}
       error={error}
       resetError={resetError}
+      onAccept={onAccept}
+      onCancel={onCancel}
+      openWarning={openWarning}
+      onOpenWarning={handleOpenWarning}
+      onCloseWarning={handleCloseWarning}
     />
   );
 };
@@ -36,12 +53,16 @@ RoomViewForm.propTypes = {
   submitText: PropTypes.string,
   error: PropTypes.string,
   resetError: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func,
 };
 
 RoomViewForm.defaultProps = {
   roomView: null,
   submitText: 'Submit',
   error: null,
+  onCancel: null,
+  onAccept: null,
 };
 
 export default RoomViewForm;

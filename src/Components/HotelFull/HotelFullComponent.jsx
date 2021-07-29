@@ -289,6 +289,7 @@ const HotelFullComponent = ({
           open={isReservation}
           close={handleReservationClose}
           hotel={hotel}
+          services={services}
           rooms={rooms}
           loggedUser={loggedUser}
           dateIn={dateIn}

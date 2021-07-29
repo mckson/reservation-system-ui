@@ -2,14 +2,54 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import HotelForm from './HotelForm';
 import ImageRequests from '../../../api/ImageRequests';
+import HotelWarningContentComponent from './HotelWarningContentComponent';
 
 const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
   const [error, setError] = useState(null);
+  const [creatingHotel, setCreatingHotel] = useState(null);
+  const [mainImage, setMainImage] = useState(null);
 
   const { createHotelImage } = ImageRequests;
 
-  const onCreateHotel = async (values) => {
-    const createdHotel = {
+  const createHotelAsync = async () => {
+    const [hotel, errorResponse] = await createHotel(creatingHotel);
+
+    if (mainImage && hotel) {
+      const image = { ...mainImage };
+      image.hotelId = hotel.id;
+
+      await createHotelImage(image);
+    }
+
+    if (errorResponse) {
+      setError(errorResponse);
+    } else {
+      onSuccess('Hotel added successfully');
+      setCreatingHotel(null);
+      close();
+    }
+  };
+
+  const warningContent = (
+    <HotelWarningContentComponent
+      text={`Hotel "${creatingHotel?.name}" is going to be created. Accept or decline the creating`}
+      hotel={creatingHotel}
+      image={mainImage}
+    />
+  );
+
+  const handleCancel = () => {
+    setError('Creating canceled');
+  };
+
+  const handleAccept = async () => {
+    if (creatingHotel) {
+      await createHotelAsync();
+    }
+  };
+
+  const handleSubmit = (values) => {
+    const newHotel = {
       name: values.name,
       numberFloors: parseInt(values.floors, 10),
       deposit: parseFloat(values.deposit),
@@ -23,26 +63,17 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
       },
     };
 
-    const [hotel, errorResponse] = await createHotel(createdHotel);
+    const newMainImage = values.newMainImage
+      ? {
+          image: values.newMainImage.image,
+          name: values.newMainImage.name,
+          type: values.newMainImage.type,
+          isMain: true,
+        }
+      : null;
 
-    if (values.newMainImage && hotel) {
-      const image = {
-        image: values.newMainImage.image,
-        name: values.newMainImage.name,
-        type: values.newMainImage.type,
-        hotelId: hotel.id,
-        isMain: true,
-      };
-
-      await createHotelImage(image);
-    }
-
-    if (errorResponse) {
-      setError(errorResponse);
-    } else {
-      onSuccess('Hotel added successfully');
-      close();
-    }
+    setCreatingHotel(newHotel);
+    setMainImage(newMainImage);
   };
 
   const handleResetError = () => {
@@ -53,11 +84,18 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
     <HotelForm
       open={open}
       close={close}
-      hotel={null}
-      submitHandler={onCreateHotel}
+      hotel={creatingHotel}
+      submitHandler={handleSubmit}
       title="Hotel creation"
       error={error}
+      onCancel={handleCancel}
+      onAccept={handleAccept}
       resetError={handleResetError}
+      warningTitle="Creating of the hotel"
+      warningContent={warningContent}
+      color="#52b202"
+      acceptText="Create hotel"
+      cancelText="Cancel"
     />
   );
 };

@@ -22,6 +22,8 @@ import ImagesTable from '../../ImagesTableModule/ImagesTable/ImagesTable';
 import Constants from '../../../Common/Constants';
 import useRowStyles from '../../../Common/Styles/TableRowStyles';
 import RoomView from '../../../Models/RoomView';
+import WarningDialog from '../../../Common/WarningDialog';
+import HotelWarningContentComponent from '../Components/HotelWarningContentComponent';
 
 const HotelRowComponent = ({
   role,
@@ -52,10 +54,47 @@ const HotelRowComponent = ({
   const [openManagers, setOpenManagers] = useState(false);
   const [openImages, setOpenImages] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [openWarning, setOpenWarning] = useState(false);
+
+  const warningContent = (
+    <HotelWarningContentComponent
+      text={`Hotel "${hotel?.name}" is going to be updated. Accept or decline the updating`}
+      hotel={hotel}
+      image={!hotel.mainImage ? null : { image: hotel.mainImage }}
+    />
+  );
+
+  const deleteHotelAsync = async () => {
+    const [, errorResponse] = await deleteHotel(hotel.id);
+
+    if (errorResponse) {
+      onError(errorResponse);
+    } else {
+      onSuccess('Hotel successfully deleted');
+    }
+  };
 
   const handleEditClose = (message) => {
     setIsEdit(!isEdit);
     console.log(message);
+  };
+
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
+
+  const handleCloseWarning = () => {
+    setOpenWarning(false);
+  };
+
+  const handleCancel = () => {
+    onError('Deleting canceled');
+  };
+
+  const handleAccept = async () => {
+    if (hotel) {
+      await deleteHotelAsync();
+    }
   };
 
   return (
@@ -78,15 +117,7 @@ const HotelRowComponent = ({
               </IconButton>
               <IconButton
                 className={classes.button}
-                onClick={async () => {
-                  const [, errorResponse] = await deleteHotel(hotel.id);
-
-                  if (errorResponse) {
-                    onError(errorResponse);
-                  } else {
-                    onSuccess('Hotel successfully deleted');
-                  }
-                }}
+                onClick={() => handleOpenWarning()}
               >
                 <DeleteOutlined />
               </IconButton>
@@ -230,13 +261,29 @@ const HotelRowComponent = ({
           }}
           colSpan={11}
         >
-          <EditHotelComponent
-            hotel={hotel}
-            open={isEdit}
-            close={handleEditClose}
-            updateHotel={updateHotel}
-            onSuccess={onSuccess}
-          />
+          <>
+            <EditHotelComponent
+              hotel={hotel}
+              open={isEdit}
+              close={handleEditClose}
+              updateHotel={updateHotel}
+              onSuccess={onSuccess}
+            />
+            {openWarning ? (
+              <WarningDialog
+                title="Deleting of the hotel"
+                open={openWarning}
+                close={handleCloseWarning}
+                onAccept={handleAccept}
+                onCancel={handleCancel}
+                cancelText="Cancel"
+                acceptText="Delete hotel"
+                color="#f44336"
+              >
+                {warningContent || null}
+              </WarningDialog>
+            ) : null}
+          </>
         </TableCell>
       </TableRow>
     </>

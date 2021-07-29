@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Autocomplete } from '@material-ui/lab';
 import { Grid, TextField, Typography } from '@material-ui/core';
-import Hotel from '../../../Models/Hotel';
+import Service from '../../../Models/Service';
 import Room from '../../../Models/Room';
 
 const RoomSelectionComponent = ({
-  hotel,
+  services,
   rooms,
   onRoomChange,
   onServicesChange,
@@ -32,7 +32,7 @@ const RoomSelectionComponent = ({
           multiple
           limitTags={3}
           size="small"
-          options={hotel.services}
+          options={services}
           getOptionLabel={(service) => `${service.name} ($${service.price})`}
           onChange={onServicesChange}
           renderInput={(params) => (
@@ -45,10 +45,15 @@ const RoomSelectionComponent = ({
 };
 
 RoomSelectionComponent.propTypes = {
-  hotel: PropTypes.instanceOf(Hotel).isRequired,
-  rooms: PropTypes.arrayOf(Room).isRequired,
+  services: PropTypes.arrayOf(Service),
+  rooms: PropTypes.arrayOf(Room),
   onRoomChange: PropTypes.func.isRequired,
   onServicesChange: PropTypes.func.isRequired,
+};
+
+RoomSelectionComponent.defaultProps = {
+  services: [],
+  rooms: [],
 };
 
 export default RoomSelectionComponent;

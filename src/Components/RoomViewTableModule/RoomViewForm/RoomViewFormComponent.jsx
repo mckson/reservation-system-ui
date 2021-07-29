@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton, Typography } from '@material-ui/core';
 import { Formik, Form } from 'formik';
 import { Alert } from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
 import MyTextField from '../../../Common/MyTextField';
 import RoomView from '../../../Models/RoomView';
+import WarningDialog from '../../../Common/WarningDialog';
 
 const RoomViewFormComponent = ({
   roomView,
@@ -14,6 +15,11 @@ const RoomViewFormComponent = ({
   submitText,
   error,
   resetError,
+  onCancel,
+  onAccept,
+  openWarning,
+  onOpenWarning,
+  onCloseWarning,
 }) => {
   return (
     <>
@@ -22,7 +28,10 @@ const RoomViewFormComponent = ({
           name: roomView ? roomView.name : '',
         }}
         validationSchema={validationSchema}
-        onSubmit={submitHandler}
+        onSubmit={(values) => {
+          onOpenWarning();
+          submitHandler(values);
+        }}
       >
         <Form autoComplete="on">
           <MyTextField
@@ -58,6 +67,21 @@ const RoomViewFormComponent = ({
           {error}
         </Alert>
       ) : null}
+      {openWarning ? (
+        <WarningDialog
+          open={openWarning}
+          close={onCloseWarning}
+          onAccept={onAccept}
+          onCancel={onCancel}
+          cancelText="Cancel"
+          acceptText="Create view"
+        >
+          <Typography>
+            Room view "{roomView.name}" is going to be created. Accept or
+            decline the creating
+          </Typography>
+        </WarningDialog>
+      ) : null}
     </>
   );
 };
@@ -70,11 +94,18 @@ RoomViewFormComponent.propTypes = {
   submitText: PropTypes.string.isRequired,
   error: PropTypes.string,
   resetError: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func,
+  openWarning: PropTypes.bool.isRequired,
+  onOpenWarning: PropTypes.func.isRequired,
+  onCloseWarning: PropTypes.func.isRequired,
 };
 
 RoomViewFormComponent.defaultProps = {
   roomView: null,
   error: null,
+  onCancel: null,
+  onAccept: null,
 };
 
 export default RoomViewFormComponent;

@@ -110,21 +110,19 @@ const HotelFull = ({
   useEffect(async () => {
     const respondedHotel = await getHotel(id);
     setHotel(new Hotel(respondedHotel));
-
-    await requestRooms(id);
   }, []);
 
   useEffect(async () => {
     if (hotel) {
       await requestRooms(id);
     }
-  }, [roomsPageNumber, roomsPageSize]);
+  }, [hotel, roomsPageNumber, roomsPageSize]);
 
   useEffect(async () => {
     if (hotel) {
       await requestServices(id);
     }
-  }, [servicesPageNumber, servicesPageSize]);
+  }, [hotel, servicesPageNumber, servicesPageSize]);
 
   return (
     <>

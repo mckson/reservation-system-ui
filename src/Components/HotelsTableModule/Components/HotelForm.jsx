@@ -13,8 +13,7 @@ import Hotel from '../../../Models/Hotel';
 import MyTextField from '../../../Common/MyTextField';
 import ImageModelConverter from '../../../Common/ImageModelConverter';
 import BaseDialog from '../../../Common/BaseDialog';
-
-// import API from '../../../Common/API';
+import WarningDialog from '../../../Common/WarningDialog';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -78,10 +77,18 @@ const HotelForm = ({
   title,
   error,
   resetError,
+  onCancel,
+  onAccept,
+  acceptText,
+  cancelText,
+  warningContent,
+  warningTitle,
+  color,
 }) => {
   const classes = useStyles();
   const [newMainImage, setNewMainImage] = useState(null);
   const [isDeleteMainImage, setIsDeleteMainImage] = useState(false);
+  const [openWarning, setOpenWarning] = useState(false);
 
   const [mainImagePreview, setMainImagePreview] = useState(
     hotel?.mainImage ? hotel.mainImage : null
@@ -95,6 +102,14 @@ const HotelForm = ({
     setNewMainImage(imageModel);
     setMainImagePreview(imageModel.image);
     setIsDeleteMainImage(false);
+  };
+
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
+
+  const handleCloseWarning = () => {
+    setOpenWarning(false);
   };
 
   return (
@@ -114,11 +129,11 @@ const HotelForm = ({
             floors: hotel ? hotel.numberFloors : '',
             deposit: hotel ? hotel.deposit : '',
             description: hotel ? hotel.description : '',
-            country: hotel ? hotel.location.country : '',
-            region: hotel ? hotel.location.region : '',
-            city: hotel ? hotel.location.city : '',
-            street: hotel ? hotel.location.street : '',
-            buildingNumber: hotel ? hotel.location.buildingNumber : '',
+            country: hotel ? hotel.location?.country : '',
+            region: hotel ? hotel.location?.region : '',
+            city: hotel ? hotel.location?.city : '',
+            street: hotel ? hotel.location?.street : '',
+            buildingNumber: hotel ? hotel.location?.buildingNumber : '',
             newMainImage: null,
             isDeleteMainImage: false,
           }}
@@ -129,8 +144,7 @@ const HotelForm = ({
             // eslint-disable-next-line no-param-reassign
             values.isDeleteMainImage = isDeleteMainImage;
             submitHandler(values);
-            setNewMainImage(null);
-            setMainImagePreview(null);
+            handleOpenWarning();
           }}
         >
           <Form autoComplete="on">
@@ -287,6 +301,20 @@ const HotelForm = ({
             {error}
           </Alert>
         ) : null}
+        {openWarning ? (
+          <WarningDialog
+            title={warningTitle}
+            open={openWarning}
+            close={handleCloseWarning}
+            onAccept={onAccept}
+            onCancel={onCancel}
+            cancelText={cancelText}
+            acceptText={acceptText}
+            color={color}
+          >
+            {warningContent || null}
+          </WarningDialog>
+        ) : null}
       </BaseDialog>
     </div>
   );
@@ -300,11 +328,25 @@ HotelForm.propTypes = {
   title: PropTypes.string.isRequired,
   error: PropTypes.string,
   resetError: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func,
+  acceptText: PropTypes.string,
+  cancelText: PropTypes.string,
+  warningTitle: PropTypes.string,
+  warningContent: PropTypes.func,
+  color: PropTypes.string,
 };
 
 HotelForm.defaultProps = {
   error: null,
   hotel: null,
+  onCancel: null,
+  onAccept: null,
+  acceptText: null,
+  cancelText: null,
+  warningContent: null,
+  warningTitle: null,
+  color: 'white',
 };
 
 export default HotelForm;

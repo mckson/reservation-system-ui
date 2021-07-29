@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { CloseOutlined } from '@material-ui/icons';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   titleSection: {
     display: 'flex',
     flexDirection: 'row',
@@ -23,13 +23,24 @@ const useStyles = makeStyles(() => ({
   closeButton: {
     width: 'auto',
   },
+  content: {
+    padding: theme.spacing(1, 0, 0, 0),
+  },
 }));
 
-const BaseDialog = ({ open, close, title, width, children, notFullWidth }) => {
-  const classes = useStyles();
+const BaseDialog = ({
+  open,
+  close,
+  title,
+  width,
+  children,
+  notFullWidth,
+  color,
+}) => {
+  const classes = useStyles(color);
   return (
     <Dialog open={open} maxWidth={width} fullWidth={!notFullWidth}>
-      <DialogTitle>
+      <DialogTitle style={{ borderBottom: `1px solid ${color}` }}>
         <div className={classes.titleSection}>
           <Typography className={classes.title} variant="h6">
             {title}
@@ -43,27 +54,31 @@ const BaseDialog = ({ open, close, title, width, children, notFullWidth }) => {
           </IconButton>
         </div>
       </DialogTitle>
-      <DialogContent>{children}</DialogContent>
+      <DialogContent>
+        <div className={classes.content}>{children}</div>
+      </DialogContent>
     </Dialog>
   );
 };
 
 BaseDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  notFullWidth: PropTypes.bool,
   close: PropTypes.func.isRequired,
   title: PropTypes.string,
+  notFullWidth: PropTypes.bool,
   width: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
+  color: PropTypes.string,
 };
 
 BaseDialog.defaultProps = {
   title: 'Default title',
   width: 'sm',
   notFullWidth: false,
+  color: 'white',
 };
 
 export default BaseDialog;

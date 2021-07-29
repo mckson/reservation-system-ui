@@ -2,8 +2,8 @@ import QueryString from 'qs';
 import API from './API';
 
 const roomUrl = (id) => `/Rooms${id ? `/${id}` : ''}`;
-const roomLockUrl = (id) => `${this.roomUrl(id)}/lock`;
-const roomUnlockUrl = (id) => `${this.roomUrl(id)}/unlock`;
+const roomLockUrl = (id) => `${roomUrl(id)}/lock`;
+const roomUnlockUrl = (id) => `${roomUrl(id)}/unlock`;
 
 const roomSearchVariantsUrl = '/Rooms/Search';
 

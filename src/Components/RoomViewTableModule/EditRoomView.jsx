@@ -6,18 +6,14 @@ import RoomView from '../../Models/RoomView';
 
 const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
   const [error, setError] = useState(null);
+  const [updatingRoomView, setUpdatingRoomView] = useState({ ...roomView });
 
-  const formTitle = `Service wih id ${roomView.id} update`;
+  const formTitle = `View with id ${roomView.id} update`;
   const formSubmitText = 'Apply changes';
 
-  const onUpdateRoomViewAsync = async (values) => {
-    const updatedRoomView = {
-      id: roomView.id,
-      name: values.name,
-    };
-
+  const updateRoomViewAsync = async () => {
     const [roomViewResponse, errorResponse] = await updateRoomView(
-      updatedRoomView
+      updatingRoomView
     );
 
     if (errorResponse) {
@@ -28,6 +24,22 @@ const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
     }
   };
 
+  const handleSubmit = (values) => {
+    const newRoomView = new RoomView(values);
+
+    setUpdatingRoomView(newRoomView);
+  };
+
+  const handleCancel = () => {
+    setError('Updating canceled');
+  };
+
+  const handleAccept = async () => {
+    if (updatingRoomView) {
+      await updateRoomViewAsync();
+    }
+  };
+
   const handleResetError = () => {
     setError(null);
   };
@@ -35,9 +47,11 @@ const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
   return (
     <BaseDialog open={open} close={close} title={formTitle}>
       <RoomViewForm
-        roomView={roomView}
+        roomView={updatingRoomView}
         submitText={formSubmitText}
-        submitHandler={onUpdateRoomViewAsync}
+        submitHandler={handleSubmit}
+        onAccept={handleAccept}
+        onCancel={handleCancel}
         error={error}
         resetError={handleResetError}
       />
