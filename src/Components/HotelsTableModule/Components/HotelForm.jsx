@@ -310,7 +310,6 @@ const HotelForm = ({
               setIsDeleteMainImage(false);
               setMainImagePreview(null);
               setNewMainImage(null);
-              close();
               onAccept();
             }}
             onCancel={onCancel}
