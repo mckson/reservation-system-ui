@@ -99,6 +99,12 @@ const RoomViewTable = ({
     setPageSize(newSize);
   };
 
+  const handleCreateRoomView = async (roomView) => {
+    const result = await createRoomView(roomView);
+    setRefresh(!refresh);
+    return result;
+  };
+
   useEffect(async () => {
     await requestRoomViews();
   }, [pageSize, pageNumber, refresh]);
@@ -116,7 +122,7 @@ const RoomViewTable = ({
       roomViews={roomViews}
       onError={onError}
       onSuccess={onSuccess}
-      createRoomView={createRoomView}
+      createRoomView={handleCreateRoomView}
       updateRoomView={updateRoomView}
       deleteRoomView={deleteRoomView}
       pageChanged={handlePageChanged}

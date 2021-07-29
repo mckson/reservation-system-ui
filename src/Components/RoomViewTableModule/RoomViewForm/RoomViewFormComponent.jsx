@@ -77,7 +77,7 @@ const RoomViewFormComponent = ({
           acceptText="Create view"
         >
           <Typography>
-            Room view "{roomView.name}" is going to be created. Accept or
+            Room view "{roomView?.name}" is going to be created. Accept or
             decline the creating
           </Typography>
         </WarningDialog>

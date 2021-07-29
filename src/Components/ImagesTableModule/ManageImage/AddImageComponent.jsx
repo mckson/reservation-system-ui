@@ -64,92 +64,89 @@ const AddImageComponent = ({
         setImage(null);
         close();
       }}
-      contentComponent={
-        <>
-          {processing ? (
-            <CircularProgress />
-          ) : (
-            <Formik
-              initialValues={{ image: '' }}
-              onSubmit={() => {
-                onCreateImage(image);
-                setImage(null);
-              }}
-            >
-              <Form>
-                <label
-                  htmlFor="icon-button-file"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Typography>
-                    {image?.name || 'Upload main picture'}
-                  </Typography>
-                  {image ? (
-                    <img
-                      height={100}
-                      className={classes.image}
-                      src={image.image}
-                      alt="Hotel"
-                    />
-                  ) : null}
-                  <input
-                    accept="image/*"
-                    dra
-                    style={{ display: 'none' }}
-                    onChange={(e) => uploadImage(e)}
-                    id="icon-button-file"
-                    type="file"
+    >
+      <>
+        {processing ? (
+          <CircularProgress />
+        ) : (
+          <Formik
+            initialValues={{ image: '' }}
+            onSubmit={() => {
+              onCreateImage(image);
+              setImage(null);
+            }}
+          >
+            <Form>
+              <label
+                htmlFor="icon-button-file"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography>{image?.name || 'Upload main picture'}</Typography>
+                {image ? (
+                  <img
+                    height={100}
+                    className={classes.image}
+                    src={image.image}
+                    alt="Hotel"
                   />
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                  >
-                    <PhotoCameraOutlined />
-                  </IconButton>
-                </label>
-                <Button
-                  fullWidth
-                  disabled={!image}
-                  className={classes.submit}
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                >
-                  Add Image
-                </Button>
-              </Form>
-            </Formik>
-          )}
-          {error != null ? (
-            <Alert
-              fullWidth
-              variant="outlined"
-              severity="error"
-              action={
+                ) : null}
+                <input
+                  accept="image/*"
+                  dra
+                  style={{ display: 'none' }}
+                  onChange={(e) => uploadImage(e)}
+                  id="icon-button-file"
+                  type="file"
+                />
                 <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    handleResetError();
-                  }}
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
                 >
-                  <CloseIcon fontSize="inherit" />
+                  <PhotoCameraOutlined />
                 </IconButton>
-              }
-            >
-              {error}
-            </Alert>
-          ) : null}
-        </>
-      }
-    />
+              </label>
+              <Button
+                fullWidth
+                disabled={!image}
+                className={classes.submit}
+                variant="contained"
+                type="submit"
+                color="primary"
+              >
+                Add Image
+              </Button>
+            </Form>
+          </Formik>
+        )}
+        {error != null ? (
+          <Alert
+            fullWidth
+            variant="outlined"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  handleResetError();
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        ) : null}
+      </>
+    </BaseDialog>
   );
 };
 

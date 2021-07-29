@@ -15,7 +15,7 @@ function App() {
   const [searchParameters, setSearchParameters] = useState(null);
   const [totalResults, setTotalResults] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(null);
   const [dateIn, setDateIn] = useState(null);
   const [dateOut, setDateOut] = useState(null);
@@ -45,7 +45,6 @@ function App() {
           pageSize,
           dateIn,
           dateOut,
-          manager: '',
           name: hotelname,
           city,
           services,
@@ -57,7 +56,12 @@ function App() {
 
       setHotels(respondedHotels);
       setTotalResults(response.totalResults);
-      setTotalPages(response.totalPages);
+
+      const newTotalPages = Math.ceil(
+        response.totalResults / response.pageSize
+      );
+
+      setTotalPages(newTotalPages);
       if (response.pageNumber !== pageNumber) {
         setPageNumber(response.pageNumber);
       }
