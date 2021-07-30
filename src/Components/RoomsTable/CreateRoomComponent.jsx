@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import RoomForm from './RoomForm';
 import Hotel from '../../Models/Hotel';
 import RoomView from '../../Models/RoomView';
+import RoomWarningContentComponent from './RoomWarningContentComponent';
 
 const CreateRoomComponent = ({
   close,
@@ -14,9 +15,22 @@ const CreateRoomComponent = ({
   onRefresh,
 }) => {
   const [error, setError] = useState(null);
+  const [creatingRoom, setCreatingRoom] = useState(null);
 
-  const onCreateRoom = async (values) => {
-    const createdRoom = {
+  const createRoomAsync = async () => {
+    const [roomResponse, errorResponse] = await createRoom(creatingRoom);
+
+    if (errorResponse) {
+      setError(errorResponse);
+    } else {
+      onSuccess(`Room ${roomResponse.roomNumber} sucessfully added`);
+      close();
+      onRefresh();
+    }
+  };
+
+  const handleSubmit = (values) => {
+    const newRoom = {
       hotelId: hotel.id,
       name: values.name,
       roomNumber: parseInt(values.number, 10),
@@ -31,16 +45,25 @@ const CreateRoomComponent = ({
       views: values.views,
     };
 
-    const [roomResponse, errorResponse] = await createRoom(createdRoom);
+    setCreatingRoom(newRoom);
+  };
 
-    if (errorResponse) {
-      setError(errorResponse);
-    } else {
-      onSuccess(`Room ${roomResponse.roomNumber} sucessfully added`);
-      close();
-      onRefresh();
+  const handleCancel = () => {
+    setError('Creating canceled');
+  };
+
+  const handleAccept = async () => {
+    if (creatingRoom) {
+      await createRoomAsync();
     }
   };
+
+  const warningContent = (
+    <RoomWarningContentComponent
+      text={`Room view "${creatingRoom?.name}" is going to be created. Accept or decline the creating`}
+      room={creatingRoom}
+    />
+  );
 
   const handleResetError = () => {
     setError(null);
@@ -52,11 +75,18 @@ const CreateRoomComponent = ({
       close={close}
       roomViews={roomViews}
       room={null}
-      submitHandler={onCreateRoom}
+      submitHandler={handleSubmit}
       title="Room creation"
       submitText="Create room"
       error={error}
       resetError={handleResetError}
+      onAccept={handleAccept}
+      onCancel={handleCancel}
+      warningContent={warningContent}
+      warningTitle="Creating of the room"
+      type="create"
+      acceptText="Create room"
+      cancelText="Cancel"
     />
   );
 };

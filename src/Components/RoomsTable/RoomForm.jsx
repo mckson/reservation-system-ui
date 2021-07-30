@@ -19,6 +19,7 @@ import MyTextField from '../../Common/MyTextField';
 import RoomView from '../../Models/RoomView';
 import FacilitiesTable from './FacilitiesTable';
 import BaseDialog from '../../Common/BaseDialog';
+import WarningDialog from '../../Common/WarningDialog';
 
 const useStyles = makeStyles(() => ({
   titleSection: {
@@ -68,6 +69,13 @@ const RoomForm = ({
   submitText,
   error,
   resetError,
+  onCancel,
+  onAccept,
+  acceptText,
+  cancelText,
+  warningContent,
+  warningTitle,
+  type,
 }) => {
   const [facilities, setFacilities] = useState(
     room?.facilities ? room.facilities : []
@@ -76,6 +84,8 @@ const RoomForm = ({
   const [selectedViews, setSelectedViews] = useState(
     room?.views ? room.views : []
   );
+  const [openWarning, setOpenWarning] = useState(false);
+
   const classes = useStyles();
 
   const handleFacilityAdd = () => {
@@ -96,6 +106,14 @@ const RoomForm = ({
   const handleFacilityDelete = (delFacility) => {
     const newFacilities = facilities.filter((f) => f.name !== delFacility.name);
     setFacilities(newFacilities);
+  };
+
+  const handleOpenWarning = () => {
+    setOpenWarning(true);
+  };
+
+  const handleCloseWarning = () => {
+    setOpenWarning(false);
   };
 
   return (
@@ -120,6 +138,7 @@ const RoomForm = ({
             // eslint-disable-next-line no-param-reassign
             values.views = selectedViews.map((view) => view.id);
             submitHandler(values);
+            handleOpenWarning();
           }}
         >
           {({ errors, touched }) => (
@@ -339,6 +358,22 @@ const RoomForm = ({
             {error}
           </Alert>
         ) : null}
+        {openWarning ? (
+          <WarningDialog
+            title={warningTitle}
+            open={openWarning}
+            close={handleCloseWarning}
+            onAccept={() => {
+              onAccept();
+            }}
+            onCancel={onCancel}
+            cancelText={cancelText}
+            acceptText={acceptText}
+            type={type}
+          >
+            {warningContent || null}
+          </WarningDialog>
+        ) : null}
       </>
     </BaseDialog>
   );
@@ -354,12 +389,26 @@ RoomForm.propTypes = {
   submitText: PropTypes.string,
   error: PropTypes.string,
   resetError: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func,
+  acceptText: PropTypes.string,
+  cancelText: PropTypes.string,
+  warningTitle: PropTypes.string,
+  warningContent: PropTypes.func,
+  type: PropTypes.string,
 };
 
 RoomForm.defaultProps = {
   submitText: 'Submit',
   error: null,
   roomViews: [],
+  onCancel: null,
+  onAccept: null,
+  acceptText: null,
+  cancelText: null,
+  warningContent: null,
+  warningTitle: null,
+  type: 'default',
 };
 
 export default RoomForm;
