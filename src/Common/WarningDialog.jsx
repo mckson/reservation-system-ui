@@ -21,11 +21,25 @@ const WarningDialog = ({
   onAccept,
   cancelText,
   acceptText,
-  color,
+  type,
 }) => {
   const classes = useStyles();
+
+  const getTypeColor = () => {
+    switch (type) {
+      case 'delete':
+        return '#f44336';
+      case 'update':
+        return '#ffc107';
+      case 'create':
+        return '#52b202';
+      default:
+        return 'default';
+    }
+  };
+
   return (
-    <BaseDialog open={open} close={close} title={title} color={color}>
+    <BaseDialog open={open} close={close} title={title} color={getTypeColor()}>
       {children}
       <div className={classes.empty} />
       <div className={classes.buttons}>
@@ -41,10 +55,14 @@ const WarningDialog = ({
         <Button
           disableElevation
           variant="contained"
-          style={{
-            backgroundColor: color,
-            color: '#FFFFFF',
-          }}
+          style={
+            getTypeColor() !== 'default'
+              ? {
+                  backgroundColor: getTypeColor(),
+                  color: '#FFFFFF',
+                }
+              : null
+          }
           onClick={() => {
             onAccept();
             close();
@@ -69,14 +87,14 @@ WarningDialog.propTypes = {
   acceptText: PropTypes.string,
   onCancel: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
-  color: PropTypes.string,
+  type: PropTypes.string,
 };
 
 WarningDialog.defaultProps = {
   title: 'Default title',
   cancelText: 'Cancel',
   acceptText: 'Accept',
-  color: 'white',
+  type: 'default',
 };
 
 export default WarningDialog;

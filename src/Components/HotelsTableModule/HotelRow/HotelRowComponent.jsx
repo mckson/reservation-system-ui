@@ -278,7 +278,7 @@ const HotelRowComponent = ({
                 onCancel={handleCancel}
                 cancelText="Cancel"
                 acceptText="Delete hotel"
-                color="#f44336"
+                type="delete"
               >
                 {warningContent || null}
               </WarningDialog>

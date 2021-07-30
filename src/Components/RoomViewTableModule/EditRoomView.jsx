@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import BaseDialog from '../../Common/BaseDialog';
 import RoomViewForm from './RoomViewForm/RoomViewForm';
 import RoomView from '../../Models/RoomView';
+import RoomViewWarningContentComponent from './RoomViewWarningContentComponent';
 
 const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
   const [error, setError] = useState(null);
@@ -44,6 +45,13 @@ const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
     setError(null);
   };
 
+  const warningContent = (
+    <RoomViewWarningContentComponent
+      text={`Room view "${updatingRoomView?.name}" is going to be updated. Accept or decline the updating`}
+      roomView={updatingRoomView}
+    />
+  );
+
   return (
     <BaseDialog open={open} close={close} title={formTitle}>
       <RoomViewForm
@@ -54,6 +62,9 @@ const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
         onCancel={handleCancel}
         error={error}
         resetError={handleResetError}
+        warningContent={warningContent}
+        warningTitle="Updating of the view"
+        type="update"
       />
     </BaseDialog>
   );

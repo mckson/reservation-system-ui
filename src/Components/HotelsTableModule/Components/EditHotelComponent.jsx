@@ -109,7 +109,7 @@ const EditHotelComponent = ({ open, close, hotel, updateHotel, onSuccess }) => {
       cancelText="Cancel"
       warningContent={warningContent}
       warningTitle="Updating of the hotel"
-      color="#ffc107"
+      type="update"
     />
   );
 };

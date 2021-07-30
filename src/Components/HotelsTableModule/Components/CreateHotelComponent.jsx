@@ -94,7 +94,7 @@ const CreateHotelComponent = ({ open, close, createHotel, onSuccess }) => {
       resetError={handleResetError}
       warningTitle="Creating of the hotel"
       warningContent={warningContent}
-      color="#52b202"
+      type="create"
       acceptText="Create hotel"
       cancelText="Cancel"
     />

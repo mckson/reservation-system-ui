@@ -83,7 +83,7 @@ const HotelForm = ({
   cancelText,
   warningContent,
   warningTitle,
-  color,
+  type,
 }) => {
   const classes = useStyles();
   const [newMainImage, setNewMainImage] = useState(null);
@@ -315,7 +315,7 @@ const HotelForm = ({
             onCancel={onCancel}
             cancelText={cancelText}
             acceptText={acceptText}
-            color={color}
+            type={type}
           >
             {warningContent || null}
           </WarningDialog>
@@ -339,7 +339,7 @@ HotelForm.propTypes = {
   cancelText: PropTypes.string,
   warningTitle: PropTypes.string,
   warningContent: PropTypes.func,
-  color: PropTypes.string,
+  type: PropTypes.string,
 };
 
 HotelForm.defaultProps = {
@@ -351,7 +351,7 @@ HotelForm.defaultProps = {
   cancelText: null,
   warningContent: null,
   warningTitle: null,
-  color: 'white',
+  type: 'default',
 };
 
 export default HotelForm;

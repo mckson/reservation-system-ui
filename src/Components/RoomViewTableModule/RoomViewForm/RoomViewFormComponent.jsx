@@ -7,6 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import MyTextField from '../../../Common/MyTextField';
 import RoomView from '../../../Models/RoomView';
 import WarningDialog from '../../../Common/WarningDialog';
+import RoomViewWarningContentComponent from '../RoomViewWarningContentComponent';
 
 const RoomViewFormComponent = ({
   roomView,
@@ -20,6 +21,9 @@ const RoomViewFormComponent = ({
   openWarning,
   onOpenWarning,
   onCloseWarning,
+  type,
+  warningContent,
+  warningTitle,
 }) => {
   return (
     <>
@@ -75,6 +79,9 @@ const RoomViewFormComponent = ({
           onCancel={onCancel}
           cancelText="Cancel"
           acceptText="Create view"
+          type={type}
+          warningContent={warningContent}
+          title={warningTitle}
         >
           <Typography>
             Room view "{roomView?.name}" is going to be created. Accept or
@@ -99,6 +106,9 @@ RoomViewFormComponent.propTypes = {
   openWarning: PropTypes.bool.isRequired,
   onOpenWarning: PropTypes.func.isRequired,
   onCloseWarning: PropTypes.func.isRequired,
+  type: PropTypes.string,
+  warningContent: PropTypes.instanceOf(RoomViewWarningContentComponent),
+  warningTitle: PropTypes.string,
 };
 
 RoomViewFormComponent.defaultProps = {
@@ -106,6 +116,9 @@ RoomViewFormComponent.defaultProps = {
   error: null,
   onCancel: null,
   onAccept: null,
+  type: 'default',
+  warningContent: null,
+  warningTitle: null,
 };
 
 export default RoomViewFormComponent;

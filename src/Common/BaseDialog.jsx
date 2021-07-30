@@ -37,7 +37,7 @@ const BaseDialog = ({
   notFullWidth,
   color,
 }) => {
-  const classes = useStyles(color);
+  const classes = useStyles();
   return (
     <Dialog open={open} maxWidth={width} fullWidth={!notFullWidth}>
       <DialogTitle style={{ borderBottom: `1px solid ${color}` }}>

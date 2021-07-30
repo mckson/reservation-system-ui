@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import RoomViewFormComponent from './RoomViewFormComponent';
 import RoomView from '../../../Models/RoomView';
+import RoomViewWarningContentComponent from '../RoomViewWarningContentComponent';
 
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -19,6 +20,9 @@ const RoomViewForm = ({
   resetError,
   onCancel,
   onAccept,
+  type,
+  warningContent,
+  warningTitle,
 }) => {
   const [openWarning, setOpenWarning] = useState(false);
 
@@ -43,6 +47,9 @@ const RoomViewForm = ({
       openWarning={openWarning}
       onOpenWarning={handleOpenWarning}
       onCloseWarning={handleCloseWarning}
+      type={type}
+      warningContent={warningContent}
+      warningTitle={warningTitle}
     />
   );
 };
@@ -55,6 +62,9 @@ RoomViewForm.propTypes = {
   resetError: PropTypes.func.isRequired,
   onCancel: PropTypes.func,
   onAccept: PropTypes.func,
+  type: PropTypes.string,
+  warningContent: PropTypes.instanceOf(RoomViewWarningContentComponent),
+  warningTitle: PropTypes.string,
 };
 
 RoomViewForm.defaultProps = {
@@ -63,6 +73,9 @@ RoomViewForm.defaultProps = {
   error: null,
   onCancel: null,
   onAccept: null,
+  type: 'default',
+  warningContent: null,
+  warningTitle: null,
 };
 
 export default RoomViewForm;

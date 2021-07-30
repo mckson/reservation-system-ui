@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import RoomViewForm from './RoomViewForm/RoomViewForm';
 import BaseDialog from '../../Common/BaseDialog';
 import RoomView from '../../Models/RoomView';
+import RoomViewWarningContentComponent from './RoomViewWarningContentComponent';
 
 const CreateRoomView = ({ open, close, createRoomView, onSuccess }) => {
   const [error, setError] = useState(null);
@@ -42,6 +43,13 @@ const CreateRoomView = ({ open, close, createRoomView, onSuccess }) => {
     setError(null);
   };
 
+  const warningContent = (
+    <RoomViewWarningContentComponent
+      text={`Room view "${creatingRoomView?.name}" is going to be created. Accept or decline the creating`}
+      roomView={creatingRoomView}
+    />
+  );
+
   const formTitle = 'Room view creation';
   const formSubmitText = 'Create view';
   return (
@@ -54,6 +62,9 @@ const CreateRoomView = ({ open, close, createRoomView, onSuccess }) => {
         onCancel={handleCancel}
         onAccept={handleAccept}
         roomView={creatingRoomView}
+        type="create"
+        warningContent={warningContent}
+        warningTitle="Creating of the view"
       />
     </BaseDialog>
   );
