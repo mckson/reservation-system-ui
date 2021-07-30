@@ -11,7 +11,7 @@ const OrdersTable = ({ user }) => {
   const [reservations, setReservatoins] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [totalResults, setTotalResults] = useState(null);
+  const [totalResults, setTotalResults] = useState(0);
 
   const requestReservationsAsync = async () => {
     const response = await getReservations({

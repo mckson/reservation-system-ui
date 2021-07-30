@@ -364,45 +364,6 @@ const HotelsManagement = ({ isOpen, close }) => {
     return error;
   };
 
-  const handleCreateRoomView = async (createdRoomView) => {
-    const [response, error] = await ManagementService.baseRequestHandler(
-      ManagementService.handleCreateRoomView,
-      createdRoomView
-    );
-
-    if (!error) {
-      await requestRoomViews();
-    }
-
-    return [response, error];
-  };
-
-  const handleUpdateRoomView = async (updatedRoomView) => {
-    const [response, error] = await ManagementService.baseRequestHandler(
-      ManagementService.handleUpdateRoomView,
-      updatedRoomView
-    );
-
-    if (!error) {
-      await requestRoomViews();
-    }
-
-    return [response, error];
-  };
-
-  const handleDeleteRoomView = async (deleteRoomViewId) => {
-    const [response, error] = await ManagementService.baseRequestHandler(
-      ManagementService.handleDeleteRoomView,
-      deleteRoomViewId
-    );
-
-    if (!error) {
-      await requestRoomViews();
-    }
-
-    return [response, error];
-  };
-
   useEffect(async () => {
     await requestHotels();
   }, [pageSize, pageNumber, orderBy, order, refresh]);
@@ -461,9 +422,6 @@ const HotelsManagement = ({ isOpen, close }) => {
       deleteImage={handleDeleteHotelImage}
       createRoomImage={handleCreateRoomImage}
       deleteRoomImage={handleDeleteRoomImage}
-      createRoomView={handleCreateRoomView}
-      updateRoomView={handleUpdateRoomView}
-      deleteRoomView={handleDeleteRoomView}
       onOrderChanged={handleOrderChanged}
       orderBy={orderBy}
       order={order}

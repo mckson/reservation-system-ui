@@ -59,9 +59,6 @@ const HotelsManagementComponent = ({
   deleteImage,
   createRoomImage,
   deleteRoomImage,
-  createRoomView,
-  updateRoomView,
-  deleteRoomView,
   onOrderChanged,
   orderBy,
   order,
@@ -162,9 +159,6 @@ const HotelsManagementComponent = ({
             <TabPanel value="1">
               <div className={classes.contentItem}>
                 <RoomViewTable
-                  createRoomView={createRoomView}
-                  updateRoomView={updateRoomView}
-                  deleteRoomView={deleteRoomView}
                   onError={handleError}
                   onSuccess={handleSuccess}
                 />
@@ -227,9 +221,6 @@ HotelsManagementComponent.propTypes = {
   deleteImage: PropTypes.func.isRequired,
   createRoomImage: PropTypes.func.isRequired,
   deleteRoomImage: PropTypes.func.isRequired,
-  createRoomView: PropTypes.func.isRequired,
-  updateRoomView: PropTypes.func.isRequired,
-  deleteRoomView: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   prompts: PropTypes.array,
   onOrderChanged: PropTypes.func.isRequired,

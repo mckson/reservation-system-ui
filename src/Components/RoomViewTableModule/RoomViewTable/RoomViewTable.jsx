@@ -4,16 +4,11 @@ import RoomView from '../../../Models/RoomView';
 import RoomViewTableComponent from './RoomViewTableComponent';
 import RoomViewRequests from '../../../api/RoomViewRequests';
 import SearchClause from '../../../Common/BaseSearch/SearchClause';
+import ManagementService from '../../../Common/ManagementService';
 
 const { getRoomViews, getRoomViewSearchPrompts } = RoomViewRequests;
 
-const RoomViewTable = ({
-  onError,
-  onSuccess,
-  createRoomView,
-  updateRoomView,
-  deleteRoomView,
-}) => {
+const RoomViewTable = ({ onError, onSuccess }) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(null);
   const [roomViews, setRoomViews] = useState([]);
@@ -99,10 +94,43 @@ const RoomViewTable = ({
     setPageSize(newSize);
   };
 
-  const handleCreateRoomView = async (roomView) => {
-    const result = await createRoomView(roomView);
-    setRefresh(!refresh);
-    return result;
+  const handleCreateRoomView = async (createdRoomView) => {
+    const [response, error] = await ManagementService.baseRequestHandler(
+      ManagementService.handleCreateRoomView,
+      createdRoomView
+    );
+
+    if (!error) {
+      await requestRoomViews();
+    }
+
+    return [response, error];
+  };
+
+  const handleUpdateRoomView = async (updatedRoomView) => {
+    const [response, error] = await ManagementService.baseRequestHandler(
+      ManagementService.handleUpdateRoomView,
+      updatedRoomView
+    );
+
+    if (!error) {
+      await requestRoomViews();
+    }
+
+    return [response, error];
+  };
+
+  const handleDeleteRoomView = async (deleteRoomViewId) => {
+    const [response, error] = await ManagementService.baseRequestHandler(
+      ManagementService.handleDeleteRoomView,
+      deleteRoomViewId
+    );
+
+    if (!error) {
+      await requestRoomViews();
+    }
+
+    return [response, error];
   };
 
   useEffect(async () => {
@@ -123,8 +151,8 @@ const RoomViewTable = ({
       onError={onError}
       onSuccess={onSuccess}
       createRoomView={handleCreateRoomView}
-      updateRoomView={updateRoomView}
-      deleteRoomView={deleteRoomView}
+      updateRoomView={handleUpdateRoomView}
+      deleteRoomView={handleDeleteRoomView}
       pageChanged={handlePageChanged}
       pageSizeChanged={handlePageSizeChanged}
       totalCount={totalResults}
@@ -147,9 +175,6 @@ const RoomViewTable = ({
 RoomViewTable.propTypes = {
   onError: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
-  createRoomView: PropTypes.func.isRequired,
-  updateRoomView: PropTypes.func.isRequired,
-  deleteRoomView: PropTypes.func.isRequired,
 };
 
 export default RoomViewTable;
