@@ -4,7 +4,6 @@ import { useParams, useHistory } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import HotelFullComponent from './HotelFullComponent';
 import Hotel from '../../Models/Hotel';
-import User from '../../Models/User';
 import Room from '../../Models/Room';
 import HotelRequests from '../../api/HotelRequests';
 import RoomRequests from '../../api/RoomRequests';
@@ -16,7 +15,6 @@ const { getRooms } = RoomRequests;
 const { getServices } = ServiceRequests;
 
 const HotelFull = ({
-  loggedUser,
   dateIn,
   dateOut,
   searchHotels,
@@ -134,7 +132,6 @@ const HotelFull = ({
           roomsTotalResults={roomsTotalResults}
           servicesTotalResults={servicesTotalResults}
           onBackClick={onBackClick}
-          loggedUser={loggedUser}
           dateIn={dateIn}
           dateOut={dateOut}
           searchHotels={searchHotels}
@@ -166,7 +163,6 @@ const HotelFull = ({
 };
 
 HotelFull.propTypes = {
-  loggedUser: PropTypes.instanceOf(User),
   dateIn: PropTypes.string,
   dateOut: PropTypes.string,
   searchHotels: PropTypes.func.isRequired,
@@ -175,7 +171,6 @@ HotelFull.propTypes = {
 };
 
 HotelFull.defaultProps = {
-  loggedUser: null,
   dateIn: null,
   dateOut: null,
 };

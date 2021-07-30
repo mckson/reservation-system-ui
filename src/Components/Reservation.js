@@ -9,11 +9,11 @@ import {
   Grid,
 } from '@material-ui/core';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Hotel from '../Models/Hotel';
 import RoomSelectionComponent from './ReservationModule/RoomSelection/RoomSelectionComponent';
 import PersonalInfo from './ReservationModule/PersonalInfo/PersonalInfo';
-import User from '../Models/User';
 import ReservationRequest from '../Models/ReservationRequest';
 import CompleteOrder from './ReservationModule/CompleteOrder/CompleteOrder';
 import SmallHotelCard from './SmallHotelCard';
@@ -120,7 +120,6 @@ const getStepContent = (
 };
 
 const Reservation = ({
-  loggedUser,
   services,
   rooms,
   open,
@@ -139,6 +138,8 @@ const Reservation = ({
   const [selectedRooms, setSelectedRooms] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [customerInfo, setCustomerInfo] = useState(null);
+
+  const loggedUser = useSelector((state) => state.loggedUser.loggedUser);
 
   const onClose = () => {
     selectedRooms.forEach((room) => unlockRoom(room.id));
@@ -317,7 +318,6 @@ const Reservation = ({
 };
 
 Reservation.propTypes = {
-  loggedUser: PropTypes.instanceOf(User),
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   hotel: PropTypes.instanceOf(Hotel).isRequired,
@@ -329,7 +329,6 @@ Reservation.propTypes = {
 };
 
 Reservation.defaultProps = {
-  loggedUser: null,
   dateIn: null,
   dateOut: null,
   services: [],

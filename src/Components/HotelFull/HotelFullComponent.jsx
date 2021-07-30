@@ -27,7 +27,6 @@ import Gallery from '../Gallery';
 import Hotel from '../../Models/Hotel';
 import Default from '../../images/default.png';
 import Reservation from '../Reservation';
-import User from '../../Models/User';
 import SearchBar from '../SearchBar/SearchBar';
 import LabeledInfo from './LabeledInfo';
 import Room from '../../Models/Room';
@@ -112,7 +111,6 @@ const HotelFullComponent = ({
   rooms,
   services,
   onBackClick,
-  loggedUser,
   dateIn,
   dateOut,
   searchHotels,
@@ -291,7 +289,6 @@ const HotelFullComponent = ({
           hotel={hotel}
           services={services}
           rooms={rooms}
-          loggedUser={loggedUser}
           dateIn={dateIn}
           dateOut={dateOut}
           onRequestRooms={onRequestRooms}
@@ -313,7 +310,6 @@ const HotelFullComponent = ({
 
 HotelFullComponent.propTypes = {
   hotel: PropTypes.instanceOf(Hotel).isRequired,
-  loggedUser: PropTypes.instanceOf(User),
   rooms: PropTypes.arrayOf(Room),
   services: PropTypes.arrayOf(Service),
   dateIn: PropTypes.string,
@@ -333,7 +329,6 @@ HotelFullComponent.propTypes = {
 HotelFullComponent.defaultProps = {
   rooms: [],
   services: [],
-  loggedUser: null,
   dateIn: null,
   dateOut: null,
   selectedRoomId: null,

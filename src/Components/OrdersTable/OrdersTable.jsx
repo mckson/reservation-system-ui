@@ -11,7 +11,6 @@ const OrdersTable = ({ user }) => {
   const [reservations, setReservatoins] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(null);
   const [totalResults, setTotalResults] = useState(null);
 
   const requestReservationsAsync = async () => {
@@ -28,7 +27,6 @@ const OrdersTable = ({ user }) => {
 
       setReservatoins(respondedReservations);
       setTotalResults(response.totalResults);
-      setTotalPages(response.totalPages);
       if (response.pageNumber !== pageNumber) {
         setPageNumber(response.pageNumber);
       }
@@ -38,6 +36,14 @@ const OrdersTable = ({ user }) => {
     }
   };
 
+  const handlePageChanged = (newPage) => {
+    setPageNumber(newPage);
+  };
+
+  const handlePageSizeChanged = (newPageSize) => {
+    setPageSize(newPageSize);
+  };
+
   useEffect(async () => {
     await requestReservationsAsync();
   }, [pageSize, pageNumber]);
@@ -45,10 +51,11 @@ const OrdersTable = ({ user }) => {
   return (
     <OrdersTableComponent
       reservations={reservations}
-      totalPages={totalPages}
       totalResults={totalResults}
       pageNumber={pageNumber}
       pageSize={pageSize}
+      onPageChanged={handlePageChanged}
+      onPageSizeChanged={handlePageSizeChanged}
     />
   );
 };
