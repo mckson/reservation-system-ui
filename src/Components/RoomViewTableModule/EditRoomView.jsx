@@ -58,10 +58,10 @@ const EditRoomView = ({ open, close, roomView, updateRoomView, onSuccess }) => {
         roomView={updatingRoomView}
         submitText={formSubmitText}
         submitHandler={handleSubmit}
-        onAccept={handleAccept}
-        onCancel={handleCancel}
         error={error}
         resetError={handleResetError}
+        onAccept={handleAccept}
+        onCancel={handleCancel}
         warningContent={warningContent}
         warningTitle="Updating of the view"
         type="update"

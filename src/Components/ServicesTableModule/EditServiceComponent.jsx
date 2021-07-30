@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ServiceForm from './ServiceForm/ServiceForm';
 import Hotel from '../../Models/Hotel';
 import Service from '../../Models/Service';
+import ServiceWarningContentComponent from './ServiceWarningContentComponent';
 
 const EditServiceComponent = ({
   open,
@@ -13,20 +14,15 @@ const EditServiceComponent = ({
   onSuccess,
   onRefresh,
 }) => {
+  const [error, setError] = useState(null);
+  const [updatingService, setUpdatingService] = useState({ ...updateService });
+
   const formTitle = `Service wih id ${service.id} update`;
   const formSubmitText = 'Apply changes';
-  const [error, setError] = useState(null);
 
-  const onUpdateServiceAsync = async (values) => {
-    const updatedService = {
-      id: service.id,
-      hotelId: hotel.id,
-      name: values.name,
-      price: parseFloat(values.price),
-    };
-
+  const updateServiceAsync = async () => {
     const [serviceResponse, errorResponse] = await updateService(
-      updatedService
+      updatingService
     );
 
     if (errorResponse) {
@@ -38,20 +34,55 @@ const EditServiceComponent = ({
     }
   };
 
+  const handleSubmit = (values) => {
+    const newService = {
+      id: service.id,
+      hotelId: hotel.id,
+      name: values.name,
+      price: parseFloat(values.price),
+    };
+
+    setUpdatingService(new Service(newService));
+  };
+
+  const handleCancel = () => {
+    setError('Updating canceled');
+  };
+
+  const handleAccept = async () => {
+    if (updatingService) {
+      await updateServiceAsync();
+    }
+  };
+
   const handleResetError = () => {
     setError(null);
   };
+
+  const warningContent = (
+    <ServiceWarningContentComponent
+      text={`Service "${updatingService?.name}" is going to be updated. Accept or decline the updating`}
+      service={updatingService}
+    />
+  );
 
   return (
     <ServiceForm
       open={open}
       close={close}
       service={service}
-      submitHandler={onUpdateServiceAsync}
+      submitHandler={handleSubmit}
       title={formTitle}
       submitText={formSubmitText}
       error={error}
       resetError={handleResetError}
+      onAccept={handleAccept}
+      onCancel={handleCancel}
+      warningContent={warningContent}
+      warningTitle="Updating of the service"
+      type="update"
+      acceptText="Update service"
+      cancelText="Cancel"
     />
   );
 };

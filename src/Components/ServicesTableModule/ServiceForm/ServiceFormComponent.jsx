@@ -7,6 +7,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import MyTextField from '../../../Common/MyTextField';
 import Service from '../../../Models/Service';
 import BaseDialog from '../../../Common/BaseDialog';
+import ServiceWarningContentComponent from '../ServiceWarningContentComponent';
+import WarningDialog from '../../../Common/WarningDialog';
 
 const ServiceFormComponent = ({
   open,
@@ -18,6 +20,16 @@ const ServiceFormComponent = ({
   submitText,
   error,
   resetError,
+  onCancel,
+  onAccept,
+  type,
+  warningContent,
+  warningTitle,
+  openWarning,
+  onOpenWarning,
+  onCloseWarning,
+  cancelText,
+  acceptText,
 }) => {
   return (
     <div>
@@ -28,7 +40,10 @@ const ServiceFormComponent = ({
             price: service != null ? service.price : '',
           }}
           validationSchema={validationSchema}
-          onSubmit={submitHandler}
+          onSubmit={(values) => {
+            submitHandler(values);
+            onOpenWarning();
+          }}
         >
           <Form autoComplete="on">
             <MyTextField
@@ -71,6 +86,20 @@ const ServiceFormComponent = ({
             {error}
           </Alert>
         ) : null}
+        {openWarning ? (
+          <WarningDialog
+            open={openWarning}
+            close={onCloseWarning}
+            onAccept={onAccept}
+            onCancel={onCancel}
+            cancelText={cancelText}
+            acceptText={acceptText}
+            type={type}
+            title={warningTitle}
+          >
+            {warningContent}
+          </WarningDialog>
+        ) : null}
       </BaseDialog>
     </div>
   );
@@ -87,10 +116,27 @@ ServiceFormComponent.propTypes = {
   submitText: PropTypes.string.isRequired,
   error: PropTypes.string,
   resetError: PropTypes.func.isRequired,
+  type: PropTypes.string,
+  warningContent: PropTypes.instanceOf(ServiceWarningContentComponent),
+  warningTitle: PropTypes.string,
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func,
+  openWarning: PropTypes.bool.isRequired,
+  onOpenWarning: PropTypes.func.isRequired,
+  onCloseWarning: PropTypes.func.isRequired,
+  acceptText: PropTypes.string,
+  cancelText: PropTypes.string,
 };
 
 ServiceFormComponent.defaultProps = {
   error: null,
+  onCancel: null,
+  onAccept: null,
+  type: 'default',
+  warningContent: null,
+  warningTitle: null,
+  acceptText: null,
+  cancelText: null,
 };
 
 export default ServiceFormComponent;

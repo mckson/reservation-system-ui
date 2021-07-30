@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ServiceForm from './ServiceForm/ServiceForm';
 import Hotel from '../../Models/Hotel';
+import ServiceWarningContentComponent from './ServiceWarningContentComponent';
 
 const CreateServiceComponent = ({
   open,
@@ -11,19 +12,15 @@ const CreateServiceComponent = ({
   onSuccess,
   onRefresh,
 }) => {
+  const [error, setError] = useState(null);
+  const [creatingService, setCreatingService] = useState(null);
+
   const formTitle = 'Service creation';
   const formSubmitText = 'Create service';
-  const [error, setError] = useState(null);
 
-  const onCreateServiceAsync = async (values) => {
-    const createdService = {
-      hotelId: hotel.id,
-      name: values.name,
-      price: parseFloat(values.price),
-    };
-
+  const createServiceAsync = async () => {
     const [serviceResponse, errorResponse] = await createService(
-      createdService
+      creatingService
     );
 
     if (errorResponse != null) {
@@ -35,9 +32,36 @@ const CreateServiceComponent = ({
     }
   };
 
+  const handleSubmit = (values) => {
+    const newService = {
+      hotelId: hotel.id,
+      name: values.name,
+      price: parseFloat(values.price),
+    };
+
+    setCreatingService(newService);
+  };
+
   const handleResetError = () => {
     setError(null);
   };
+
+  const handleCancel = () => {
+    setError('Creating canceled');
+  };
+
+  const handleAccept = async () => {
+    if (creatingService) {
+      await createServiceAsync();
+    }
+  };
+
+  const warningContent = (
+    <ServiceWarningContentComponent
+      text={`Room view "${creatingService?.name}" is going to be created. Accept or decline the creating`}
+      service={creatingService}
+    />
+  );
 
   return (
     <>
@@ -45,11 +69,18 @@ const CreateServiceComponent = ({
         open={open}
         close={close}
         service={null}
-        submitHandler={onCreateServiceAsync}
+        submitHandler={handleSubmit}
         title={formTitle}
         submitText={formSubmitText}
         error={error}
         resetError={handleResetError}
+        onAccept={handleAccept}
+        onCancel={handleCancel}
+        warningContent={warningContent}
+        warningTitle="Creating of the service"
+        type="create"
+        acceptText="Create service"
+        cancelText="Cancel"
       />
     </>
   );
